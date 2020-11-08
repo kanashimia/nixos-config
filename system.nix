@@ -5,7 +5,7 @@
 
   nix.package = pkgs.nixFlakes;
   environment.systemPackages = with pkgs; [
-    htop kakoune fd ripgrep git pciutils glxinfo unstable.manix tree dash linuxPackages.perf
+    htop kakoune fd ripgrep git pciutils glxinfo unstable.manix tree dash linuxPackages.perf inxi xsel
   ];
 
   nix.extraOptions = "experimental-features = nix-command flakes";
@@ -22,8 +22,6 @@
   home-manager.useGlobalPkgs = true;
   home-manager.useUserPackages = true;
 
-  #services.autorandr.enable = true;
-
   services.xserver = {
     enable = true;
     displayManager.lightdm.enable = true;
@@ -38,6 +36,12 @@
         waitPID=$!
       '';
     }];
+    windowManager.xmonad = {
+      enable = true;
+      enableContribAndExtras = true;
+      config = ./dotfiles/xmonad.hs;
+    };
+ 
     exportConfiguration = true;
     autoRepeatInterval = 30;
     autoRepeatDelay = 300;
@@ -59,12 +63,14 @@
   i18n.defaultLocale = "en_IE.UTF-8";
   console = {
     font = "Lat2-Terminus16";
+    earlySetup = true;
     useXkbConfig = true;
   };
 
   services.xserver.layout = "us";
   services.xserver.xkbOptions = "caps:swapescape, terminate:ctrl_alt_bksp";
   services.xserver.dpi = 96;
+  
   fonts.fontconfig.dpi = 96;
   fonts.fonts = with pkgs; [
     fira-code
@@ -79,7 +85,7 @@
     "89ddff"
     "d5d5e1"
 
-    "4e5471" # "676e95"
+    "4e5471"
     "f07178"
     "c3e88d"
     "ffc47c"
@@ -88,6 +94,4 @@
     "89ddff"
     "d5d5e1"
   ];
-
-  #environment.binsh = "${pkgs.dash}/bin/dash";
 }

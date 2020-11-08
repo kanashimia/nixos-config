@@ -3,7 +3,7 @@
 let
 profile = {
   home.packages = with pkgs; [
-    fortune neofetch gparted st rofi vivaldi
+    fortune neofetch gparted st rofi vivaldi discord
   ];
 
   programs = {
