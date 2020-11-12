@@ -3,7 +3,7 @@
 let
 profile = {
   home.packages = with pkgs; [
-    fortune neofetch gparted st rofi vivaldi discord steam flameshot
+    fortune neofetch gparted st rofi vivaldi discord steam flameshot libreoffice
   ];
 
   programs = {
@@ -19,11 +19,25 @@ profile = {
         syu = "sudo nixos-rebuild switch";
         syr = "sudo nixos-rebuild switch --rollback";
       };
+      plugins = [
+        { name = "spacefish";
+          src = pkgs.fetchFromGitHub {
+            owner = "matchai";
+            repo = "spacefish";
+            rev = "adbb02a9866547f235380ea9db8c71424bd6e611";
+            sha256 = "Asz+m17DsPRPAFLb9mU+L7rubwAxe4CvvSZpxCdTiMU=";
+          };
+        }
+      ];
     };
     git = {
       enable = true;
       userEmail = "nikita20001116@gmail.com";
       userName = "Nikita Ursol";
+    };
+    fzf = {
+      enable = true;
+      enableFishIntegration = true;
     };
   };
   

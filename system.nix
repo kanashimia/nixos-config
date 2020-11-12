@@ -5,7 +5,7 @@
 
   nix.package = pkgs.nixFlakes;
   environment.systemPackages = with pkgs; [
-    htop kakoune fd ripgrep git pciutils glxinfo unstable.manix tree dash linuxPackages.perf inxi xsel xorg.xev
+    htop kakoune fd ripgrep git pciutils glxinfo unstable.manix tree dash linuxPackages.perf inxi xsel xorg.xev argyllcms xcalib
   ];
 
   nix.extraOptions = "experimental-features = nix-command flakes";
@@ -29,13 +29,14 @@
       enable = false;
       user = "kana";
     };
-    desktopManager.session = [{
-      name = "home-manager";
-      start = ''
-        ${pkgs.runtimeShell} $HOME/.hm-xsession
-        waitPID=$!
-      '';
-    }];
+    desktopManager.session = [
+      { name = "home-manager";
+        start = ''
+          ${pkgs.runtimeShell} $HOME/.hm-xsession
+          waitPID=$!
+        '';
+      }
+    ];
     # windowManager.xmonad = {
     #   enable = true;
     #   enableContribAndExtras = true;
@@ -82,8 +83,8 @@
     useXkbConfig = true;
   };
 
-  services.xserver.layout = "us";
-  services.xserver.xkbOptions = "caps:swapescape, terminate:ctrl_alt_bksp";
+  services.xserver.layout = "us, ru";
+  services.xserver.xkbOptions = "caps:swapescape, grp:rctrl_rshift_toggle, terminate:ctrl_alt_bksp";
   services.xserver.dpi = 96;
   
   fonts.fontconfig.dpi = 96;

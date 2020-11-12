@@ -78,13 +78,14 @@
     Option "metamodes" "nvidia-auto-select +0+0 { ForceCompositionPipeline = On }"
   '';
 
-  environment.systemPackages = with pkgs; [(
-    pkgs.writeShellScriptBin "screen-toggle" ''
-      MONITORS=$(xrandr --listactivemonitors | wc -l)
-      STATE=$(test $MONITORS -gt 2 && echo '--off' || echo '--auto')
-      xrandr --output eDP-1-1 $STATE
-    ''
-  )];
+  environment.systemPackages = with pkgs; [
+    ( pkgs.writeShellScriptBin "screen-toggle" ''
+        MONITORS=$(xrandr --listactivemonitors | wc -l)
+        STATE=$(test $MONITORS -gt 2 && echo '--off' || echo '--auto')
+        xrandr --output eDP-1-1 $STATE
+      ''
+    )
+  ];
 
   # Laptop powersaving, or something.
   services.tlp.enable = true;

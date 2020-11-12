@@ -19,7 +19,7 @@ st = self: super: {
       };
     in builtins.map super.fetchurl [ boxdraw ligatures ];
   };
-};
+};	
 
 neofetch = self: super: {
   neofetch = super.neofetch.overrideAttrs (old: {
@@ -48,7 +48,6 @@ haskellPackages = self: super: {
     };
   };
 };
-
 in
 {
   nixpkgs.overlays = [
