@@ -3,7 +3,7 @@
 let
 profile = {
   home.packages = with pkgs; [
-    fortune neofetch gparted st rofi vivaldi discord
+    fortune neofetch gparted st rofi vivaldi discord steam flameshot
   ];
 
   programs = {
@@ -15,6 +15,10 @@ profile = {
     fish = {
       enable = true;
       interactiveShellInit = builtins.readFile ./dotfiles/fish.fish;
+      shellAbbrs = {
+        syu = "sudo nixos-rebuild switch";
+        syr = "sudo nixos-rebuild switch --rollback";
+      };
     };
     git = {
       enable = true;
@@ -34,7 +38,9 @@ profile = {
   xsession = {
     enable = true;
     scriptPath = ".hm-xsession";
-    initExtra = "${pkgs.feh}/bin/feh --bg-fill ${./dotfiles/wallpaper.png}";
+    initExtra = ''
+      ${pkgs.feh}/bin/feh --bg-fill ${./dotfiles/wallpaper.png}
+    '';
   };
 
   #services.picom = {

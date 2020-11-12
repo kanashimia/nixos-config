@@ -5,7 +5,7 @@
 
   nix.package = pkgs.nixFlakes;
   environment.systemPackages = with pkgs; [
-    htop kakoune fd ripgrep git pciutils glxinfo unstable.manix tree dash linuxPackages.perf inxi xsel
+    htop kakoune fd ripgrep git pciutils glxinfo unstable.manix tree dash linuxPackages.perf inxi xsel xorg.xev
   ];
 
   nix.extraOptions = "experimental-features = nix-command flakes";
@@ -36,11 +36,11 @@
         waitPID=$!
       '';
     }];
-    windowManager.xmonad = {
-      enable = true;
-      enableContribAndExtras = true;
-      config = ./dotfiles/xmonad.hs;
-    };
+    # windowManager.xmonad = {
+    #   enable = true;
+    #   enableContribAndExtras = true;
+    #   config = ./dotfiles/xmonad.hs;
+    # };
  
     exportConfiguration = true;
     autoRepeatInterval = 30;
@@ -51,14 +51,29 @@
   sound.enable = true;
   hardware.pulseaudio.enable = true;
 
+  # Logarithmic brightness control.
   hardware.brillo.enable = true;
 
-  # Enable touchpad support (enabled default in most desktopManager).
+  # Touchpad configuration.
+  # Need MatchIsTouchpad "on" there,
+  # otherwise it would change mouse settings too.
   services.xserver.libinput = {
     enable = true;
     naturalScrolling = true;
     accelSpeed = "-0.1";
+    additionalOptions = ''MatchIsTouchpad "on"'';
   };
+  
+  # Ah, why isn't there one for mouse too?
+  services.xserver.config = ''
+    Section "InputClass"
+      Identifier     "My mouse"
+      Driver         "libinput"
+      MatchIsPointer "on"
+      Option "AccelSpeed" "-0.5"
+      Option "AccelProfile" "flat"
+    EndSection
+  '';
 
   i18n.defaultLocale = "en_IE.UTF-8";
   console = {

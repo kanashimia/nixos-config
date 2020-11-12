@@ -1,6 +1,7 @@
 { pkgs, lib, modulesPath, ... }:
 
 {
+  # Import myself.
   imports = [ ../kana.nix ];
 
   boot.initrd.availableKernelModules = [
@@ -14,8 +15,18 @@
   };
   boot.consoleLogLevel = 3;
 
+  # Enable proprietary non-free garbage.
   hardware.enableRedistributableFirmware = true;
 
+  # Please, please never buy HP laptops,
+  # especially if you are going to be using linux,
+  # everything about their firmware makes me wanna cry.
+  # Like why do my "function" keys don't function
+  # unless i load device by hands, and, AND,
+  # even then that device is there only half of the time,
+  # and, if it isn't there (because probably it isn't),
+  # you have to do a hard shutdown to make it appear.
+  # Idk how to feel about this, sounds like a sitcom.
   systemd.services.fuck-hp = {
     enable = true;
     description = "Fuck HP";
@@ -28,20 +39,16 @@
     lidSwitch = "suspend-then-hibernate";
   };
   
+  # Boot params and stuff.
   boot.kernelParams = [ "quiet" ];
-
   boot.initrd.kernelModules = [ "kvm-intel" ];
   boot.blacklistedKernelModules = [ ];
   boot.extraModulePackages = [ ];
   
+  # Networking configuration.
   networking.networkmanager.enable = true;
   networking.hostName = "hp-laptop";
   networking.networkmanager.wifi.backend = "iwd";
-
-  # Disabling this speeds up startup dramatically as it seems.
-  # I don't care, lamao.
-  # systemd.services.NetworkManager-wait-online.enable = false;
-
   networking.dhcpcd.enable = false;
   networking.useDHCP = false;
   
@@ -54,30 +61,39 @@
     size = null;
   }];
 
+  # Oh no.
   services.xserver.videoDrivers = [ "nvidia" ];
 
-  # Is this reverse prime?? Why do i have to do this? It worked on arch -_-
-  services.xserver.displayManager.sessionCommands = ''
-    ${pkgs.xorg.xrandr}/bin/xrandr --setprovideroutputsource 1 0
-  '';
-
+  # Finally, nvidia doesen't (completely) suck.
+  # prime.sync works so much better than prime.offload
+  hardware.nvidia.modesetting.enable = true;
   hardware.nvidia.prime = {
-    offload.enable = true;
+    sync.enable = true;
     intelBusId = "PCI:0:2:0";
     nvidiaBusId = "PCI:1:0:0";
   };
+  
+  # Fix xorg tearing meme.
+  services.xserver.screenSection = ''
+    Option "metamodes" "nvidia-auto-select +0+0 { ForceCompositionPipeline = On }"
+  '';
 
   environment.systemPackages = with pkgs; [(
-    pkgs.writeShellScriptBin "nvidia-offload" ''
-      export __NV_PRIME_RENDER_OFFLOAD=1
-      export __NV_PRIME_RENDER_OFFLOAD_PROVIDER=NVIDIA-G0
-      export __GLX_VENDOR_LIBRARY_NAME=nvidia
-      export __VK_LAYER_NV_optimus=NVIDIA_only
-      exec -a "$0" "$@"
+    pkgs.writeShellScriptBin "screen-toggle" ''
+      MONITORS=$(xrandr --listactivemonitors | wc -l)
+      STATE=$(test $MONITORS -gt 2 && echo '--off' || echo '--auto')
+      xrandr --output eDP-1-1 $STATE
     ''
   )];
 
   # Laptop powersaving, or something.
   services.tlp.enable = true;
   powerManagement.cpuFreqGovernor = lib.mkDefault "powersave";
+
+  # Steam related fixes.
+  hardware.opengl = {
+    driSupport32Bit = true;
+    extraPackages32 = with pkgs.pkgsi686Linux; [ libva ];
+  };
+  hardware.pulseaudio.support32Bit = true;
 }  
