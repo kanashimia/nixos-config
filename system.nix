@@ -5,7 +5,7 @@
 
   nix.package = pkgs.nixFlakes;
   environment.systemPackages = with pkgs; [
-    htop kakoune fd ripgrep git pciutils glxinfo unstable.manix tree dash linuxPackages.perf inxi xsel xorg.xev argyllcms xcalib
+    htop kakoune fd ripgrep git pciutils glxinfo unstable.manix tree dash linuxPackages.perf inxi xsel xclip xorg.xev xcalib
   ];
 
   nix.extraOptions = "experimental-features = nix-command flakes";

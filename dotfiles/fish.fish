@@ -23,6 +23,9 @@ if status is-interactive
     #IFS="" paste (printf "\n\n%b" (fortune | sed "s/^/  /" | expand) | psub) (echo $anime | psub) | column -s '$'\t -t
     #echo -e $anime
 end
+
+set fish_history ""
+
 #    if string match -q "*scratchpad*" (xprop -id $WINDOWID WM_CLASS)
 #    and test $LINES -gt 30 -a $COLUMNS -gt 100
 #        set -l IFS ""
@@ -148,9 +151,9 @@ export FZF_DEFAULT_OPTS='--no-extended --multi --ansi --color 16,bg+:#343b51,hl+
 #export LESS='--mouse --wheel-lines 3'
 #export MANLESS=''
 
-function _hist_sync --on-event=fish_prompt
-    history merge
-end
+#function _hist_sync --on-event=fish_prompt
+#    history merge
+#end
 
 function expand_glob
     set -l tokens (eval string escape -- (commandline -ct))
