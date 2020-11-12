@@ -52,6 +52,6 @@ haskellPackages = self: super: {
 in
 {
   nixpkgs.overlays = [
-    st unstable neofetch haskellPackages
+    st unstable neofetch
   ];
 }

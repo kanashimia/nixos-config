@@ -12,7 +12,7 @@ import Graphics.X11.ExtraTypes.XF86
 import XMonad.Actions.Warp
 import XMonad.Layout.NoBorders
 
-main = xmonad $ ewmhFullscreen $ ewmh $ additionalKeys myConf myKeys
+main = xmonad $ ewmh $ additionalKeys myConf myKeys
 
 myKeys =
     [ ((myM, xK_p), spawn "rofi -show drun -show-icons -m -4")
