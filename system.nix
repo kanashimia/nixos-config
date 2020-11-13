@@ -22,6 +22,8 @@
   home-manager.useGlobalPkgs = true;
   home-manager.useUserPackages = true;
 
+  security.polkit.enable = true;
+
   services.xserver = {
     enable = true;
     displayManager.lightdm.enable = true;
@@ -47,6 +49,7 @@
     autoRepeatInterval = 30;
     autoRepeatDelay = 300;
   };
+
 
   # Enable sound.
   sound.enable = true;
@@ -86,7 +89,18 @@
   services.xserver.layout = "us, ru";
   services.xserver.xkbOptions = "caps:swapescape, grp:rctrl_rshift_toggle, terminate:ctrl_alt_bksp";
   services.xserver.dpi = 96;
-  
+
+  services.xserver.displayManager.lightdm.greeters = {
+    gtk = {
+      enable = true;
+      cursorTheme = {
+        package = pkgs.breeze-qt5;
+        name = "breeze_cursors";
+        size = 16;
+      };
+    };
+  };
+
   fonts.fontconfig.dpi = 96;
   fonts.fonts = with pkgs; [
     fira-code

@@ -58,6 +58,6 @@ myLayoutHook = avoidStruts
     frac = 5/10
 
 myScratchHook = scratchpadManageHook
-    $ RationalRect ((1-size)/2) 0 (size-0.003) (size-0.007)
+    $ RationalRect ((1-size)/2) 0 size size
     where
     size = 7/10

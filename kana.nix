@@ -40,6 +40,16 @@ profile = {
       enableFishIntegration = true;
     };
   };
+
+  xsession.pointerCursor = {
+    package = pkgs.breeze-qt5;
+    name = "breeze_cursors";
+    size = 16;
+  };
+
+  services = {
+    unclutter.enable = true;
+  };
   
   xsession.windowManager = {
     xmonad = {
@@ -53,18 +63,10 @@ profile = {
     enable = true;
     scriptPath = ".hm-xsession";
     initExtra = ''
+      ${pkgs.polkit_gnome}/libexec/polkit-gnome-authentication-agent-1 &
       ${pkgs.feh}/bin/feh --bg-fill ${./dotfiles/wallpaper.png}
     '';
   };
-
-  #services.picom = {
-  #  enable = true;
-  #  vSync = true;
-  #};
-  # home.sessionVariables = {
-  #   KAKOUNE_POSIX_SHELL = "${pkgs.dash}/bin/dash";
-  #   EDITOR = "${pkgs.kakoune}";
-  # };
 };
 in
 {
