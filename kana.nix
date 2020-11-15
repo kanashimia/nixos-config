@@ -7,7 +7,39 @@ profile = {
   ];
 
   programs = {
-    htop.enable = true;
+    htop = {
+      enable = true;
+      treeView = true;
+      hideUserlandThreads = true;
+      highlightBaseName = true;
+      showProgramPath = false;
+      showCpuUsage = true;
+      meters = {
+        left = [
+          "AllCPUs2"
+          "Blank"
+          { kind = "Memory"; mode = 2; }
+        ];
+        right = [
+          "Uptime"
+          "Blank"
+          "Tasks"
+          "LoadAverage"
+          "Blank"
+          { kind = "Swap"; mode = 2; }
+        ];
+      };
+      fields = [
+        "PID"
+        "USER"
+        "M_RESIDENT"
+        "PERCENT_CPU"
+        "PERCENT_MEM"
+        "STATE"
+        "COMM"
+      ];
+    };
+
     rofi = {
       enable = true;
       package = pkgs.unstable.rofi;
@@ -15,10 +47,12 @@ profile = {
       font = "Fira Code 12";
       extraConfig = "rofi.modi: drun,run,window";
     };
+
     tmux = {
       enable = true;
       extraConfig = builtins.readFile ./dotfiles/tmux.conf;
     };
+
     fish = {
       enable = true;
       interactiveShellInit = builtins.readFile ./dotfiles/fish.fish;
@@ -37,11 +71,13 @@ profile = {
         }
       ];
     };
+
     git = {
       enable = true;
       userEmail = "nikita20001116@gmail.com";
       userName = "Nikita Ursol";
     };
+
     fzf = {
       enable = true;
       enableFishIntegration = true;
