@@ -3,11 +3,18 @@
 let
 profile = {
   home.packages = with pkgs; [
-    fortune neofetch gparted st rofi vivaldi discord steam flameshot libreoffice
+    fortune neofetch gparted st vivaldi discord steam flameshot libreoffice
   ];
 
   programs = {
     htop.enable = true;
+    rofi = {
+      enable = true;
+      package = pkgs.unstable.rofi;
+      theme = ./dotfiles/rofi.rasi;
+      font = "Fira Code 12";
+      extraConfig = "rofi.modi: drun,run,window";
+    };
     tmux = {
       enable = true;
       extraConfig = builtins.readFile ./dotfiles/tmux.conf;
