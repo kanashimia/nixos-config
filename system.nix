@@ -10,6 +10,16 @@
 
   nix.extraOptions = "experimental-features = nix-command flakes";
 
+  # Automatically optimize /nix/store
+  nix.autoOptimiseStore = true;
+
+  # Automatically delete old generations.
+  nix.gc = {
+    automatic = true;
+    dates = "weekly";
+    options = "--delete-older-than 30d";
+  };
+ 
   nixpkgs.config = {
     allowUnfree = true;
     vivaldi = {
