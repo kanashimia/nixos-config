@@ -13,14 +13,12 @@
   outputs = { nixpkgs, unstable, manager, ... }@inputs: {
     nixosConfigurations.hp-laptop = nixpkgs.lib.nixosSystem {
       modules = [
-        (manager.nixosModules.home-manager)
+        manager.nixosModules.home-manager
         ./hosts/hp-laptop.nix
         ./system.nix
       ];
       system = "x86_64-linux";
       specialArgs = { inherit inputs; };
     };
-    #legacyPackages.x86_64-linux = self.nixosConfigurations.hp-laptop.pkgs;
-    #legacyPackages."<system>"."<attr>" = derivation;
   };
 }
