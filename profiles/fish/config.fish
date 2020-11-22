@@ -16,13 +16,13 @@
 # end
 
 #if set -q DISPLAY
-if status is-interactive
-    if not set -q TMUX
-        exec tmux
-    end
-    #IFS="" paste (printf "\n\n%b" (fortune | sed "s/^/  /" | expand) | psub) (echo $anime | psub) | column -s '$'\t -t
-    #echo -e $anime
-end
+#if status is-interactive
+#    if not set -q TMUX
+#        exec tmux
+#    end
+#    #IFS="" paste (printf "\n\n%b" (fortune | sed "s/^/  /" | expand) | psub) (echo $anime | psub) | column -s '$'\t -t
+#    #echo -e $anime
+#end
 
 set fish_history ""
 
@@ -77,36 +77,31 @@ set fish_vi_force_cursor ""
 
 function fish_mode_prompt
 end
-set SPACEFISH_PROMPT_ADD_NEWLINE true
-set SPACEFISH_PROMPT_FIRST_PREFIX_SHOW false
-set SPACEFISH_PROMPT_PREFIXES_SHOW true
-set SPACEFISH_PROMPT_SUFFIXES_SHOW true
-set SPACEFISH_PROMPT_DEFAULT_PREFIX "via "
-set SPACEFISH_PROMPT_DEFAULT_SUFFIX " "
-set SPACEFISH_PROMPT_ORDER time user dir host git package node ruby golang php rust haskell julia elixir docker aws venv conda pyenv dotnet kubecontext exec_time line_sep battery vi_mode jobs exit_code char
-set SPACEFISH_CHAR_SYMBOL "›"
-set SPACEFISH_CHAR_SUFFIX ""
-set SPACEFISH_VI_MODE_SHOW false
-set SPACEFISH_GIT_STATUS_PREFIX ""
-set SPACEFISH_GIT_STATUS_SUFFIX ""
+
+set __fish_git_prompt_showdirtystate
+set __fish_git_prompt_showuntrackedfiles
+set __fish_git_prompt_showupstream auto
+set __fish_git_prompt_char_upstream_equal
+set __fish_git_prompt_char_upstream_ahead ↑
+set __fish_git_prompt_char_upstream_behind ↓
+
+set __fish_git_prompt_char_dirtystate !
+set __fish_git_prompt_char_untrackedfiles ?
+
+set __fish_git_prompt_color purple --bold
+set __fish_git_prompt_color_prefix white --bold
+set __fish_git_prompt_color_flags --bold red
 
 function fish_prompt
-    # Store the exit code of the last command
-    set -g sf_exit_code $status
-    set -g SPACEFISH_VERSION 2.7.0
+    printf '\n'
+    printf (set_color cyan --bold)'%s'(set_color normal) (prompt_pwd)
+    printf '%s' (fish_git_prompt " on  %s")
 
-    # Keep track of whether the prompt has already been opened
-    set -g sf_prompt_opened $SPACEFISH_PROMPT_FIRST_PREFIX_SHOW
-
-    if test "$SPACEFISH_PROMPT_ADD_NEWLINE" = "true"
-        echo
-    end
-
-    for i in $SPACEFISH_PROMPT_ORDER
-        eval __sf_section_$i
-    end
-    set_color normal
+    test $CMD_DURATION -gt 1000 && printf (set_color white --bold)' took '(set_color yellow)(math $CMD_DURATION/1000)'s'(set_color normal)
+    set CMD_DURATION 0
+    printf (set_color green --bold)'\n›'(set_color normal)
 end
+
 
 # abbr -g r 'ranger'
 # 
@@ -154,6 +149,8 @@ export FZF_DEFAULT_OPTS='--no-extended --multi --ansi --color 16,bg+:#343b51,hl+
 #function _hist_sync --on-event=fish_prompt
 #    history merge
 #end
+
+ 
 
 function expand_glob
     set -l tokens (eval string escape -- (commandline -ct))

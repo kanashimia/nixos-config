@@ -16,7 +16,7 @@ main = xmonad $ ewmh $ additionalKeys myConf myKeys
 
 myKeys =
     [ ((myM, xK_p), spawn "rofi -show drun -show-icons -m -4")
-    , ((myM, xK_s), scratchpadSpawnActionCustom "st -n scratchpad")
+    , ((myM, xK_s), scratchpadSpawnActionCustom "xst -n scratchpad")
     , ((myM, xK_Tab), sendMessage NextLayout)
     , ((myM, xK_space), sendMessage ToggleLayout)
     , ((myM, xK_BackSpace), spawn "vivaldi")
@@ -42,7 +42,7 @@ myConf = def
     , borderWidth = 1
     , normalBorderColor = "#676e95"
     , focusedBorderColor = "#d5d5e1"
-    , terminal = "st"
+    , terminal = "xst"
     , manageHook = myScratchHook
     , layoutHook = myLayoutHook
     }
