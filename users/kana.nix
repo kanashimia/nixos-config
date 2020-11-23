@@ -1,7 +1,7 @@
 { conf-utils, pkgs, ... }:
 
 {
-  home-manager.users.kana = {
+  home-manager.users.kana = { pkgs, lib, ... }: {
     imports = conf-utils.listFiles ../profiles;
   };
 

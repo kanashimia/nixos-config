@@ -19,18 +19,7 @@
     xorg.xev
     neofetch
     htop
-
-    gparted
-    vivaldi
-    steam
-    libreoffice
   ];
 
-  nixpkgs.config = {
-    allowUnfree = true;
-    vivaldi = {
-      proprietaryCodecs = true;
-      enableWideVine = true;
-    };
-  };
+  nixpkgs.config.allowUnfree = true;
 }
