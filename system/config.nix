@@ -1,17 +1,10 @@
-{ inputs, pkgs, conf-utils,... }:
+{ pkgs, conf-utils,... }:
 
 {
   # Import users and config files.
   imports = conf-utils.listFiles ../users ++ [
     ./pkgs.nix
     ./xorg.nix
-  ];
-
-  # Import overlays, add overlay for installing pkgs from unstable.
-  nixpkgs.overlays = map import (conf-utils.listFiles ../overlays) ++ [
-    (self: super: {
-      unstable = inputs.unstable.legacyPackages.${super.system};
-    })
   ];
 
   # Enable flake support.

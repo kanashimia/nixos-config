@@ -1,4 +1,4 @@
-{ pkgs, ...}:
+{ inputs, conf-utils, pkgs, ...}:
 
 {
   environment.systemPackages = with pkgs; [
@@ -21,5 +21,14 @@
     htop
   ];
 
+  # Allow unfree pkgs
   nixpkgs.config.allowUnfree = true;
+
+  # Import overlays, add overlay for installing pkgs from unstable.
+  nixpkgs.overlays = map import (conf-utils.listFiles ../overlays) ++ [
+    (self: super: {
+      unstable = inputs.unstable.legacyPackages.${super.system};
+    })
+  ];
+
 }
