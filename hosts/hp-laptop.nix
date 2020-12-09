@@ -1,4 +1,4 @@
-{ pkgs, lib, modulesPath, conf-utils, ... }:
+{ pkgs, lib, modulesPath, ... }:
 
 {
   boot.initrd.availableKernelModules = [
@@ -36,7 +36,7 @@
 
   services.logind = {
     extraConfig = "HandlePowerKey=hibernate";
-    lidSwitch = "suspend-then-hibernate";
+    lidSwitch = "ignore"; # "suspend-then-hibernate";
   };
   
   # Boot params and stuff.
@@ -77,6 +77,8 @@
   services.xserver.screenSection = ''
     Option "metamodes" "nvidia-auto-select +0+0 { ForceCompositionPipeline = On }"
   '';
+
+  services.autorandr.enable = true;
 
   environment.systemPackages = with pkgs; [
     ( pkgs.writeShellScriptBin "screen-toggle" ''

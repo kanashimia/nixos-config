@@ -5,11 +5,16 @@
 
   # Dependancies.
   home.packages = with pkgs; [
-    xst unstable.rofi brillo flameshot discord
+    xst unstable.rofi brillo flameshot tdesktop
   ];
+  home.sessionVariables = {
+    BROWSER = "vivaldi";
+    EDITOR = "kak";
+  };
   
   # Xmonad config.
   xsession.enable = true;
+  xsession.scriptPath = ".hm-xsession";
   xsession.windowManager.xmonad = {
     enable = true;
     enableContribAndExtras = true;

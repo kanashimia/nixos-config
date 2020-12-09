@@ -19,19 +19,16 @@ myKeys =
     , ((myM, xK_s), scratchpadSpawnActionCustom "xst -n scratchpad")
     , ((myM, xK_Tab), sendMessage NextLayout)
     , ((myM, xK_space), sendMessage ToggleLayout)
-    , ((myM, xK_BackSpace), spawn "vivaldi")
-    , ((myM, xK_bracketright), spawn "Discord")
+    , ((myM, xK_BackSpace), spawn "$BROWSER")
+    , ((myM, xK_bracketright), spawn "telegram-desktop")
     , ((myM .|. controlMask, xK_k), sendMessage MirrorExpand)
     , ((myM .|. controlMask, xK_j), sendMessage MirrorShrink)
-    , ((myM, xK_backslash), spawn "rofi-power")
-    , ((myM, xK_b), sendMessage ToggleStruts)
     , ((noM, xK_Print), spawn "flameshot gui")
     , ((noM, xF86XK_MonBrightnessUp), spawn "brillo -q -A 2 -u 100000")
     , ((noM, xF86XK_MonBrightnessDown), spawn "brillo -q -U 2 -u 100000")
     , ((noM, xF86XK_AudioRaiseVolume), spawn "amixer set Master 1%+")
     , ((noM, xF86XK_AudioLowerVolume), spawn "amixer set Master 1%-")
     , ((noM, xF86XK_AudioMute), spawn "amixer set Master toggle")
-    , ((myM, xK_F1), spawn "screen-toggle")
     ]
     where
     myM = modMask myConf
@@ -47,8 +44,8 @@ myConf = def
     , layoutHook = myLayoutHook
     }
 
-myLayoutHook = avoidStruts
-    $ smartBorders
+myLayoutHook = 
+    smartBorders
     $ toggleLayouts Full
     $ ResizableTall master delta frac []
     ||| ThreeColMid master delta frac
@@ -57,7 +54,8 @@ myLayoutHook = avoidStruts
     delta = 3/100
     frac = 5/10
 
-myScratchHook = scratchpadManageHook
+myScratchHook =
+    scratchpadManageHook
     $ RationalRect ((1-size)/2) 0 size size
     where
     size = 7/10

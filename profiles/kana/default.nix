@@ -1,9 +1,8 @@
 { conf-utils, pkgs, ... }:
 
 {
-  home-manager.users.kana = {
-    imports = conf-utils.listFiles ../profiles;
-  };
+  home-manager.users.kana.imports =
+    conf-utils.listFilesInFolders ./.;
 
   programs.fish.enable = true;
 

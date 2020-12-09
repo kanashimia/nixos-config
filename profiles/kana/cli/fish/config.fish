@@ -23,22 +23,6 @@
 #    #IFS="" paste (printf "\n\n%b" (fortune | sed "s/^/  /" | expand) | psub) (echo $anime | psub) | column -s '$'\t -t
 #    #echo -e $anime
 #end
-
-set fish_history ""
-
-#    if string match -q "*scratchpad*" (xprop -id $WINDOWID WM_CLASS)
-#    and test $LINES -gt 30 -a $COLUMNS -gt 100
-#        set -l IFS ""
-#        set -l A (fortune | sed -e "s/[[:cntrl:]]//g; s/^/  /" | expand)
-#        paste (printf "\n\n%b" $A | psub) (echo $anime | psub) | column -s '$'\t -t
-#    end
-#end
-#set FZF_DEFAULT_OPTS "--height=40"
-#set FZF_DISABLE_KEYBINDINGS "0"
-#set FZF_LEGACY_KEYBINDINGS "0"
-#set FZF_PREVIEW_DIR_CMD "exa"
-#set FZF_PREVIEW_FILE_CMD "head -n 10"
-#set FZF_TMUX_HEIGHT "40"
 set fish_color_autosuggestion "brblack" #292D3E"
 set fish_color_cancel "-r"
 set fish_color_command "green"
@@ -79,7 +63,7 @@ function fish_mode_prompt
 end
 
 set __fish_git_prompt_showdirtystate
-set __fish_git_prompt_showuntrackedfiles
+# set __fish_git_prompt_showuntrackedfiles
 set __fish_git_prompt_showupstream auto
 set __fish_git_prompt_char_upstream_equal
 set __fish_git_prompt_char_upstream_ahead ↑
@@ -93,28 +77,58 @@ set __fish_git_prompt_color_prefix white --bold
 set __fish_git_prompt_color_flags --bold red
 
 function fish_prompt
-    printf '\n'
-    printf (set_color cyan --bold)'%s'(set_color normal) (prompt_pwd)
-    printf '%s' (fish_git_prompt " on  %s")
+    set_color cyan --bold
+    printf '\n%s%s' (prompt_pwd) (fish_git_prompt ' on  %s')
 
-    test $CMD_DURATION -gt 1000 && printf (set_color white --bold)' took '(set_color yellow)(math $CMD_DURATION/1000)'s'(set_color normal)
+    if test $CMD_DURATION -gt 1000
+        set_color white --bold
+        printf ' took '
+
+        set H (math "floor($CMD_DURATION/1000/60/60%24)")
+        set M (math "floor($CMD_DURATION/1000/60%60)")
+        set S (math -s1 "$CMD_DURATION/1000%60")
+
+        set_color yellow
+        test $H -gt 0 && printf $H'h'
+        test $M -gt 0 && printf $M'm'
+        printf $S's'
+    end
+
     set CMD_DURATION 0
-    printf (set_color green --bold)'\n›'(set_color normal)
+
+    set_color green --bold
+    printf '\n›'
+    set_color normal
 end
 
+set fish_history ""
 
-# abbr -g r 'ranger'
+#    if string match -q "*scratchpad*" (xprop -id $WINDOWID WM_CLASS)
+#    and test $LINES -gt 30 -a $COLUMNS -gt 100
+#        set -l IFS ""
+#        set -l A (fortune | sed -e "s/[[:cntrl:]]//g; s/^/  /" | expand)
+#        paste (printf "\n\n%b" $A | psub) (echo $anime | psub) | column -s '$'\t -t
+#    end
+#end
+#set FZF_DEFAULT_OPTS "--height=40"
+#set FZF_DISABLE_KEYBINDINGS "0"
+#set FZF_LEGACY_KEYBINDINGS "0"
+#set FZF_PREVIEW_DIR_CMD "exa"
+#set FZF_PREVIEW_FILE_CMD "head -n 10"
+#set FZF_TMUX_HEIGHT "40"
+
+# abbr r 'ranger'
 # 
-# abbr -g g 'git'
-# abbr -g gcl 'git clone'
-# abbr -g gch 'git checkout'
-# abbr -g gc 'git commit -m'
-# abbr -g gi 'git init'
+# abbr g 'git'
+# abbr gcl 'git clone'
+# abbr gch 'git checkout'
+# abbr gc 'git commit -m'
+# abbr gi 'git init'
 # 
-# abbr -g p 'sudo pacman'
-# abbr -g ps 'sudo pacman -S'
-# abbr -g psu 'sudo pacman -Syu'
-# abbr -g pr 'sudo pacman -Rsn'
+# abbr p 'sudo pacman'
+# abbr ps 'sudo pacman -S'
+# abbr psu 'sudo pacman -Syu'
+# abbr pr 'sudo pacman -Rsn'
 
 
 # export LS_COLORS="rs=0:di=34:ln=36:mh=00:pi=40;33:so=35:do=35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=30;41:tw=30;42:ow=34;42:st=37;44:ex=32:*.tar=31:*.tgz=31:*.arc=31:*.arj=31:*.taz=31:*.lha=31:*.lz4=31:*.lzh=31:*.lzma=31:*.tlz=31:*.txz=31:*.tzo=31:*.t7z=31:*.zip=31:*.z=31:*.dz=31:*.gz=31:*.lrz=31:*.lz=31:*.lzo=31:*.xz=31:*.zst=31:*.tzst=31:*.bz2=31:*.bz=31:*.tbz=31:*.tbz2=31:*.tz=31:*.deb=31:*.rpm=31:*.jar=31:*.war=31:*.ear=31:*.sar=31:*.rar=31:*.alz=31:*.ace=31:*.zoo=31:*.cpio=31:*.7z=31:*.rz=31:*.cab=31:*.wim=31:*.swm=31:*.dwm=31:*.esd=31:*.jpg=35:*.jpeg=35:*.mjpg=35:*.mjpeg=35:*.gif=35:*.bmp=35:*.pbm=35:*.pgm=35:*.ppm=35:*.tga=35:*.xbm=35:*.xpm=35:*.tif=35:*.tiff=35:*.png=35:*.svg=35:*.svgz=35:*.mng=35:*.pcx=35:*.mov=35:*.mpg=35:*.mpeg=35:*.m2v=35:*.mkv=35:*.webm=35:*.webp=35:*.ogm=35:*.mp4=35:*.m4v=35:*.mp4v=35:*.vob=35:*.qt=35:*.nuv=35:*.wmv=35:*.asf=35:*.rm=35:*.rmvb=35:*.flc=35:*.avi=35:*.fli=35:*.flv=35:*.gl=35:*.dl=35:*.xcf=35:*.xwd=35:*.yuv=35:*.cgm=35:*.emf=35:*.ogv=35:*.ogx=35:*.aac=36:*.au=36:*.flac=36:*.m4a=36:*.mid=36:*.midi=36:*.mka=36:*.mp3=36:*.mpc=36:*.ogg=36:*.ra=36:*.wav=36:*.oga=36:*.opus=36:*.spx=36:*.xspf=36:*.djvu=33:*.doc=33:*.docx=33:*.dvi=33:*.eml=33:*.eps=33:*.fotd=33:*.odp=33:*.odt=33:*.pdf=33:*.ppt=33:*.pptx=33:*.rtf=33:*.xls=33:*.xlsx=33:*#=01;30:*~=01;30:*.tmp=01;30:*.swp=01;30:*.swo=01;30:*.swn=01;30:*.bak=01;30:*.bk=01;30:"
@@ -134,7 +148,6 @@ export FZF_DEFAULT_OPTS='--no-extended --multi --ansi --color 16,bg+:#343b51,hl+
 #export KAKOUNE_POSIX_SHELL='/bin/dash'
 
 #export EDITOR='kak'
-
 
 #export LESS_TERMCAP_mb=(set_color -o red) # begin blink
 #export LESS_TERMCAP_md=(set_color cyan) # begin bold

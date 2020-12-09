@@ -2,16 +2,16 @@
   description = "My system config";
   
   inputs = {
-    nixpkgs.url = "nixpkgs/release-20.09";
-    unstable.url = "nixpkgs/master";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-20.09";
+    unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
     manager = {
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
   
-  outputs = { nixpkgs, unstable, manager, ... }@inputs: {
-    nixosConfigurations = with nixpkgs.lib;
+  outputs = { manager, ... }@inputs: {
+    nixosConfigurations = with inputs.nixpkgs.lib;
       let
         conf-utils = import ./lib/conf-utils.nix;
         hosts = conf-utils.listHosts ./hosts;
@@ -21,7 +21,8 @@
             modules = [
               manager.nixosModules.home-manager
               (./hosts + "/${name}.nix")
-              ./system/config.nix
+              ./profiles/system
+              ./profiles/kana
             ];
             specialArgs = { inherit inputs conf-utils; };
           };

@@ -4,6 +4,9 @@
   home.packages = with pkgs; [
     vivaldi
     steam
-    libreoffice
+    libreoffice-fresh
+    qbittorrent
+    jq
+    krita
   ];
 }

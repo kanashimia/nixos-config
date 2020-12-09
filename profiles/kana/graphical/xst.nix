@@ -1,4 +1,13 @@
+{ pkgs, ... }:
+
 {
+  home.packages = with pkgs; [
+    xst
+    fira-code
+  ];
+
+  fonts.fontconfig.enable = true;
+  
   xresources.properties = {
     "st.font" = "Fira Code:pixelsize=16";
     "st.termname" = "st-256color";
