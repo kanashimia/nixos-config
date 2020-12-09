@@ -1,0 +1,2 @@
+# My nixos config.
+todo.
