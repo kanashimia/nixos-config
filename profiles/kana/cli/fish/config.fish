@@ -89,8 +89,8 @@ function fish_prompt
         set S (math -s1 "$CMD_DURATION/1000%60")
 
         set_color yellow
-        test $H -gt 0 && printf $H'h'
-        test $M -gt 0 && printf $M'm'
+        test $H -gt 0 && printf $H'h '
+        test $M -gt 0 && printf $M'm '
         printf $S's'
     end
 

@@ -1,10 +1,18 @@
 { pkgs, ... }:
 
+let
+xst = pkgs.xst.overrideAttrs (old: {
+  buildInputs = old.buildInputs ++ [ pkgs.harfbuzz ];
+  src = pkgs.fetchFromGitHub {
+    owner = "arkhan";
+    repo = "xst";
+    rev = "076796c028369d80e2932438233c8246b98dc35c";
+    sha256 = "+qPE4+BRL3QDzUpak22TiiLSqFWd1t/GRWxYuEDwekE=";
+  };
+});
+in
 {
-  home.packages = with pkgs; [
-    xst
-    fira-code
-  ];
+  home.packages = with pkgs; [ xst fira-code ];
 
   fonts.fontconfig.enable = true;
   

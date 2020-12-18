@@ -2,6 +2,7 @@
 
 {
   # home.sessionVariables
+  home.packages = with pkgs; [ tig ];
   programs.git = {
     enable = true;
     userEmail = "nikita20001116@gmail.com";

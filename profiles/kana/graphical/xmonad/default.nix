@@ -5,7 +5,7 @@
 
   # Dependancies.
   home.packages = with pkgs; [
-    xst unstable.rofi brillo flameshot tdesktop
+    unstable.rofi brillo flameshot tdesktop
   ];
   home.sessionVariables = {
     BROWSER = "vivaldi";
@@ -37,6 +37,7 @@
     options = [
       "caps:swapescape"
       "grp:rctrl_rshift_toggle"
+      "compose:menu"
     ];
   };
   
