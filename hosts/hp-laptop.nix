@@ -55,12 +55,6 @@
   fileSystems."/" = { device = "/dev/disk/by-label/nixos"; };
   fileSystems."/boot" = { device = "/dev/disk/by-label/boot"; };
 
-  swapDevices = [{
-    device = "/dev/disk/by-label/swap";
-    priority = 10;
-    size = null;
-  }];
-
   # Oh no.
   services.xserver.videoDrivers = [ "nvidia" ];
 

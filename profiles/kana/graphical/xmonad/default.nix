@@ -33,7 +33,7 @@
   services.unclutter.enable = true;
 
   home.keyboard = {
-    layout = "us,ru";
+    layout = "us,ru,ua";
     options = [
       "caps:swapescape"
       "grp:rctrl_rshift_toggle"

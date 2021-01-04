@@ -11,4 +11,8 @@
       credential.helper = "cache --timeout=3600";
     };
   };
+  xdg.configFile."tig/config".text = ''
+    color cursor default black bold
+    color title-focus white default bold
+  '';
 }

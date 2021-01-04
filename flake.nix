@@ -4,10 +4,7 @@
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-20.09";
     unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
-    manager = {
-      url = "github:nix-community/home-manager";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
+    manager.url = "github:nix-community/home-manager/release-20.09";
   };
   
   outputs = { manager, ... }@inputs: {
