@@ -5,11 +5,6 @@ vivaldi = pkgs.vivaldi.override {
   proprietaryCodecs = true;
   enableWidevine = true;
 };
-steam = pkgs.steam.override {
-  extraPkgs = pkgs: with pkgs; [
-    noto-fonts noto-fonts-cjk
-  ];
-};
 neofetch = pkgs.neofetch.overrideAttrs (old: {
   src = pkgs.fetchFromGitHub {
     owner = "dylanaraps";
@@ -22,14 +17,12 @@ in
 {
   home.packages = with pkgs; [
     vivaldi
-    steam
-    libreoffice-fresh
+    #libreoffice-fresh
     qbittorrent
     jq
-    krita
     neofetch
     zathura
-    feh
+    #gnome3.nautilus
   ];
   xdg.mimeApps.enable = true;
   xdg.mimeApps.defaultApplications = {

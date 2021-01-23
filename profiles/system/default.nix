@@ -11,14 +11,14 @@
   '';
 
   # Automatically optimize /nix/store
-  # nix.autoOptimiseStore = true;
+  nix.autoOptimiseStore = true;
 
   # Automatically delete old generations.
-  # nix.gc = {
-  #   automatic = true;
-  #   dates = "weekly";
-  #   options = "--delete-older-than 30d";
-  # };
+  nix.gc = {
+    automatic = true;
+    dates = "weekly";
+    options = "--delete-older-than 30d";
+  };
 
   # Home manager config.
   home-manager.useGlobalPkgs = true;

@@ -5,7 +5,7 @@
     enable = true;
     interactiveShellInit = builtins.readFile ./config.fish;
     shellAbbrs = {
-      syu = "sudo nixos-rebuild switch";
+      syu = "sudo nixos-rebuild switch -L";
       syr = "sudo nixos-rebuild switch --rollback";
       sys = "nix search nixpkgs";
 

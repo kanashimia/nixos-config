@@ -1,24 +1,16 @@
 {
-  # Touchpad configuration.
-  # Need MatchIsTouchpad "on" there,
-  # otherwise it would change mouse settings too.
+  # Mouse and touchpad configuration.
   services.xserver.libinput = {
     enable = true;
-    naturalScrolling = true;
-    accelSpeed = "-0.1";
-    additionalOptions = ''MatchIsTouchpad "on"'';
+    touchpad = {
+      accelSpeed = "-0.1";
+      naturalScrolling = true;
+    };
+    mouse = {
+      accelSpeed = "-0.75";
+      accelProfile = "flat";
+    };
   };
-  
-  # Mouse config.
-  services.xserver.config = ''
-    Section "InputClass"
-      Identifier     "My mouse"
-      Driver         "libinput"
-      MatchIsPointer "on"
-      Option "AccelSpeed" "-0.5"
-      Option "AccelProfile" "flat"
-    EndSection
-  '';
 
   # Keyboard config.
   services.xserver = {

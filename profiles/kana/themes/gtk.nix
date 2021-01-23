@@ -1,4 +1,4 @@
-{ pkgs, stdenv, ... }:
+{ pkgs, ... }:
 
 let
 colors = pkgs.writeTextFile {
@@ -17,7 +17,7 @@ colors = pkgs.writeTextFile {
 palenight-gtk = pkgs.stdenv.mkDerivation {
   name = "palenight-gtk";
 
-  src = pkgs.unstable.materia-theme.src;
+  src = pkgs.materia-theme.src;
 
   nativeBuildInputs = with pkgs; [
     sassc
@@ -50,7 +50,6 @@ palenight-gtk = pkgs.stdenv.mkDerivation {
     rm $out/share/themes/*/COPYING
   '';
 };
-
 in
 {
   gtk = {

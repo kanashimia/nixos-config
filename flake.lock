@@ -3,36 +3,34 @@
     "manager": {
       "inputs": {
         "nixpkgs": [
-          "nixpkgs"
+          "pkgs"
         ]
       },
       "locked": {
-        "lastModified": 1609010567,
-        "narHash": "sha256-N6WslRAtrvCPCpQnxQqo+VlSivX/KylL9Xy/OZr0kMg=",
+        "lastModified": 1611270612,
+        "narHash": "sha256-tLQWDaKnrRTbkqm1am5fJM/eYNJUt/Mpr+6F7h28wNw=",
         "owner": "nix-community",
         "repo": "home-manager",
-        "rev": "22f6736e628958f05222ddaadd7df7818fe8f59d",
+        "rev": "2c0e3f61da903613cc316cb992c8c07d92e1d186",
         "type": "github"
       },
       "original": {
         "owner": "nix-community",
-        "ref": "release-20.09",
         "repo": "home-manager",
         "type": "github"
       }
     },
-    "nixpkgs": {
+    "pkgs": {
       "locked": {
-        "lastModified": 1609725427,
-        "narHash": "sha256-Yn97AVjFvQunGmwK3nnr7LihzMnp72jyaYNRRaJvAZ4=",
-        "owner": "NixOS",
+        "lastModified": 1611420295,
+        "narHash": "sha256-515H0urn0v9mhkwuub1jvRiutv4GZLYk1p5+f1TjpEA=",
+        "owner": "kanashimia",
         "repo": "nixpkgs",
-        "rev": "c5c6009fb436efe5732e07cd0e5692f495321752",
+        "rev": "99b2774347350853f39cdc43f4f2679a75e0fd55",
         "type": "github"
       },
       "original": {
-        "owner": "NixOS",
-        "ref": "nixos-20.09",
+        "owner": "kanashimia",
         "repo": "nixpkgs",
         "type": "github"
       }
@@ -40,24 +38,7 @@
     "root": {
       "inputs": {
         "manager": "manager",
-        "nixpkgs": "nixpkgs",
-        "unstable": "unstable"
-      }
-    },
-    "unstable": {
-      "locked": {
-        "lastModified": 1609580981,
-        "narHash": "sha256-esnPRxHdqKTdOJyEol3zOJ7/atfvNyKFW1IN+ejzhfI=",
-        "owner": "NixOS",
-        "repo": "nixpkgs",
-        "rev": "56bb1b0f7a33e5d487dc2bf2e846794f4dcb4d01",
-        "type": "github"
-      },
-      "original": {
-        "owner": "NixOS",
-        "ref": "nixos-unstable",
-        "repo": "nixpkgs",
-        "type": "github"
+        "pkgs": "pkgs"
       }
     }
   },

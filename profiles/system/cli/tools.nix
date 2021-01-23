@@ -21,5 +21,10 @@
     inxi
     neofetch
     htop
+    acpi
+    iasl
+
+    valgrind
+    gdb
   ];
 }

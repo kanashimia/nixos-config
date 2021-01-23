@@ -4,7 +4,7 @@
   services.xserver.displayManager.lightdm = {
     background = pkgs.nixos-artwork.wallpapers.nineish-dark-gray.gnomeFilePath;
     greeters.gtk = {
-      indicators = [];
+      indicators = [ "~spacer" "~session" "~language" "~power" ];
       enable = true;
       cursorTheme = {
         package = pkgs.breeze-qt5;

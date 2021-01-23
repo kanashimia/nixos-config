@@ -20,7 +20,7 @@
     '';
   }];
 
-  # Enable sound.
-  sound.enable = true;
-  hardware.pulseaudio.enable = true;
+  # Automatic monitor configuration.
+  services.autorandr.enable = true;
+
 }

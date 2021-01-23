@@ -51,7 +51,7 @@ listview {
 }
 
 element-icon {
-    size: 2.4ch;
+    size: 32px;
 }
 
 element-text {

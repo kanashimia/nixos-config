@@ -1,11 +1,9 @@
 { pkgs, ... }:
 
 {
-  # imports = [ ../xorg ];
-
   # Dependancies.
   home.packages = with pkgs; [
-    unstable.rofi brillo flameshot tdesktop
+    brillo flameshot tdesktop
   ];
   home.sessionVariables = {
     BROWSER = "vivaldi";
@@ -21,6 +19,7 @@
     config = ./xmonad.hs;
   };
   xsession.initExtra = ''
+    ${pkgs.autorandr}/bin/autorandr -c &
     ${pkgs.polkit_gnome}/libexec/polkit-gnome-authentication-agent-1 &
   '';
 
@@ -40,9 +39,4 @@
       "compose:menu"
     ];
   };
-  
- # home.file.".xinitrc".text = ''
- #   #!/bin/sh
- #   ${pkgs.runtimeShell} $HOME/.xsession
- # '';
 }

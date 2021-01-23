@@ -3,9 +3,11 @@
 {
   programs.rofi = {
     enable = true;
-    package = pkgs.unstable.rofi;
     theme = ./theme.rasi;
     font = "Fira Code 12";
-    extraConfig = "rofi.modi: drun,run,window";
+    extraConfig = ''
+      rofi.modi: drun,run,window
+      rofi.sort: true
+    '';
   };
 }

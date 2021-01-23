@@ -12,8 +12,15 @@
   };
   boot.consoleLogLevel = 3;
 
+  # boot.kernelPackages = pkgs.linuxPackages_latest;
+
   # Enable proprietary non-free garbage.
   hardware.enableRedistributableFirmware = true;
+
+  hardware.cpu.intel.updateMicrocode = true;
+
+  # Enable SysRq key for unexpected situations.
+  boot.kernel.sysctl."kernel.sysrq" = 1;
 
   # Please, please never buy HP laptops,
   # especially if you are going to be using linux,
@@ -27,6 +34,9 @@
   #
   # Edit: Ah fuck, even this doesen't work anymore.
   # I'll keep it for historical reference.
+  #
+  # Wait it works again? Like wth.
+  # Also yes, it is indeed a problem with their DSDT
   systemd.services.fuck-hp = {
     enable = false;
     description = "Fuck HP";
@@ -41,19 +51,23 @@
   
   # Boot params and stuff.
   boot.kernelParams = [ "quiet" ];
+  # boot.kernelParams = [ "snd_hda_intel.model=hp-mute-led-mic3" ];
   boot.initrd.kernelModules = [ "kvm-intel" ];
-  boot.blacklistedKernelModules = [ ];
-  boot.extraModulePackages = [ ];
+  #boot.blacklistedKernelModules = [ ];
+  #boot.extraModulePackages = [ ];
   
   # Networking configuration.
   networking.networkmanager.enable = true;
   networking.hostName = "hp-laptop";
-  networking.networkmanager.wifi.backend = "iwd";
   networking.dhcpcd.enable = false;
   networking.useDHCP = false;
-  
-  fileSystems."/" = { device = "/dev/disk/by-label/nixos"; };
-  fileSystems."/boot" = { device = "/dev/disk/by-label/boot"; };
+
+  # Drives.
+  fileSystems."/".label = "nixos";
+  fileSystems."/boot".label = "boot";
+
+  # Swap drive.
+  swapDevices = [{ label = "swap"; }];
 
   # Oh no.
   services.xserver.videoDrivers = [ "nvidia" ];
@@ -72,25 +86,13 @@
     Option "metamodes" "nvidia-auto-select +0+0 { ForceCompositionPipeline = On }"
   '';
 
-  services.autorandr.enable = true;
-
-  environment.systemPackages = with pkgs; [
-    ( pkgs.writeShellScriptBin "screen-toggle" ''
-        MONITORS=$(xrandr --listactivemonitors | wc -l)
-        STATE=$(test $MONITORS -gt 2 && echo '--off' || echo '--auto')
-        xrandr --output eDP-1-1 $STATE
-      ''
-    )
-  ];
-
   # Laptop powersaving, or something.
   services.tlp.enable = true;
   powerManagement.cpuFreqGovernor = lib.mkDefault "powersave";
 
   # Steam related fixes.
-  hardware.opengl = {
-    driSupport32Bit = true;
-    extraPackages32 = with pkgs.pkgsi686Linux; [ libva ];
-  };
+  hardware.opengl.driSupport32Bit = true;
   hardware.pulseaudio.support32Bit = true;
+
+  hardware.brillo.enable = true;
 }  

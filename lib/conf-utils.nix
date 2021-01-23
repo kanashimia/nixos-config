@@ -1,13 +1,13 @@
-rec {
-  listHosts = with builtins; path:
+with builtins; rec {
+  listHosts = path:
     map (fname: head (match "(.*)\\.nix" fname))
       (attrNames (readDir path));
 
-  listFiles = with builtins; path:
+  listFiles = path:
     map (file: path + "/${file}")
       (filter (x: x != "default.nix")
         (attrNames (readDir path)));
 
-  listFilesInFolders = with builtins; path:
+  listFilesInFolders = path:
     concatMap listFiles (listFiles path);
 }

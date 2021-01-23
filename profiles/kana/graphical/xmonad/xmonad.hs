@@ -11,6 +11,7 @@ import XMonad.Hooks.ManageDocks
 import Graphics.X11.ExtraTypes.XF86
 import XMonad.Actions.Warp
 import XMonad.Layout.NoBorders
+import XMonad.Hooks.ManageHelpers
 
 main = xmonad $ ewmh $ additionalKeys myConf myKeys
 
@@ -34,13 +35,21 @@ myKeys =
     myM = modMask myConf
     noM = noModMask
 
+isUtility = isInProperty "_NET_WM_WINDOW_TYPE" "_NET_WM_WINDOW_TYPE_UTILITY"
+
+myFloatHook = composeOne
+    [ isDialog -?> doCenterFloat
+    , isUtility -?> doFloat
+    , className =? "QjackCtl" -?> doFloat
+    ]
+
 myConf = def
     { modMask = mod4Mask
     , borderWidth = 1
     , normalBorderColor = "#676e95"
     , focusedBorderColor = "#d5d5e1"
     , terminal = "xst"
-    , manageHook = myScratchHook
+    , manageHook = myScratchHook <> myFloatHook
     , layoutHook = myLayoutHook
     }
 
