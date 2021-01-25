@@ -13,6 +13,7 @@
 
     nix-index
     hydra-check
+    nix-du
 
     linuxPackages.perf
 
@@ -23,6 +24,7 @@
     htop
     acpi
     iasl
+    iw
 
     valgrind
     gdb

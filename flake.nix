@@ -2,7 +2,7 @@
   description = "My system config";
   
   inputs = {
-    pkgs.url = "github:kanashimia/nixpkgs";
+    pkgs.url = "github:NixOS/nixpkgs";
     manager = {
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "pkgs";

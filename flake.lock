@@ -22,15 +22,15 @@
     },
     "pkgs": {
       "locked": {
-        "lastModified": 1611420295,
-        "narHash": "sha256-515H0urn0v9mhkwuub1jvRiutv4GZLYk1p5+f1TjpEA=",
-        "owner": "kanashimia",
+        "lastModified": 1611517406,
+        "narHash": "sha256-HjVS3yM+iR/F8HQQS+mq81fxiAHQde4ke+/mHnoZrmI=",
+        "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "99b2774347350853f39cdc43f4f2679a75e0fd55",
+        "rev": "ab757a382c3fb1461186ddf55d87923451a964ed",
         "type": "github"
       },
       "original": {
-        "owner": "kanashimia",
+        "owner": "NixOS",
         "repo": "nixpkgs",
         "type": "github"
       }
