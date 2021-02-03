@@ -17,4 +17,11 @@
     autoRepeatInterval = 30;
     autoRepeatDelay = 300;
   };
+
+  # Layout config.
+  services.xserver = {
+    xkbOptions = "caps:swapescape,grp:rctrl_rshift_toggle,compose:menu";
+    layout = "us,ru";
+    xkbModel = "pc86";
+  };
 }

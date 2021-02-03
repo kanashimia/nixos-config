@@ -1,4 +1,4 @@
-{ pkgs, conf-utils,... }:
+{ pkgs, conf-utils, ... }:
 
 {
   # Import users and config files.
@@ -16,13 +16,9 @@
   # Automatically delete old generations.
   nix.gc = {
     automatic = true;
-    dates = "weekly";
-    options = "--delete-older-than 30d";
+    dates = "daily";
+    options = "--delete-older-than 7d";
   };
-
-  # Home manager config.
-  home-manager.useGlobalPkgs = true;
-  home-manager.useUserPackages = true;
 
   # Default locale.
   i18n.defaultLocale = "en_IE.UTF-8";
