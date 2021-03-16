@@ -1,45 +1,12 @@
 {
   "nodes": {
-    "nix": {
-      "inputs": {
-        "nixpkgs": "nixpkgs"
-      },
-      "locked": {
-        "lastModified": 1612372824,
-        "narHash": "sha256-zjAya4GPTvdespzY/k4HJEfPM1umzoCIsgPtuUENjTg=",
-        "owner": "nixos",
-        "repo": "nix",
-        "rev": "c8937ba9f34174a0ddeb1137b523e31c4acfb6af",
-        "type": "github"
-      },
-      "original": {
-        "owner": "nixos",
-        "repo": "nix",
-        "type": "github"
-      }
-    },
     "nixpkgs": {
       "locked": {
-        "lastModified": 1602702596,
-        "narHash": "sha256-fqJ4UgOb4ZUnCDIapDb4gCrtAah5Rnr2/At3IzMitig=",
-        "owner": "NixOS",
-        "repo": "nixpkgs",
-        "rev": "ad0d20345219790533ebe06571f82ed6b034db31",
-        "type": "github"
-      },
-      "original": {
-        "id": "nixpkgs",
-        "ref": "nixos-20.09-small",
-        "type": "indirect"
-      }
-    },
-    "nixpkgs_2": {
-      "locked": {
-        "lastModified": 1612282043,
-        "narHash": "sha256-MzoN8nI1eydYHuWBAXBcw9Na0XndZHa/VjoxZRWSX68=",
+        "lastModified": 1615532953,
+        "narHash": "sha256-SWpaGjrp/INzorEqMz3HLi6Uuk9I0KAn4YS8B4n3q5g=",
         "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "fab6fcdceb2560a4ab943830a2b1632458c7a6ff",
+        "rev": "916ee862e87ac5ee2439f2fb7856386b4dc906ae",
         "type": "github"
       },
       "original": {
@@ -51,8 +18,24 @@
     },
     "root": {
       "inputs": {
-        "nix": "nix",
-        "nixpkgs": "nixpkgs_2"
+        "nixpkgs": "nixpkgs",
+        "scroll": "scroll"
+      }
+    },
+    "scroll": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1611752773,
+        "narHash": "sha256-TIY6WnsJ+1HHc0esvI1vYSlI5MXPXe7I6rbXXnffNIA=",
+        "ref": "master",
+        "rev": "51ee387dd3860b13baaca5ef23392f7282e9bbdc",
+        "revCount": 239,
+        "type": "git",
+        "url": "https://git.suckless.org/scroll"
+      },
+      "original": {
+        "type": "git",
+        "url": "https://git.suckless.org/scroll"
       }
     }
   },
