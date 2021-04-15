@@ -1,12 +1,10 @@
 { pkgs, ... }:
 
 {
-  users.mutableUsers = false;
-
-  users.users.root.hashedPassword = pkgs.lib.fileContents ./password;
+  users.users.root.initialHashedPassword = pkgs.lib.fileContents ./password;
 
   users.users.kanashimia = {
-    uid = 1001;
+    uid = 1000;
     description = "Kanashimia";
     isNormalUser = true;
     extraGroups = [
@@ -14,10 +12,10 @@
       "video"
       "audio"
       "jackaudio"
-      # "realtime"
       "docker"
+      "adbusers"
     ];
-    hashedPassword = pkgs.lib.fileContents ./password;
+    initialHashedPassword = pkgs.lib.fileContents ./password;
   };
 
   users.motd = ''

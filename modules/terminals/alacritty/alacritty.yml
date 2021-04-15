@@ -176,11 +176,11 @@ window:
 #draw_bold_text_with_bright_colors: false
 
 # Colors (Tomorrow Night)
-#colors:
+colors:
   # Default colors
-  #primary:
-  #  background: '#1d1f21'
-  #  foreground: '#c5c8c6'
+  primary:
+    background: '@background@'
+    foreground: '@foreground@'
 
     # Bright and dim foreground colors
     #
@@ -267,26 +267,26 @@ window:
   #  background: CellForeground
 
   # Normal colors
-  #normal:
-  #  black:   '#1d1f21'
-  #  red:     '#cc6666'
-  #  green:   '#b5bd68'
-  #  yellow:  '#f0c674'
-  #  blue:    '#81a2be'
-  #  magenta: '#b294bb'
-  #  cyan:    '#8abeb7'
-  #  white:   '#c5c8c6'
+  normal:
+    black:   '@black@'
+    red:     '@red@'
+    green:   '@green@'
+    yellow:  '@yellow@'
+    blue:    '@blue@'
+    magenta: '@purple@'
+    cyan:    '@cyan@'
+    white:   '@white@'
 
   # Bright colors
-  #bright:
-  #  black:   '#666666'
-  #  red:     '#d54e53'
-  #  green:   '#b9ca4a'
-  #  yellow:  '#e7c547'
-  #  blue:    '#7aa6da'
-  #  magenta: '#c397d8'
-  #  cyan:    '#70c0b1'
-  #  white:   '#eaeaea'
+  bright:
+    black:   '@blackBr@'
+    red:     '@redBr@'
+    green:   '@greenBr@'
+    yellow:  '@yellowBr@'
+    blue:    '@blueBr@'
+    magenta: '@purpleBr@'
+    cyan:    '@cyanBr@'
+    white:   '@whiteBr@'
 
   # Dim colors
   #
@@ -721,7 +721,7 @@ window:
 #
 # If the same trigger is assigned to multiple actions, all of them are executed
 # in the order they were defined in.
-#key_bindings:
+key_bindings:
   #- { key: Paste,                                       action: Paste          }
   #- { key: Copy,                                        action: Copy           }
   #- { key: L,         mods: Control,                    action: ClearLogNotice }
@@ -799,7 +799,8 @@ window:
   #- { key: F,              mods: Control|Shift, mode: ~Search,    action: SearchForward    }
   #- { key: B,              mods: Control|Shift, mode: ~Search,    action: SearchBackward   }
   #- { key: C,              mods: Control|Shift, mode: Vi|~Search, action: ClearSelection   }
-  #- { key: Insert,         mods: Shift,                           action: PasteSelection   }
+  - { key: Insert,         mods: Shift,                             action: Paste   }
+  - { key: Insert,         mods: Control,                           action: Copy    }
   #- { key: Key0,           mods: Control,                         action: ResetFontSize    }
   #- { key: Equals,         mods: Control,                         action: IncreaseFontSize }
   #- { key: Plus,           mods: Control,                         action: IncreaseFontSize }

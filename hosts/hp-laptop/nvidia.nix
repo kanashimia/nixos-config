@@ -1,8 +1,8 @@
-{ pkgs, ... }:
-
 {
   # Oh no.
   services.xserver.videoDrivers = [ "nvidia" ];
+
+  # For "amazing" intel + nvidia combo.
   hardware.nvidia.modesetting.enable = true;
   hardware.nvidia.prime = {
     sync.enable = true;

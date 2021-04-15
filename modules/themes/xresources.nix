@@ -20,12 +20,6 @@ config = pkgs.writeText "config" ''
   *.color13: #${colors.purpleBr}
   *.color14: #${colors.cyanBr}
   *.color15: #${colors.whiteBr}
-  *.color16: #ff0000
-  *.color17: #ff0000
-  *.color18: #ff0000
-  *.color19: #ff0000
-  *.color20: #ff0000
-  *.color21: #ff0000
   Xcursor.theme: breeze_cursors
 '';
 in

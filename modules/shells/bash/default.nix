@@ -3,10 +3,10 @@
 {
   programs.bash.promptInit = pkgs.lib.readFile (pkgs.substituteAll {
     src = ./prompt.sh;
-    inherit (pkgs) gitstatus;
+    gitstatus = "${pkgs.gitstatus}/gitstatus.plugin.sh";
   });
 
-  environment.systemPackages = with pkgs; [ fzf ];
+  environment.systemPackages = with pkgs; [ gitstatus fzf ];
 
   programs.bash.interactiveShellInit = ''
     source ${pkgs.fzf}/share/fzf/key-bindings.bash

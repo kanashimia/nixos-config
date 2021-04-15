@@ -1,0 +1,108 @@
+/* Options.
+---------------------------------------
+*/
+
+configuration {
+    display-drun: "|||>";
+    display-run: "||>";
+    display-window: "<|>";
+    font: "Fira Code 12";
+    modi: "drun";
+}
+
+/* Colors.
+---------------------------------------
+*/
+
+* {
+    --background-color: @background@;
+    --foreground-color: @foreground@;
+    --selection-color: @backgroundBr@;
+    --window-border-color: @foregroundBr@;
+}
+
+* {
+    background-color: var(--background-color);
+    border-color: var(--window-border-color);
+    text-color: var(--foreground-color);
+}
+
+element selected {
+    background-color: var(--selection-color);
+}
+
+/* Borders.
+---------------------------------------
+*/
+
+window {
+    border: 1px;
+}
+
+inputbar {
+    border: 0 0 1px 0;
+}
+
+prompt {
+    border: 0 0 0 1px;
+}
+
+element {
+    border: 0 0 1px 0;
+}
+
+listview {
+    margin: 0 0 -1px 0;
+}
+
+/* Padding.
+---------------------------------------
+*/
+
+prompt, entry {
+    padding: 1ch;
+}
+
+element-text {
+    padding: 1ch 0px;
+}
+
+element {
+    padding: 0 0.5ch;
+}
+
+/* Size position, etc.
+---------------------------------------
+*/
+
+* {
+    spacing: 0;
+}
+
+element-icon {
+    size: 3ch;
+}
+
+window {
+    location: center;
+    orientation: vertical;
+    width: 30%;
+    y-offset: -20%;
+}
+
+/* Misc.
+---------------------------------------
+*/
+
+inputbar {
+    children: [entry,prompt];
+}
+
+listview {
+    cycle: false;
+    fixed-height: false;
+}
+
+element-text {
+    highlight: none;
+}

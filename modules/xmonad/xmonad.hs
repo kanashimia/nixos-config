@@ -1,5 +1,3 @@
-{-# LANGUAGE OverloadedStrings #-}
-
 import XMonad
 import XMonad.Hooks.DynamicLog
 import XMonad.Hooks.EwmhDesktops
@@ -9,50 +7,51 @@ import XMonad.StackSet
 import XMonad.Util.EZConfig
 import XMonad.Util.Scratchpad
 import XMonad.Hooks.ManageDocks
-import Graphics.X11.ExtraTypes.XF86
 import XMonad.Actions.Warp
 import XMonad.Layout.NoBorders
 import XMonad.Hooks.ManageHelpers
-import System.CPU
-import Data.Maybe
+import XMonad.Util.Run
 
-main = launch . ewmh . myKeys =<< myModKeyHook myConf
+main = launch $ ewmh $ myKeys myConf
+
+run name app = spawn $ unwords
+    [ "systemd-run --user --scope --collect --quiet"
+    , "--unit", name ++ "-$(systemd-id128 new)"
+    , "systemd-cat --identifier", name, app
+    ]
 
 myKeys = flip additionalKeysP
-    [ ("M-p", spawn "@search@")
-    , ("M-]", spawn "@chat@")
-    , ("M-<Backspace>", spawn "@browser@")
+    [ ("M-p", run "search" "@search@")
+    , ("M-]", run "chat" "@chat@")
+    , ("M-[", run "mail" "@mail@")
+    , ("M-S-<Return>", run "terminal" "@terminal@")
+    , ("M-<Backspace>", run "browser" "@browser@")
     , ("M-q", restart "xmonad" True)
-    , ("<Print>", spawn "@screenshot@")
-    , ("<XF86AudioRaiseVolume>", spawn "amixer set Master 1%+")
-    , ("<XF86AudioLowerVolume>", spawn "amixer set Master 1%-")
-    , ("<XF86AudioMute>", spawn "amixer set Master toggle")
+    , ("<Print>", run "screenshot" "@screenshot@")
+    , ("<XF86AudioRaiseVolume>", run "sound" "amixer set Master -q 1%+")
+    , ("<XF86AudioLowerVolume>", run "sound" "amixer set Master -q 1%-")
+    , ("<XF86AudioMute>", run "sound" "amixer set Master -q toggle")
     ]
 
 isUtility = isInProperty "_NET_WM_WINDOW_TYPE" "_NET_WM_WINDOW_TYPE_UTILITY"
 
-myFloatHook = composeOne
+myManageHook = composeOne
     [ isDialog -?> doCenterFloat
     , isUtility -?> doFloat
-    , className =? "QjackCtl" -?> doFloat
+    , isFullscreen -?> doFloat
     ]
 
-myModKeyHook conf = do
-    cpuFlags <- map flags <$> getCPUs
-    let hypervised = or $ elem "hypervisor" <$> catMaybes cpuFlags
-    pure $ conf { modMask = mod4Mask }
-
 myConf = def
-    { borderWidth = 1
+    { modMask = if "@virtualised@" == "1" then mod1Mask else mod4Mask
+    , borderWidth = 1
     , normalBorderColor = "#676e95"
     , focusedBorderColor = "#d5d5e1"
-    , terminal = "@terminal@"
-    , manageHook = myFloatHook
+    , manageHook = myManageHook
     , layoutHook = myLayoutHook
+    , handleEventHook = fullscreenEventHook
     }
 
-myLayoutHook = 
-    smartBorders
+myLayoutHook = smartBorders
     $ toggleLayouts Full
     $ Tall master delta frac
     ||| ThreeColMid master delta frac
@@ -60,9 +59,3 @@ myLayoutHook =
     master = 1
     delta = 3/100
     frac = 5/10
-
-myScratchHook =
-    scratchpadManageHook
-    $ RationalRect ((1-size)/2) 0 size size
-    where
-    size = 7/10

@@ -7,10 +7,10 @@
   #   alsa.enable = true;
   #   alsa.support32Bit = true;
   #   jack.enable = true;
-  #   pulse.enable = true;
+  #   # pulse.enable = true;
   # };
 
-  security.rtkit.enable = true;
+  # security.rtkit.enable = true;
   systemd.services.rtkit-daemon.serviceConfig.ExecStart = [
     ""
     "${pkgs.rtkit}/libexec/rtkit-daemon --our-realtime-priority=95 --max-realtime-priority=90"
@@ -28,7 +28,7 @@
   sound.enable = true;
   hardware.pulseaudio.enable = true;
 
-  # # Enable JACK
+  ## Enable JACK
   services.jack = {
     jackd.enable = true;
     alsa.enable = false;
@@ -38,7 +38,6 @@
   services.jack.jackd.extraOptions = [ "-R" "-P99" "-dalsa" ];
 
   environment.systemPackages = with pkgs; [
-    patchage # qjackctl pavucontrol
+    patchage pavucontrol # qjackctl
   ];
-
 }

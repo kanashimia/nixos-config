@@ -18,9 +18,6 @@
   fileSystems."/".label = "nixos";
   fileSystems."/boot".label = "boot";
 
-  # Bleeding edge ha, ha.
-  boot.kernelPackages = pkgs.linuxPackages_latest;
-
   # Enable proprietary non-free garbage.
   hardware.enableRedistributableFirmware = true;
 

@@ -1,12 +1,43 @@
 {
   "nodes": {
+    "home-manager": {
+      "inputs": {
+        "nixpkgs": "nixpkgs"
+      },
+      "locked": {
+        "lastModified": 1618469593,
+        "narHash": "sha256-fNdt+Q3irnT3pId7PKSSVeR8/9inBrAEg4gpItoRowU=",
+        "owner": "nix-community",
+        "repo": "home-manager",
+        "rev": "ebbbd4f2b50703409543941e7445138dc1e7392e",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nix-community",
+        "repo": "home-manager",
+        "type": "github"
+      }
+    },
     "nixpkgs": {
       "locked": {
-        "lastModified": 1615532953,
-        "narHash": "sha256-SWpaGjrp/INzorEqMz3HLi6Uuk9I0KAn4YS8B4n3q5g=",
+        "lastModified": 1618251784,
+        "narHash": "sha256-/IG7op2hUVnjzKt2UXL152+YsL0gdPakk6/RxondIJ0=",
+        "path": "/nix/store/mz3jwbsj8az7vqic5jx2phj777yfjgh5-source",
+        "rev": "311ceed827f531f88f46222920cd1ebb2c101f73",
+        "type": "path"
+      },
+      "original": {
+        "id": "nixpkgs",
+        "type": "indirect"
+      }
+    },
+    "nixpkgs_2": {
+      "locked": {
+        "lastModified": 1618343055,
+        "narHash": "sha256-yux3woyNtMt6ynYRq7+DYe19CC+SoI/LJW+zSJd0UOs=",
         "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "916ee862e87ac5ee2439f2fb7856386b4dc906ae",
+        "rev": "e019872af81e4013fd518fcacfba74b1de21a50e",
         "type": "github"
       },
       "original": {
@@ -18,24 +49,8 @@
     },
     "root": {
       "inputs": {
-        "nixpkgs": "nixpkgs",
-        "scroll": "scroll"
-      }
-    },
-    "scroll": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1611752773,
-        "narHash": "sha256-TIY6WnsJ+1HHc0esvI1vYSlI5MXPXe7I6rbXXnffNIA=",
-        "ref": "master",
-        "rev": "51ee387dd3860b13baaca5ef23392f7282e9bbdc",
-        "revCount": 239,
-        "type": "git",
-        "url": "https://git.suckless.org/scroll"
-      },
-      "original": {
-        "type": "git",
-        "url": "https://git.suckless.org/scroll"
+        "home-manager": "home-manager",
+        "nixpkgs": "nixpkgs_2"
       }
     }
   },

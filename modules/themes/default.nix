@@ -4,44 +4,57 @@ with lib;
 
 let
   cfg = config.themes;
-  defaultColors = {
+  defaultColors = rec {
     foreground = "#d5d5e1";
-    background = "#202331";
+    foregroundBr = "#acaccd";
 
-    # black = "#4e5471";
-    # red = "#f07178";
-    # green = "#c3e88d";
-    # yellow = "#ffc47c";
-    # blue = "#82aaff";
-    # purple = "#c792ea";
-    # cyan = "#89ddff";
-    # white = "#d5d5e1";
-    # 
-    # blackBr = "#676e95";
-    # redBr = "#f07178";
-    # greenBr = "#c3e88d";
-    # yellowBr = "#ffc47c";
-    # blueBr = "#82aaff";
-    # purpleBr = "#c792ea";
-    # cyanBr = "#89ddff";
-    # whiteBr = "#d5d5e1";
-    
-    color0 = "#4e5471";
-    color1 = "#f07178";
-    color2 = "#c3e88d";
-    color3 = "#ffc47c";
-    color4 = "#82aaff";
-    color5 = "#c792ea";
-    color6 = "#89ddff";
-    color7 = "#d5d5e1";
-    color8 = "#676e95";
-    color9 = "#f07178";
-    color10 = "#c3e88d";
-    color11 = "#ffc47c";
-    color12 = "#82aaff";
-    color13 = "#c792ea";
-    color14 = "#89ddff";
-    color15 = "#d5d5e1";
+    background = "#15171f";
+    backgroundBr = "#1f222e";
+    backgroundDim = "#0b0c10";
+
+    middleground = "#292d3d";
+
+    accent = blue;
+
+    black = "#4e5471";
+    red = "#f07178";
+    green = "#c3e88d";
+    yellow = "#ffc47c";
+    blue = "#82aaff";
+    purple = "#c792ea";
+    cyan = "#89ddff";
+    white = "#d5d5e1";
+
+    blackBr = "#676e95";
+    redBr = "#f07178";
+    greenBr = "#c3e88d";
+    yellowBr = "#ffc47c";
+    blueBr = "#82aaff";
+    purpleBr = "#c792ea";
+    cyanBr = "#89ddff";
+    whiteBr = "#d5d5e1";
+  };
+
+  toXresourcesColors = c: {
+    inherit (c) background foreground;
+
+    color0 = c.black;
+    color1 = c.red;
+    color2 = c.green;
+    color3 = c.yellow;
+    color4 = c.blue;
+    color5 = c.purple;
+    color6 = c.cyan;
+    color7 = c.white;
+
+    color8 = c.blackBr;
+    color9 = c.redBr;
+    color10 = c.greenBr;
+    color11 = c.yellowBr;
+    color12 = c.blueBr;
+    color13 = c.purpleBr;
+    color14 = c.cyanBr;
+    color15 = c.whiteBr;
   };
   
   mkColorOption = name: {
@@ -53,9 +66,13 @@ let
   };
 
   xresources = pkgs.writeText "xresources-colors"
-    (concatStringsSep "\n"
-      (mapAttrsToList (n: v: "*.${n}: ${v}") cfg.colors));
+    (concatStrings
+      (mapAttrsToList
+        (n: v: "*.${n}: ${v}\n")
+        (toXresourcesColors cfg.colors)));
 in {
+  imports = [ ./gtk.nix ];
+  
   options.themes = {
     enable = mkEnableOption "custom themes";
 

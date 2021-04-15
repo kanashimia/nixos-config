@@ -1,4 +1,4 @@
-source @gitstatus@/gitstatus.plugin.sh
+source @gitstatus@
 
 function gitstatus_prompt_update() {
   GITSTATUS_PROMPT=""

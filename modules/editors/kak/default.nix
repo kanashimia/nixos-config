@@ -4,17 +4,28 @@ let
 config = pkgs.writeTextDir
   "/share/kak/autoload/kakrc.kak"
   (pkgs.lib.readFile ./config.kak);
-kak = pkgs.kakoune.override {
-  plugins = with pkgs.kakounePlugins; [
-    config
-  ];
+
+kak-overlay = final: prev: {
+  kakoune = prev.kakoune.override {
+    plugins = with final; with kakounePlugins; [
+      config kak-lsp kakoune-state-save
+      nodePackages.svelte-language-server
+    ];
+  };
 };
 in
 {
+  nixpkgs.overlays = [ kak-overlay ];
+  
   environment.systemPackages = with pkgs; [
-    kak kak-lsp
+    kakoune
+    nodePackages.vscode-html-languageserver-bin
+    nodePackages.vscode-json-languageserver-bin
+    nodePackages.vscode-css-languageserver-bin
+    #nodePackages.emmet-cli
+    #nodePackages.emmet-ls
+    nodePackages.svelte-language-server
+    #emmet
   ];
-  environment.sessionVariables = {
-    EDITOR = "kak";
-  };
+  environment.variables.EDITOR = "kak";
 }

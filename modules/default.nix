@@ -8,9 +8,25 @@
     ./shells
     ./input.nix
     ./terminals
-    ./direnv.nix
     ./version-management
     ./audio.nix
+    ./repl.nix
+    ./time-locale.nix
+    ./music
+    ./telegram.nix
+    ./oomd.nix
+    ./less.nix
+    ./syncthing.nix
+    ./home-manager.nix
+    ./keepass.nix
+    ./utils.nix
+    ./rofi
+    ./android.nix
+    ./torrent.nix
+    ./lightdm.nix
+    ./unclutter.nix
+    ./neofetch.nix
+    #./sway.nix
     #./themes
   ];
 }

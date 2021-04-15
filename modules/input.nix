@@ -21,7 +21,7 @@
   # Layout config.
   services.xserver = {
     xkbOptions = "caps:swapescape,grp:rctrl_rshift_toggle,compose:menu,grp_led:num";
-    layout = "us(dvorak),us,ru";
+    layout = "us(dvorak),us,ru,ua";
   };
 
   # Use same layout for console. 

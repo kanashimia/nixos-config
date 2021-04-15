@@ -1,6 +1,0 @@
-partial alphanumeric_keys
-xkb_symbols "octopus" {
-  key <CAPS> { [ BackSpace ] };
-  key <TAB> { [ Escape ] };
-  key <RSHIFT> { [ Tab ] };
-};
