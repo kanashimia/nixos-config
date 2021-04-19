@@ -17,6 +17,7 @@
           (./hosts + "/${host}")
           ./modules
           ./modules/themes
+          ./overlays
         ];
         specialArgs = { inherit inputs; };
       };

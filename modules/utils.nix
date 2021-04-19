@@ -11,9 +11,7 @@
     tree
     dua
 
-    nix-du
     nix-tree
-    nix-index
     hydra-check
 
     linuxPackages.perf

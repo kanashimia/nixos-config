@@ -1,7 +1,4 @@
-{ pkgs, ... }:
-
-let
-neofetch = self: super: {
+self: super: {
   neofetch = super.neofetch.overrideAttrs (old: {
     src = super.fetchFromGitHub {
       owner = "dylanaraps";
@@ -10,8 +7,4 @@ neofetch = self: super: {
       sha256 = "PZjFF/K7bvPIjGVoGqaoR8pWE6Di/qJVKFNcIz7G8xE=";
     };
   });
-};
-in
-{
-  nixpkgs.overlays = [ neofetch ];
 }

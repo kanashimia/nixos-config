@@ -10,7 +10,7 @@
     ./terminals
     ./version-management
     ./audio.nix
-    ./repl.nix
+    ./helpers.nix
     ./time-locale.nix
     ./music
     ./telegram.nix
@@ -25,7 +25,7 @@
     ./torrent.nix
     ./lightdm.nix
     ./unclutter.nix
-    ./neofetch.nix
+    ./profiles
     #./sway.nix
     #./themes
   ];

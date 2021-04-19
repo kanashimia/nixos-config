@@ -1,0 +1,3 @@
+{
+  kanashimia.xmonad.enable = true;
+}
