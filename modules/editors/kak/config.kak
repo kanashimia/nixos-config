@@ -6,3 +6,4 @@ eval %sh{ kak-lsp --kakoune -s $kak_session | sed 's/%reg{a}/<c-r>a/g' }
 lsp-enable
 
 map global user l %{: enter-user-mode lsp<ret>} -docstring "LSP mode"
+map global user <minus> ':enter-user-mode idris-ide<ret>'

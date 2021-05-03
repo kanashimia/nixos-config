@@ -19,5 +19,5 @@
     efi.canTouchEfiVariables = true;
   };
 
-  boot.kernelParams = [ "quiet" ];
+  #boot.kernelParams = [ "quiet" ];
 } 

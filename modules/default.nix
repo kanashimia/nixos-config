@@ -1,32 +1,8 @@
-{
-  imports = [
-    ./nix.nix
-    ./users
-    ./xmonad
-    ./virtualisation.nix
-    ./editors
-    ./shells
-    ./input.nix
-    ./terminals
-    ./version-management
-    ./audio.nix
-    ./helpers.nix
-    ./time-locale.nix
-    ./music
-    ./telegram.nix
-    ./oomd.nix
-    ./less.nix
-    ./syncthing.nix
-    ./home-manager.nix
-    ./keepass.nix
-    ./utils.nix
-    ./rofi
-    ./android.nix
-    ./torrent.nix
-    ./lightdm.nix
-    ./unclutter.nix
-    ./profiles
-    #./sway.nix
-    #./themes
-  ];
-}
+#{ pkgs, ... }:
+#
+#with pkgs.lib.filesystem;
+#
+#{
+  ##imports = listFilesRecursive ./.;
+#}
+{}
