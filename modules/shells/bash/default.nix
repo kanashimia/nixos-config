@@ -12,7 +12,9 @@
     source ${pkgs.fzf}/share/fzf/key-bindings.bash
   '';
 
-  environment.variables.HISTCONTROL = "ignoreboth:erasedups";
+  environment.variables = {
+    HISTCONTROL = "ignoreboth:erasedups";
+  };
 
   environment.shellAliases = {
     nrs = "sudo nixos-rebuild switch -L";

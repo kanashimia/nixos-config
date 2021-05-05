@@ -31,7 +31,7 @@ st = final: prev: {
         src = ./config.h;
         scroll = "${scroll}/bin/scroll";
         font = "Fira Code:size=11";
-      } // config.themes.colors) );
+      } // config.kanashimia.themes.colors) );
   };
 };
 in

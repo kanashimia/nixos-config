@@ -2,13 +2,13 @@
 
 {
   # Imagine humanity when this becomes usable.
-  # services.pipewire = {
-  #   enable = true;
-  #   alsa.enable = true;
-  #   alsa.support32Bit = true;
-  #   jack.enable = true;
-  #   # pulse.enable = true;
-  # };
+  services.pipewire = {
+    enable = true;
+    alsa.enable = true;
+    alsa.support32Bit = true;
+    jack.enable = true;
+    pulse.enable = true;
+  };
 
   # security.rtkit.enable = true;
   systemd.services.rtkit-daemon.serviceConfig.ExecStart = [
@@ -26,14 +26,14 @@
 
   # Enable ALSA
   sound.enable = true;
-  hardware.pulseaudio.enable = true;
+  #hardware.pulseaudio.enable = true;
 
   ## Enable JACK
-  services.jack = {
-    jackd.enable = true;
-    alsa.enable = false;
-    loopback.enable = true;
-  };
+  #services.jack = {
+  #  jackd.enable = true;
+  #  alsa.enable = false;
+  #  loopback.enable = true;
+  #};
 
   services.jack.jackd.extraOptions = [ "-R" "-P99" "-dalsa" ];
 

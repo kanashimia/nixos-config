@@ -22,19 +22,58 @@
     },
     "nixpkgs": {
       "locked": {
-        "narHash": "sha256-YCc7RL5HiIKUHvfL5hE5ujgpa6T2LYlkPW1ZrBMIWRs=",
-        "path": "/home/kanashimia/nixpkgs",
-        "type": "path"
+        "lastModified": 1619987134,
+        "narHash": "sha256-QnN41tsjoVGV4zmvF3Fxrst2VZnoNXu5Lbb5ODNeBsE=",
+        "owner": "nixos",
+        "repo": "nixpkgs",
+        "rev": "4518794ee53d109d551c210a6d195b79e9995a90",
+        "type": "github"
       },
       "original": {
-        "path": "/home/kanashimia/nixpkgs",
-        "type": "path"
+        "owner": "nixos",
+        "ref": "nixos-unstable",
+        "repo": "nixpkgs",
+        "type": "github"
       }
     },
     "root": {
       "inputs": {
         "home-manager": "home-manager",
-        "nixpkgs": "nixpkgs"
+        "nixpkgs": "nixpkgs",
+        "xmonad": "xmonad",
+        "xmonad-contrib": "xmonad-contrib"
+      }
+    },
+    "xmonad": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1619517932,
+        "narHash": "sha256-NU+QAAhCxnkuF9fn6AJ0vvgq4+dFwDHS7oDde2hPfEQ=",
+        "owner": "xmonad",
+        "repo": "xmonad",
+        "rev": "131fd3669f6c2952d3094016d14873fdfe66f98c",
+        "type": "github"
+      },
+      "original": {
+        "owner": "xmonad",
+        "repo": "xmonad",
+        "type": "github"
+      }
+    },
+    "xmonad-contrib": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1619794473,
+        "narHash": "sha256-kqWb5IbY65cg63fnR4sutjVrYfbVlM85iF9UB0w5k9s=",
+        "owner": "xmonad",
+        "repo": "xmonad-contrib",
+        "rev": "a99c76cce48ce70cf30094a3a74f54bcb03eb3d7",
+        "type": "github"
+      },
+      "original": {
+        "owner": "xmonad",
+        "repo": "xmonad-contrib",
+        "type": "github"
       }
     }
   },

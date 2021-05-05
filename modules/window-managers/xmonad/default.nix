@@ -10,7 +10,7 @@ let
     type = types.str;
   };
   apps = with pkgs; mapAttrs mkApp {
-    browser = "${ungoogled-chromium}/bin/chromium";
+    browser = "${chromium}/bin/chromium";
     terminal = "${alacritty}/bin/alacritty";
     chat = "${tdesktop}/bin/telegram-desktop";
     mail = "${thunderbird}/bin/thunderbird";
@@ -37,7 +37,9 @@ in
         virtualised = config.services.qemuGuest.enable;
       } // cfg.apps);
 
-      enableContribAndExtras = true;
+      extraPackages = hpkgs: with hpkgs; [
+        xmonad-contrib
+      ];
     };
   };
 }

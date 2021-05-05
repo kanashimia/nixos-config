@@ -3,8 +3,6 @@
 with lib;
 
 let
-  cfg = config.themes;
-
   defaultColors = rec {
     foreground = "#d5d5e1";
     foregroundBr = "#acaccd";
@@ -43,9 +41,7 @@ let
   };
 in
 {
-  options.themes = {
-    enable = mkEnableOption "custom themes";
-
+  options.kanashimia.themes = {
     colors = mapAttrs mkColorOption defaultColors;
   };
 }

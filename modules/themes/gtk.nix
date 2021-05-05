@@ -1,7 +1,8 @@
 { pkgs, config, lib, ... }:
 
 let
-colors = lib.mapAttrs (k: v: lib.removePrefix "#" v) config.themes.colors;
+colors = lib.mapAttrs (k: v: lib.removePrefix "#" v)
+  config.kanashimia.themes.colors;
 
 my-colors = pkgs.writeTextFile {
   name = "colors";
@@ -48,6 +49,8 @@ in
     gtk-theme-name=Palenight
     gtk-icon-theme-name=Papirus-Dark
   '';
+
+  environment.sessionVariables.GTK2_RC_FILES = "/etc/xdg/gtk-2.0/gtkrc";
 
   qt5 = {
     enable = true;

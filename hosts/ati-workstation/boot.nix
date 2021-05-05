@@ -14,10 +14,14 @@
   hardware.enableRedistributableFirmware = true;
 
   boot.loader = {
-    systemd-boot.enable = true;
+    systemd-boot = {
+      enable = true;
+      editor = false;
+      consoleMode = "max";
+    };
     timeout = 0;
     efi.canTouchEfiVariables = true;
   };
 
-  #boot.kernelParams = [ "quiet" ];
+  boot.kernelParams = [ "quiet" ];
 } 

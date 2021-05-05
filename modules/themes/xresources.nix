@@ -3,9 +3,7 @@
 with lib;
 
 let
-  cfg = config.themes;
-
-  enabled = cfg.xresources.enable && cfg.enable;
+  cfg = config.kanashimia.themes;
 
   toXresourcesColors = c: {
     inherit (c) background foreground;
@@ -34,11 +32,11 @@ let
         (toXresourcesColors cfg.colors)));
 in
 {
-  options.themes = {
-    xresources.enable = mkEnableOption "xresources themes";
+  options.kanashimia.themes.xresources = {
+    enable = mkEnableOption "xresources themes";
   };
 
-  config = mkIf enabled {
+  config = mkIf cfg.xresources.enable {
     services.xserver.displayManager.sessionCommands = ''
       ${pkgs.xorg.xrdb}/bin/xrdb -merge ${xresources}
     '';

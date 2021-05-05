@@ -1,7 +1,4 @@
 {
-  # Networking configuration.
-  networking.hostName = "hp-laptop";
-
   # Need to make interface use DHCP manually, because systemd.
   networking.useDHCP = false;
   networking.interfaces.wlan0.useDHCP = true;

@@ -5,7 +5,7 @@ rofi = self: super: {
   rofi = super.rofi.override {
     theme = pkgs.substituteAll {
       src = ./theme.rasi;
-      inherit (config.themes.colors)
+      inherit (config.kanashimia.themes.colors)
         background foreground backgroundBr foregroundBr;
     };
   };
