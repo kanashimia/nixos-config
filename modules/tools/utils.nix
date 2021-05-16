@@ -17,6 +17,7 @@
     linuxPackages.perf
 
     pciutils
+    usbutils
     inxi
     neofetch
     htop

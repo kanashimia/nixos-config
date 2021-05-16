@@ -66,10 +66,9 @@ plugins = with pkgs; [
   # Autotune
   zita-at1
 ];
+
 in
 {
-  imports = [ ./player.nix ];
-
   #nixpkgs.overlays = [ distrho-overlay ];
 
   environment.systemPackages = with pkgs; [
@@ -82,7 +81,7 @@ in
 
   environment.variables = {
     DSSI_PATH   = pkgs.lib.makeSearchPath "lib/dssi" plugins;
-    LADSPA_PATH = pkgs.lib.makeSearchPath "lib/adspa" plugins;
+    LADSPA_PATH = pkgs.lib.makeSearchPath "lib/ladspa" plugins;
     LV2_PATH    = pkgs.lib.makeSearchPath "lib/lv2" plugins;
     LXVST_PATH  = pkgs.lib.makeSearchPath "lib/lxvst" plugins;
     VST_PATH    = pkgs.lib.makeSearchPath "lib/vst" plugins;

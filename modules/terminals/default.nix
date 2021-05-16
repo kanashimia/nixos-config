@@ -1,6 +1,0 @@
-{
-  imports = [
-    ./alacritty
-    ./st
-  ];
-}

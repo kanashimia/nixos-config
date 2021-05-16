@@ -27,6 +27,8 @@ run name app args = do
 
 runProg name app = run name app []
 
+run' name args = run name name args
+
 runTerm :: [String] -> String -> [String] -> X ()
 runTerm options command args = do
     term <- asks (terminal . config)
@@ -34,10 +36,8 @@ runTerm options command args = do
 
 runTerm' = runTerm []
 
-runAmixer action = run "sound" "amixer" [ "set", "Master", "-q", action ]
-
 myScratchpads =
-    [ basicNS "qutebrowser" nonFloating
+    [ NS "browser" "chromium" (className =? "Chromium-browser") nonFloating
     , basicNSClass "telegram-desktop" "TelegramDesktop" nonFloating
     ]
     where
@@ -46,17 +46,27 @@ myScratchpads =
 
 runNS = namedScratchpadAction myScratchpads
 
-myKeys = flip additionalKeysP
-    [ ("M-p", runProg "search" "@search@")
+mapRun cmd = map (run' <$> head <*> tail <$> cmd <$>)
+mapRun' cmd = mapRun (\a -> cmd ++ [ a ])
+
+myKeys = flip additionalKeysP $
+    [ ("M-p", run' "rofi" [ "-show", "drun" ])
     , ("M-c", runNS "telegram-desktop")
     , ("M-S-m", runProg "mail" "@mail@")
-    , ("M-b", runNS "qutebrowser")
+    , ("M-b", runNS "browser")
     , ("M-S-l", runTerm' "journalctl" [ "-f" ])
     , ("M-q", restart "xmonad" True)
     , ("<Print>", runProg "screenshot" "@screenshot@")
-    , ("<XF86AudioRaiseVolume>", runAmixer "1%+")
-    , ("<XF86AudioLowerVolume>", runAmixer "1%-")
-    , ("<XF86AudioMute>", runAmixer "toggle")
+    ]
+    ++ mapRun' [ "amixer", "set", "Master", "-q" ]
+    [ ("<XF86AudioRaiseVolume>", "1%+")
+    , ("<XF86AudioLowerVolume>", "1%-")
+    , ("<XF86AudioMute>", "toggle")
+    ]
+    ++ mapRun' [ "mpc" ]
+    [ ("<XF86AudioPlay>", "toggle")
+    , ("<XF86AudioPrev>", "prev")
+    , ("<XF86AudioNext>", "next")
     ]
 
 isUtility = isInProperty "_NET_WM_WINDOW_TYPE" "_NET_WM_WINDOW_TYPE_UTILITY"

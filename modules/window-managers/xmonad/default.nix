@@ -3,20 +3,25 @@
 with lib;
 
 let
-  cfg = config.kanashimia.xmonad;
+cfg = config.kanashimia.xmonad;
 
-  mkApp = name: val: mkOption {
-    default = val;
-    type = types.str;
-  };
-  apps = with pkgs; mapAttrs mkApp {
-    browser = "${chromium}/bin/chromium";
-    terminal = "${alacritty}/bin/alacritty";
-    chat = "${tdesktop}/bin/telegram-desktop";
-    mail = "${thunderbird}/bin/thunderbird";
-    search = "${rofi}/bin/rofi -show drun -show-icons -m -4";
-    screenshot = "${maim}/bin/maim ~/Pictures/$(date +%s).png";
-  };
+screenshot = with pkgs; writeShellScriptBin "screenshot" ''
+  ${maim}/bin/maim ~/Pictures/Screenshots/$(date +%s).png
+'';
+
+mkApp = name: val: mkOption {
+  default = val;
+  type = types.str;
+};
+
+apps = with pkgs; mapAttrs mkApp {
+  browser = "${chromium}/bin/chromium";
+  terminal = "${st}/bin/st";
+  chat = "${tdesktop}/bin/telegram-desktop";
+  mail = "${thunderbird}/bin/thunderbird";
+  search = "${rofi}/bin/rofi -show drun -show-icons -m -4";
+  screenshot = "${screenshot}/bin/screenshot";
+};
 in
 {
   options.kanashimia.xmonad = {
@@ -25,7 +30,7 @@ in
   };
 
   config = mkIf cfg.enable {
-    environment.systemPackages = with pkgs; [ firefox ];
+    environment.systemPackages = with pkgs; [ firefox mpc_cli rofi ];
 
     services.xserver.enable = true;
 

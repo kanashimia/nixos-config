@@ -14,6 +14,7 @@
       "jackaudio"
       "docker"
       "adbusers"
+      "dialout"
     ];
     initialHashedPassword = pkgs.lib.fileContents ./password;
   };

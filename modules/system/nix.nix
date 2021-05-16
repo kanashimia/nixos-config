@@ -1,14 +1,10 @@
 { pkgs, inputs, ... }:
 
 {
-  # Enable flake and profile support.
+  # Enable flake support.
   nix.package = pkgs.nixFlakes;
-  nix.extraOptions = ''
-    experimental-features = nix-command flakes ca-references
-  '';
 
-  # Use same nixpkgs systemwide.
-  nix.registry.nixpkgs.flake = inputs.nixpkgs;
+  # Use n as an alias to the current configs nixpkgs.
   nix.registry.n.flake = inputs.nixpkgs;
 
   # Hardlink identical files in nix store.
