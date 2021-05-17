@@ -13,7 +13,7 @@
         forceSSL = true;
         enableACME = true;
         # All serverAliases will be added as extra domain names on the certificate.
-        serverAliases = [ "www.redpilled.dev" ];
+        serverAliases = [ ];
         locations."/" = {
           root = "/var/www";
         };

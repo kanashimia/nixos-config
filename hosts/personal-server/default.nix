@@ -15,5 +15,7 @@
     #"${modulesPath}/profiles/all-hardware.nix"
     # "${modulesPath}/profiles/minimal.nix"
   ];
+  environment.memoryAllocator.provider = "libc";
+
 
 }
