@@ -1,8 +1,8 @@
 {
-  # Need to make interface use DHCP manually, because systemd.
+  # networkd requires manual DHCP configuration
   networking.useDHCP = false;
-  #networking.interfaces.enp2s0.useDHCP = true;
+  networking.interfaces.ens3.useDHCP = true;
   
-  # systemd master race.
+  # systemd master race
   networking.useNetworkd = true;
 }
