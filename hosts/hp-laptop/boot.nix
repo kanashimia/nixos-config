@@ -1,5 +1,3 @@
-{ pkgs, ... }:
-
 {
   # Enable something, was generated automatically.
   boot.initrd.availableKernelModules = [
@@ -7,16 +5,12 @@
   ];
 
   # Enable systemd boot, because it is superior.
-  boot.loader = {
-    efi.canTouchEfiVariables = true;
-    systemd-boot.enable = true;
-    systemd-boot.editor = false;
-    timeout = 0;
-  };
+  boot.loader.systemd-boot.enable = true;
 
-  # Drives.
-  fileSystems."/".label = "nixos";
-  fileSystems."/boot".label = "boot";
+  fileSystems = {
+    "/".label = "nixos";
+    "/boot".label = "boot";
+  };
 
   # Enable proprietary non-free garbage.
   hardware.enableRedistributableFirmware = true;

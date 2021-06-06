@@ -9,9 +9,4 @@
     intelBusId = "PCI:0:2:0";
     nvidiaBusId = "PCI:1:0:0";
   };
-
-  # Fix xorg tearing meme.
-  services.xserver.screenSection = ''
-    Option "metamodes" "nvidia-auto-select +0+0 { ForceCompositionPipeline = On }"
-  '';
 }

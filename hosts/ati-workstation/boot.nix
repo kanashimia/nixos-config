@@ -1,5 +1,3 @@
-{ pkgs, ... }:
-
 {
   #boot.initrd.availableKernelModules = [
   #  "ahci" "ohci_pci" "ehci_pci" "xhci_pci"
@@ -7,21 +5,18 @@
   #];
   #boot.kernelModules = [ "kvm-amd" ];
 
-  fileSystems."/".label = "nixos";
-  fileSystems."/boot".label = "boot";
-
-  hardware.cpu.amd.updateMicrocode = true;
-  hardware.enableRedistributableFirmware = true;
-
-  boot.loader = {
-    systemd-boot = {
-      enable = true;
-      editor = false;
-      consoleMode = "max";
-    };
-    timeout = 0;
-    efi.canTouchEfiVariables = true;
+  fileSystems = {
+    "/".label = "nixos";
+    "/boot".label = "boot";
   };
 
-  boot.kernelParams = [ "quiet" ];
+  hardware = {
+    cpu.amd.updateMicrocode = true;
+    enableRedistributableFirmware = true;
+  };
+
+  boot.loader.systemd-boot = {
+    enable = true;
+    consoleMode = "max";
+  };
 } 

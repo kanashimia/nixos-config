@@ -1,20 +1,22 @@
-{ pkgs, ... }:
+{ modulesPath, ... }:
 
 {
+  imports = [
+    "${modulesPath}/profiles/qemu-guest.nix"
+  ];
+
   users.users.root.initialHashedPassword = "";
-  # services.getty.autologinUser = "root";
-  security.sudo.enable = false;
 
-  documentation.enable = false;
-  documentation.nixos.enable = false;
+  zramSwap.enable = true;
 
-  fileSystems."/" = {
-    label = "nixos";
-    fsType = "ext4";
-  };
+  profiles.minimal.enable = true;
+
+  fileSystems."/".label = "nixos";
 
   boot.loader.grub = {
     enable = true;
     device = "/dev/vda";
   };
+
+  services.openssh.enable = true;
 }
