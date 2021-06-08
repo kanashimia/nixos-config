@@ -13,9 +13,6 @@
     xmonad-contrib.url = "github:xmonad/xmonad-contrib";
     xmonad-contrib.flake = false;
 
-    deploy-rs.url = "github:serokell/deploy-rs";
-    deploy-rs.inputs.nixpkgs.follows = "nixpkgs";
-
     agenix.url = github:ryantm/agenix;
     agenix.inputs.nixpkgs.follows = "nixpkgs";
 
@@ -26,23 +23,6 @@
   };
   
   outputs = inputs: {
-    #deploy.nodes.personal-server = {
-    #  hostname = "redpilled.dev";
-    #  sshUser = "root";
-
-    #  profiles.system = {
-    #    path = inputs.deploy-rs.lib.x86_64-linux.activate.nixos
-    #      inputs.self.nixosConfigurations.personal-server;
-    #  };
-    #};
-
-    # checks = builtins.mapAttrs
-    #   (system: deployLib: deployLib.deployChecks inputs.self.deploy)
-    #   inputs.deploy-rs.lib;
-    # legacyPackages = import inputs.nur {
-    #     nurpkgs = import inputs.nixpkgs { system = "x86_64-linux"; };
-    # };
-       
     nixosConfigurations = let
       inherit (inputs.nixpkgs) lib;
 
@@ -52,22 +32,18 @@
         filter (hasSuffix ".nix")
           (filesystem.listFilesRecursive path);
 
-      inputs-overlay = final: prev: { inherit inputs; };
-
       mkHost = host:
         lib.makeOverridable lib.nixosSystem rec {
           system = "x86_64-linux";
           modules = [
             { networking.hostName = host; }
-            { nixpkgs.overlays = [ inputs-overlay ]; }
+            { nixpkgs.overlays = map import (listNixFilesRecursive ./overlays); }
+            ./secrets/module.nix
             inputs.agenix.nixosModules.age
             inputs.mailserver.nixosModule
-            ./secrets/module.nix
-            ./overlays
           ] ++ lib.concatMap listNixFilesRecursive [
             (./hosts + "/${host}")
-            ./preferences
-            ./profiles
+            ./modules
           ];
           specialArgs = { inherit inputs; };
         };

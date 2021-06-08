@@ -1,4 +1,4 @@
-{ modulesPath, ... }:
+{ modulesPath, inputs, ... }:
 
 {
   imports = [
@@ -7,11 +7,10 @@
 
   users.users.root.initialHashedPassword = "";
 
-  zramSwap.enable = true;
-
   profiles.minimal.enable = true;
 
   fileSystems."/".label = "nixos";
+  swapDevices = [ { label = "swap"; } ];
 
   boot.loader.grub = {
     enable = true;
