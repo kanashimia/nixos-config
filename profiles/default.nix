@@ -1,4 +1,4 @@
-{ lib, config, pkgs, ... }:
+{ lib, config, pkgs, inputs, ... }:
 
 {
   options.profiles.default.enable = lib.mkOption {
@@ -12,11 +12,25 @@
     # Some default programs that i always use.
     environment.systemPackages = with pkgs; [ gitMinimal kakoune ];
 
-    # Enable flake support for nix
+    # Enable flake support for nix, don't warn on dirty repos.
     nix.package = pkgs.nixUnstable;
     nix.extraOptions = ''
       experimental-features = nix-command flakes ca-references
+      warn-dirty = false
     '';
+
+    # Use n as an alias to the current configs nixpkgs.
+    nix.registry.n.flake = inputs.nixpkgs;
+
+    # Hardlink identical files in nix store.
+    nix.autoOptimiseStore = true;
+
+    # Automatically delete old generations.
+    nix.gc = {
+      automatic = true;
+      dates = "daily";
+      options = "--delete-older-than 7d";
+    };
 
     # Do not show boot loader menu unless explicitly desired.
     # It is still accessible by holding random keys during early boot.
@@ -43,5 +57,20 @@
     # Do not print sometimes helpful, but not always, info during boot,
     # so it is harder to debug system when something goes wrong.
     boot.kernelParams = [ "quiet" ];
+
+    # Layout config.
+    services.xserver = {
+      xkbOptions = "caps:swapescape,grp:rctrl_rshift_toggle,compose:menu,grp_led:num";
+      layout = "us(dvorak),ru,ua";
+    };
+
+    # Use same layout for console.
+    console.useXkbConfig = true;
+
+    i18n.defaultLocale = "en_IE.UTF-8";
+    time.timeZone = "Europe/Kiev";
+
+    users.users.root.password = "root";
+    users.mutableUsers = false;
   };
 }

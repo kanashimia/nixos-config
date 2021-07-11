@@ -4,22 +4,14 @@
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
 
-    home-manager.url = "github:nix-community/home-manager";
-    home-manager.inputs.nixpkgs.follows = "nixpkgs";
+    # home-manager.url = "github:nix-community/home-manager";
+    # home-manager.inputs.nixpkgs.follows = "nixpkgs";
 
-    xmonad.url = "github:xmonad/xmonad";
-    xmonad.flake = false;
+    # agenix.url = "github:ryantm/agenix";
+    # agenix.inputs.nixpkgs.follows = "nixpkgs";
 
-    xmonad-contrib.url = "github:xmonad/xmonad-contrib";
-    xmonad-contrib.flake = false;
-
-    agenix.url = github:ryantm/agenix;
-    agenix.inputs.nixpkgs.follows = "nixpkgs";
-
-    mailserver.url = gitlab:simple-nixos-mailserver/nixos-mailserver;
+    mailserver.url = "gitlab:simple-nixos-mailserver/nixos-mailserver";
     mailserver.inputs.nixpkgs.follows = "nixpkgs";
-
-    nur.url = github:nix-community/NUR;
   };
   
   outputs = inputs: {
@@ -38,12 +30,14 @@
           modules = [
             { networking.hostName = host; }
             { nixpkgs.overlays = map import (listNixFilesRecursive ./overlays); }
-            ./secrets/module.nix
-            inputs.agenix.nixosModules.age
+            # ./secrets/module.nix
+            # inputs.agenix.nixosModules.age
             inputs.mailserver.nixosModule
           ] ++ lib.concatMap listNixFilesRecursive [
             (./hosts + "/${host}")
             ./modules
+            ./profiles
+            ./configs
           ];
           specialArgs = { inherit inputs; };
         };
