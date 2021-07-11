@@ -17,4 +17,6 @@
 
   # Use updated microcode because hardware bugs are fun.
   hardware.cpu.intel.updateMicrocode = true;
+
+  profiles.graphical.enable = true;
 }
