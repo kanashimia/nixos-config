@@ -1,3 +1,5 @@
+{ pkgs, ... }:
+
 {
   # Please, please never buy HP laptops,
   # especially if you are going to be using linux,
@@ -15,12 +17,27 @@
   # Wait it works again? Like wth. And now it doesen't, ok.
   # Also yes, it is indeed a problem with their DSDT.
   systemd.services.fuck-hp = {
-    enable = false;
+    enable = true;
     description = "Fuck HP";
-    script = ". /dev/input/js0";
-    wantedBy = [ "default.target" ];
+    script = ". /dev/input/js0; exit 0";
+    wantedBy = [ "multi-user.target" ];
   };
+
+  # Debugging for acpi.
+  services.acpid.enable = true;
+  environment.systemPackages = with pkgs; [ acpid ];
+
+  # Backlight control.
+  hardware.acpilight.enable = true;
+  services.illum.enable = true;
+  systemd.services.illum.serviceConfig.ExecStartPre = "${pkgs.coreutils}/bin/sleep 5";
 
   # And damn lid switch works unreliably af, only causes problems.
   services.logind.lidSwitch = "ignore";
+
+  # In hope that this fixes something.
+  boot.kernelParams = [
+    "snd_hda_intel.model=hp-mute-led-mic3"
+    "acpi=strict"
+  ];
 }

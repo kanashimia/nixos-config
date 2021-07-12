@@ -37,7 +37,7 @@
     boot.loader.timeout = 0;
 
     # Disable systemd-boot editor, as it is an security issue.
-    boot.loader.systemd-boot.editor = false;
+    # boot.loader.systemd-boot.editor = false;
 
     # Add nixos as a first EFI entry.
     boot.loader.efi.canTouchEfiVariables = true;

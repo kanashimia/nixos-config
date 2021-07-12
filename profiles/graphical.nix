@@ -8,6 +8,7 @@
     hardware.amdgpu.fixTearing = true;
     hardware.nvidia.fixTearing = true;
     services.xserver.windowManager.xmonad.enable = true;
+    services.xserver.libinput.enable = true;
 
     users.users.kanashimia = {
       uid = 1000;
@@ -15,8 +16,12 @@
       isNormalUser = true;
       extraGroups = [
         "wheel"
+        "video"
       ];
       password = "kanashimia";
     };
+
+    # Enable SysRq key for unexpected situations.
+    boot.kernel.sysctl."kernel.sysrq" = 1;
   };
 }
