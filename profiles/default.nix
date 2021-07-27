@@ -61,7 +61,8 @@
     # Layout config.
     services.xserver = {
       xkbOptions = "caps:swapescape,grp:rctrl_rshift_toggle,compose:menu,grp_led:num";
-      layout = "us(dvorak),ru,ua";
+      xkbVariant = "dvorak,,";
+      layout = "us,ru,ua";
     };
 
     # Use same layout for console.
@@ -72,5 +73,7 @@
 
     users.users.root.password = "root";
     users.mutableUsers = false;
+
+    boot.tmpOnTmpfs = true;
   };
 }

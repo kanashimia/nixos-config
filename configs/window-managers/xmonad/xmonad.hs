@@ -78,7 +78,7 @@ myManageHook = composeOne
 
 myConf = def
     { modMask = if "@virtualised@" == "1" then mod1Mask else mod4Mask
-    , terminal = "alacritty"
+    , terminal = "wayst"
     , borderWidth = 1
     , normalBorderColor = "#676e95"
     , focusedBorderColor = "#d5d5e1"

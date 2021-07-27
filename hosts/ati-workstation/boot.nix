@@ -1,8 +1,20 @@
 {
   fileSystems = {
-    "/".label = "nixos";
-    "/boot".label = "boot";
+    "/" = {
+      device = "rpool/nixos";
+      fsType = "zfs";
+    };
+    "/home" = {
+      device = "rpool/nixos/home";
+      fsType = "zfs";
+    };
+    "/boot" = {
+      label = "boot";
+      fsType = "vfat";
+    };
   };
+
+  boot.zfs.arcSize = 2;
 
   hardware = {
     cpu.amd.updateMicrocode = true;
@@ -12,8 +24,13 @@
 
   boot.loader.systemd-boot = {
     enable = true;
-    consoleMode = "max";
+    # consoleMode = "max";
   };
 
-  profiles.graphical.enable = true;
+  services.xserver.videoDrivers = [ "amdgpu" ];
+
+  profiles = {
+    graphical.enable = true;
+    zfs.enable = true;
+  };
 } 

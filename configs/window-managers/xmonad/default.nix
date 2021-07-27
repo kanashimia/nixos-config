@@ -6,7 +6,7 @@ in
 {
   config = lib.mkIf cfg.enable {
     environment.systemPackages = with pkgs; [
-      firefox mpc_cli rofi thunderbird alacritty tdesktop
+      firefox mpc_cli rofi thunderbird alacritty tdesktop wayst
     ];
 
     services.xserver.enable = true;
