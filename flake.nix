@@ -4,8 +4,8 @@
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
 
-    # home-manager.url = "github:nix-community/home-manager";
-    # home-manager.inputs.nixpkgs.follows = "nixpkgs";
+    home-manager.url = "github:nix-community/home-manager";
+    home-manager.inputs.nixpkgs.follows = "nixpkgs";
 
     # agenix.url = "github:ryantm/agenix";
     # agenix.inputs.nixpkgs.follows = "nixpkgs";
@@ -14,20 +14,48 @@
     mailserver.inputs.nixpkgs.follows = "nixpkgs";
   };
   
-  outputs = inputs: {
+  outputs = inputs:  let
+    inherit (inputs.nixpkgs) lib;
+
+    genAttrsetTreeOfModules = dir:
+      with lib;
+      mapAttrs'
+        (name: type:
+          let
+            path = dir + "/${name}";
+          in
+            if type == "directory"
+            then
+              if pathExists (path + "/default.nix")
+              then nameValuePair name (path + "/default.nix")
+              else nameValuePair name (genAttrsetTreeOfModules path)
+            else
+              lib.nameValuePair (removeSuffix ".nix" name) path)
+        (filterAttrs
+          (name: type: type != "regular" || hasSuffix ".nix" name)
+          (builtins.readDir dir));
+
+    listNixFilesRecursive = path:
+      with lib;
+      filter (hasSuffix ".nix")
+        (filesystem.listFilesRecursive path);
+  in {
+    nixosModules = genAttrsetTreeOfModules ./modules;
+     
     nixosConfigurations = let
-      inherit (inputs.nixpkgs) lib;
-
       hosts = with builtins; attrNames (readDir ./hosts);
-
-      listNixFilesRecursive = path: with lib;
-        filter (hasSuffix ".nix")
-          (filesystem.listFilesRecursive path);
+      #
+      # hosts =
 
       mkHost = host:
         lib.makeOverridable lib.nixosSystem rec {
           system = "x86_64-linux";
           modules = [
+            # home-manager.
+            inputs.home-manager.nixosModules.home-manager
+            { home-manager.useGlobalPkgs = true; }
+            { home-manager.useUserPackages = true; }
+
             { networking.hostName = host; }
             { nixpkgs.overlays = map import (listNixFilesRecursive ./overlays); }
             # ./secrets/module.nix
@@ -39,7 +67,10 @@
             ./profiles
             ./configs
           ];
-          specialArgs = { inherit inputs; };
+          specialArgs = {
+            inherit inputs;
+            inherit (inputs.self) nixosModules;
+          };
         };
     in lib.genAttrs hosts mkHost;
   };

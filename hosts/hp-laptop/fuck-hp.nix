@@ -19,8 +19,11 @@
   systemd.services.fuck-hp = {
     enable = true;
     description = "Fuck HP";
-    script = ". /dev/input/js0; exit 0";
-    wantedBy = [ "multi-user.target" ];
+    script = ''
+      sleep 1
+      . /dev/input/js0
+    '';
+    wantedBy = [ "graphical.target" ];
   };
 
   # Debugging for acpi.
@@ -38,6 +41,14 @@
   # In hope that this fixes something.
   boot.kernelParams = [
     "snd_hda_intel.model=hp-mute-led-mic3"
-    "acpi=strict"
+    # "acpi=strict"
   ];
+
+  boot.kernelPackages = pkgs.linuxPackages_latest;
+
+  services.udev.extraHwdb = ''
+    evdev:atkbd:dmi:bvn*:bvr*:bd*:br*:efr*:svnHP:pnHP15-cx00*:pvr*
+      KEYBOARD_KEY_ab=unknown
+      KEYBOARD_KEY_d8=unknown
+  '';
 }

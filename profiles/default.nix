@@ -73,7 +73,5 @@
 
     users.users.root.password = "root";
     users.mutableUsers = false;
-
-    boot.tmpOnTmpfs = true;
   };
 }

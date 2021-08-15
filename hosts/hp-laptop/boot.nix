@@ -1,15 +1,31 @@
 {
-  # Enable something, was generated automatically.
-  boot.initrd.availableKernelModules = [
-    "xhci_pci" "ahci" "nvme" "alcor" "sd_mod" "kvm_intel"
-  ];
+  # Support booting from NVMe SSD.
+  boot.initrd.availableKernelModules = [ "nvme" ];
 
   # Enable systemd boot, because it is superior.
   boot.loader.systemd-boot.enable = true;
 
   fileSystems = {
-    "/".label = "nixos";
-    "/boot".label = "boot";
+    "/" = {
+      device = "rpool/nixos";
+      fsType = "zfs";
+    };
+    "/var" = {
+      device = "rpool/nixos/var";
+      fsType = "zfs";
+    };
+    "/home" = {
+      device = "rpool/nixos/home";
+      fsType = "zfs";
+    };
+    "/nix" = {
+      device = "rpool/nixos/nix";
+      fsType = "zfs";
+    };
+    "/boot" = {
+      label = "boot";
+      fsType = "vfat";
+    };
   };
 
   # Enable proprietary non-free garbage.
@@ -19,6 +35,7 @@
   hardware.cpu.intel.updateMicrocode = true;
 
   profiles.graphical.enable = true;
+  profiles.zfs.enable = true;
 
   # Laptop powersaving, or something.
   services.tlp.enable = true;
