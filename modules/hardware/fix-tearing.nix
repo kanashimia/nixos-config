@@ -1,4 +1,4 @@
-{ config, ... }:
+{ config, lib, ... }:
 
 let
   drivers = config.services.xserver.videoDrivers;
