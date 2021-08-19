@@ -1,21 +1,16 @@
-{ pkgs, config, ... }:
+{ pkgs, config, lib, ... }:
 
 {
   environment.systemPackages = with pkgs; [
-    firefox mpc_cli rofi thunderbird alacritty tdesktop
+    firefox mpc_cli rofi thunderbird xst alacritty tdesktop
   ];
 
   services.xserver.enable = true;
   services.xserver.windowManager.xmonad = {
     enable = true;
-
-    config = pkgs.substituteAll {
-      src = ./xmonad.hs;
-      virtualised = config.services.qemuGuest.enable;
-    };
-
+    config = ./xmonad.hs;
     extraPackages = hpkgs: with hpkgs; [
-      xmonad-contrib
+      xmonad-contrib xmonad-systemd
     ];
   };
 }

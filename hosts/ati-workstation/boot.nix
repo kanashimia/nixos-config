@@ -1,4 +1,12 @@
+{ nixosModules, ... }:
+
 {
+  imports = with nixosModules; [
+    profiles.zfs
+    profiles.graphical
+    hardware.amdgpu.support-old
+  ];
+
   fileSystems = {
     "/" = {
       device = "rpool/nixos";
@@ -19,7 +27,6 @@
   hardware = {
     cpu.amd.updateMicrocode = true;
     enableRedistributableFirmware = true;
-    amdgpu.supportOldCards = true;
   };
 
   boot.loader.systemd-boot = {
@@ -28,9 +35,4 @@
   };
 
   services.xserver.videoDrivers = [ "amdgpu" ];
-
-  profiles = {
-    graphical.enable = true;
-    zfs.enable = true;
-  };
 } 

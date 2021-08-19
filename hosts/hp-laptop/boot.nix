@@ -1,4 +1,11 @@
+{ nixosModules, ... }:
+
 {
+  imports = with nixosModules.profiles; [
+    zfs
+    graphical
+  ];
+
   # Support booting from NVMe SSD.
   boot.initrd.availableKernelModules = [ "nvme" ];
 
@@ -33,9 +40,6 @@
 
   # Use updated microcode because hardware bugs are fun.
   hardware.cpu.intel.updateMicrocode = true;
-
-  profiles.graphical.enable = true;
-  profiles.zfs.enable = true;
 
   # Laptop powersaving, or something.
   services.tlp.enable = true;

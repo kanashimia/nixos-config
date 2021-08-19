@@ -21,7 +21,8 @@
     description = "Fuck HP";
     script = ''
       sleep 1
-      . /dev/input/js0
+      exec 3< /dev/input/js0 || true
+      sleep infinity
     '';
     wantedBy = [ "graphical.target" ];
   };
@@ -29,6 +30,8 @@
   # Debugging for acpi.
   services.acpid.enable = true;
   environment.systemPackages = with pkgs; [ acpid ];
+  hardware.sensor.iio.enable = true;
+  
 
   # Backlight control.
   hardware.acpilight.enable = true;

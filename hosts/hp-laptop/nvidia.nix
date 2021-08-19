@@ -1,15 +1,21 @@
+{ lib, ... }:
+
 {
-  # # Oh no.
-  # services.xserver.videoDrivers = [ "nvidia" ];
+  # Oh no.
+  services.xserver.videoDrivers = [ "nvidia" ];
 
-  # # For "amazing" intel + nvidia combo.
-  # hardware.nvidia.modesetting.enable = true;
-  # hardware.nvidia.prime = {
-  #   sync.enable = true;
-  #   intelBusId = "PCI:0:2:0";
-  #   nvidiaBusId = "PCI:1:0:0";
-  # };
+  # Proprietary garbage.
+  nixpkgs.config.allowUnfreePredicate = pkg: lib.elem (lib.getName pkg) [
+    "nvidia-x11" "nvidia-settings"
+  ];
 
-  # # Proprietary garbage.
-  # nixpkgs.config.allowUnfree = true;
+  # For "amazing" intel + nvidia combo.
+  hardware.nvidia = {
+    modesetting.enable = true;
+    prime = {
+      sync.enable = true;
+      intelBusId = "PCI:0:2:0";
+      nvidiaBusId = "PCI:1:0:0";
+    };
+  };
 }

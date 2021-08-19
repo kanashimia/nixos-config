@@ -11,9 +11,9 @@
     configDir = "/home/${user}/.config/syncthing";
     dataDir = "/home/${user}/.local/share/syncthing";
 
-    declarative.overrideDevices = false;
+    overrideDevices = false;
 
-    declarative.folders = let
+    folders = let
       dirs = lib.genAttrs [ "Documents" "Pictures" "Music" ] opts;
       opts = folder: {
         enable = true;

@@ -4,7 +4,6 @@
   programs.zsh = {
     enable = true;
     enableGlobalCompInit = false;
-    # autosuggestions.enable = true;
     syntaxHighlighting.enable = true;
   };
 
