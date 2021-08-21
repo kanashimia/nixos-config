@@ -6,10 +6,13 @@
     profiles.minimal
   ];
 
-  fileSystems."/".label = "nixos";
+  fileSystems."/" = {
+    device = "/dev/sda1";
+    fsType = "ext4";
+  };
 
   boot.loader.grub = {
     enable = true;
-    device = "/dev/vda";
+    device = "/dev/sda";
   };
 }
