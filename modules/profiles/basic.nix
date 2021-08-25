@@ -1,6 +1,11 @@
-{ lib, config, pkgs, inputs, ... }:
+{ lib, config, pkgs, inputs, nixosModules, ... }:
 
 {
+  imports = with nixosModules; [
+    networking.networkd
+    environment.user-dirs
+  ];
+
   # Some default programs that i always use.
   environment.systemPackages = with pkgs; [ gitMinimal kakoune ];
 

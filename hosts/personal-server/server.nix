@@ -1,10 +1,9 @@
 { config, pkgs, ... }:
 
 let
-hostname = "redpilled.dev";
-certDir = config.security.acme.certs.${hostname}.directory;
-in
-{
+  hostname = "redpilled.dev";
+  certDir = config.security.acme.certs.${hostname}.directory;
+in {
   security.acme.acceptTerms = true;
   security.acme.email = "acme@${hostname}";
 

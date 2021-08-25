@@ -6,6 +6,8 @@
     graphical
   ];
 
+  networking.wireless.iwd.enable = true;
+
   # Support booting from NVMe SSD.
   boot.initrd.availableKernelModules = [ "nvme" ];
 

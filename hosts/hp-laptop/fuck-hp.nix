@@ -30,16 +30,12 @@
   # Debugging for acpi.
   services.acpid.enable = true;
   environment.systemPackages = with pkgs; [ acpid ];
-  hardware.sensor.iio.enable = true;
-  
-
+ 
   # Backlight control.
   hardware.acpilight.enable = true;
-  services.illum.enable = true;
-  systemd.services.illum.serviceConfig.ExecStartPre = "${pkgs.coreutils}/bin/sleep 5";
 
   # And damn lid switch works unreliably af, only causes problems.
-  services.logind.lidSwitch = "ignore";
+  # services.logind.lidSwitch = "ignore";
 
   # In hope that this fixes something.
   boot.kernelParams = [

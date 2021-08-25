@@ -1,4 +1,4 @@
-{ nixosModules, ... }:
+{ nixosModules, pkgs, ... }:
 
 {
   imports = with nixosModules; [
@@ -13,4 +13,15 @@
 
   # Enable SysRq key for unexpected situations.
   boot.kernel.sysctl."kernel.sysrq" = 1;
+
+  environment.systemPackages = with pkgs; [ alsa-utils ];
+
+  security.rtkit.enable = true;
+  services.pipewire = {
+    enable = true;
+    pulse.enable = true;
+    jack.enable = true;
+    alsa.enable = true;
+    alsa.support32Bit = true;
+  };
 }
