@@ -9,16 +9,22 @@ import XMonad.Actions.Warp
 import XMonad.Layout.NoBorders
 import XMonad.Hooks.ManageHelpers
 
+import qualified XMonad.Util.Run as UR
 import XMonad.Util.Run.Systemd
 import XMonad.Util.NamedScratchpad.Systemd
 
+detectVirt = do
+    out <- init <$> UR.runProcessWithInput "systemd-detect-virt" [] ""
+    pure $ out /= "none"
+
 main = do
     installSignalHandlers
-    launch $ ewmh $ myKeys myConf
+    isVirt <- detectVirt
+    launch $ ewmh $ myKeys $ myConf isVirt
 
-myConf = def
-    { modMask = if "@virtualised@" == "1" then mod1Mask else mod4Mask
-    , terminal = "alacritty"
+myConf isVirt = def
+    { modMask = if isVirt then mod1Mask else mod4Mask
+    , terminal = "@terminal@"
     , borderWidth = 1
     , normalBorderColor = "#676e95"
     , focusedBorderColor = "#d5d5e1"

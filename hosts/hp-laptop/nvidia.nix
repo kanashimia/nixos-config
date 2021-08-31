@@ -22,4 +22,6 @@
     #   finegrained = true;
     # };
   };
+
+  services.xserver.dpi = 96;
 }

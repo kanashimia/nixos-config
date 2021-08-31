@@ -9,9 +9,9 @@ in {
 
   security.acme.certs.${hostname} = {
     extraDomainNames = [ "*.${hostname}" ];
-    dnsProvider = "vultr";
-    credentialsFile = "/run/secrets/redpilled-cert";
-    group = "nginx";
+    dnsProvider = "cloudflare";
+    credentialsFile = config.age.secrets.acme-auth.path;
+    group = config.services.nginx.group;
   };
 
   services.nginx = {
@@ -27,7 +27,7 @@ in {
         onlySSL = true;
         useACMEHost = hostname;
         locations."/" = {
-          root = "/var/www";
+          root = "/srv/www";
         };
       };
       "*.${hostname}" = {
@@ -40,14 +40,14 @@ in {
 
   mailserver = {
     enable = true;
-    fqdn = "mail.${hostname}";
+    fqdn = hostname;
     domains = [ hostname ];
 
     # A list of all login accounts. To create the password hashes, use
-    # nix run n#apacheHttpd -c htpasswd -nbB "" "super secret password" | cut -d: -f2
+    # nix shell n#apacheHttpd -c htpasswd -nB ""
     loginAccounts = {
       "chad@${hostname}" = {
-        hashedPasswordFile = "/run/secrets/redpilled-mail";
+        hashedPasswordFile = config.age.secrets.chad-password.path;
         aliases = [ "@${hostname}" ];
       };
     };

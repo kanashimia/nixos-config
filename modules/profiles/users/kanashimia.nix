@@ -6,6 +6,7 @@
     extraGroups = [
       "wheel"
       "video"
+      "audio"
     ];
     password = "kanashimia";
   };

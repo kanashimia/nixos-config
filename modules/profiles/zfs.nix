@@ -2,7 +2,7 @@
 
 {
   imports = with nixosModules; [
-    boot.zfs
+    system.zfs
   ];
 
   networking.hostId = with builtins;

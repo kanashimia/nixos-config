@@ -11,7 +11,7 @@
       DHCP = "yes";
       DNSSEC = "yes";
       DNSOverTLS = "yes";
-      DNS = [ "1.1.1.1" "1.0.0.1" ];
+      DNS = [ "8.8.8.8" "8.8.4.4" ];
     };
   in {
     "40-wired" = {
