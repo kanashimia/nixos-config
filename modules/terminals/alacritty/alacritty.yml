@@ -1,0 +1,31 @@
+env:
+  WINIT_X11_SCALE_FACTOR: '@scale@'
+
+colors:
+  primary:
+    background: '@background@'
+    foreground: '@foreground@'
+
+  normal:
+    black:   '@black@'
+    red:     '@red@'
+    green:   '@green@'
+    yellow:  '@yellow@'
+    blue:    '@blue@'
+    magenta: '@purple@'
+    cyan:    '@cyan@'
+    white:   '@white@'
+
+  bright:
+    black:   '@blackBr@'
+    red:     '@redBr@'
+    green:   '@greenBr@'
+    yellow:  '@yellowBr@'
+    blue:    '@blueBr@'
+    magenta: '@purpleBr@'
+    cyan:    '@cyanBr@'
+    white:   '@whiteBr@'
+
+key_bindings:
+  - { key: Insert, mods: Shift,   action: Paste }
+  - { key: Insert, mods: Control, action: Copy  }

@@ -20,6 +20,8 @@ in
   imports = with nixosModules; [
     profiles.basic
     window-managers.xmonad
+    terminals.alacritty
+    themes.colors
     profiles.users.kanashimia
     shells.zsh
   ];

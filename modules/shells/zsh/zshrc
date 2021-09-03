@@ -1,37 +1,24 @@
+ZDOTDIR="$HOME/.config/zsh"
+mkdir -p "$ZDOTDIR"
+
+HISTFILE="$ZDOTDIR/history"
+
 autoload -U compinit
-# compinit -C
-# zcompile ~/.zcompdump
 
-# zcompdump="${ZDOTDIR:-$HOME}/.zcompdump"
-# compinit -C -d "$zcompdump"
-# if [[ -s "$zcompdump" && (! -s "${zcompdump}.zwc" || "$zcompdump" -nt "${zcompdump}.zwc") ]]; then
-#   zcompile "$zcompdump"
-# fi
-# 
-# # Compile zcompdump, if modified, to increase startup speed.
-# # Execute in the background to not affect the current session
-# compinit -d "$zcompdump" &!
-
-hash -d os=~/projects/nixos
-
-alias nrs='sudo nixos-rebuild switch --flake ~os'
-alias ns='nix shell'
-alias nr='nix run'
-alias nd='nix develop'
-alias s='systemctl'
-alias j='journalctl --no-hostname -eb -o short-monotonic'
-alias jw='j -p notice'
-alias jf='j -f'
-alias jk='j -k'
-alias d='dmesg'
-
-# autoload -U colors && colors
+zcompdump="${ZDOTDIR:-$HOME}/.zcompdump"
+compinit -C -d "$zcompdump"
+if [[ -s "$zcompdump" && (! -s "${zcompdump}.zwc" || "$zcompdump" -nt "${zcompdump}.zwc") ]]; then
+  zcompile "$zcompdump"
+fi
+ 
+# Compile zcompdump, if modified, to increase startup speed.
+# Execute in the background to not affect the current session
+compinit -d "$zcompdump" &!
 
 zstyle ':completion:*' menu select
 zstyle ':completion:*' group-name ''
 zstyle ':completion:*:descriptions' format '%B%F{blue}Completing %F{yellow}%d%f%b'
 
-# TERM=xterm-256color
 eval "$(dircolors -b)"
 zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
 

@@ -2,7 +2,7 @@
 
 {
   environment.systemPackages = with pkgs; [
-    firefox mpc_cli rofi alacritty tdesktop
+    ungoogled-chromium firefox mpc_cli rofi alacritty tdesktop
   ];
 
   services.xserver.enable = true;

@@ -1,4 +1,4 @@
-{ config, lib, ... }:
+{ config, ... }:
 
 {
   networking = {
@@ -11,17 +11,15 @@
       DHCP = "yes";
       DNSSEC = "yes";
       DNSOverTLS = "yes";
-      DNS = [ "8.8.8.8" "8.8.4.4" ];
+      DNS = [ "1.1.1.1" "1.0.0.1" ];
     };
   in {
     "40-wired" = {
-      enable = true;
       name = "en*";
       inherit networkConfig;
-      dhcpV4Config.RouteMetric = 1024;
+      dhcpV4Config.RouteMetric = 1024; # Better be explicit
     };
     "40-wireless" = {
-      enable = true;
       name = "wl*";
       inherit networkConfig;
       dhcpV4Config.RouteMetric = 2048; # Prefer wired

@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ config, lib, ... }:
 
 let
   hostname = "redpilled.dev";
@@ -19,20 +19,24 @@ in {
 
     recommendedGzipSettings = true;
     recommendedOptimisation = true;
-    recommendedProxySettings = true;
     recommendedTlsSettings = true;
 
-    virtualHosts = {
+    virtualHosts = lib.mapAttrs (_: conf: conf // {
+      onlySSL = true;
+      useACMEHost = hostname;
+    }) {
       ${hostname} = {
-        onlySSL = true;
-        useACMEHost = hostname;
         locations."/" = {
           root = "/srv/www";
         };
       };
+      "rspamd.${hostname}" = {
+        locations."/" = {
+          proxyPass = "http://unix:/run/rspamd/worker-controller.sock:/";
+        };
+        basicAuthFile = config.age.secrets.rspamd-password.path;
+      };
       "*.${hostname}" = {
-        onlySSL = true;
-        useACMEHost = hostname;
         globalRedirect = hostname;
       };
     };
@@ -42,6 +46,8 @@ in {
     enable = true;
     fqdn = hostname;
     domains = [ hostname ];
+
+    localDnsResolver = false;
 
     # A list of all login accounts. To create the password hashes, use
     # nix shell n#apacheHttpd -c htpasswd -nB ""
@@ -58,4 +64,5 @@ in {
   };
 
   networking.firewall.allowedTCPPorts = [ 443 ];
+  networking.firewall.logRefusedConnections = false;
 }

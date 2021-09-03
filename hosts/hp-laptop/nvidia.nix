@@ -23,5 +23,5 @@
     # };
   };
 
-  services.xserver.dpi = 96;
+  services.xserver.dpi = 102;
 }

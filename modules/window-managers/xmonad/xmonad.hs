@@ -58,7 +58,7 @@ myKeys = flip additionalKeysP $
 
 myScratchpads :: NamedScratchpads
 myScratchpads =
-    [ NS "browser" "firefox" [] (className =? "Firefox") nonFloating
+    [ NS "browser" "chromium" [] (className =? "Chromium-browser") nonFloating
     , NS "telegram" "telegram-desktop" [] (className =? "TelegramDesktop") nonFloating
     ]
 
