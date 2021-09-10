@@ -7,6 +7,8 @@
     xmonad-systemd.url = "github:kanashimia/xmonad-systemd";
     agenix.url = "github:ryantm/agenix";
 
+    digimend.url = "github:kurikaesu/digimend-kernel-drivers/xppen-artist22r-pro";
+    digimend.flake = false;
     # home-manager.url = "github:nix-community/home-manager";
     # home-manager.inputs.nixpkgs.follows = "nixpkgs";
   };
@@ -31,11 +33,19 @@
       filter (hasSuffix ".nix") (filesystem.listFilesRecursive path);
   in {
     nixosModules = genAttrsetTreeOfModules ./modules;
+
+    overlays.digimend = final: prev: {
+      linuxPackagesFor = kernel:
+        (prev.linuxPackagesFor kernel).extend (lnxfinal: lnxprev: {
+          digimend = lnxprev.digimend.overrideAttrs (old: {
+            src = inputs.digimend;
+            patches = [];
+          });
+        });
+    };
      
     nixosConfigurations = let
       hosts = with builtins; attrNames (readDir ./hosts);
-
-      # hosts =
 
       mkHost = host:
         # lib.makeOverridable
@@ -43,8 +53,8 @@
           system = "x86_64-linux";
           modules = [
             { networking.hostName = host; }
-            { nixpkgs.overlays = map import (listNixFilesRecursive ./overlays); }
             { nixpkgs.overlays = [ inputs.xmonad-systemd.overlay ]; }
+            { nixpkgs.overlays = lib.attrValues inputs.self.overlays; }
 
             # home-manager.
             # inputs.home-manager.nixosModule
@@ -55,9 +65,6 @@
             inputs.agenix.nixosModules.age
           ] ++ lib.concatMap listNixFilesRecursive [
             (./hosts + "/${host}")
-            # ./modules
-            # ./profiles
-            # ./configs
           ];
           specialArgs = {
             inherit inputs;

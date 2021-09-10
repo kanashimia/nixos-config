@@ -77,11 +77,11 @@ in
   #     ID_INPUT_TABLET_PAD=1
   # '';
     
-  services.xserver.inputClassSections = [''
-    Identifier "Tablet"
-    MatchUSBID "28bd:0904"
-    MatchDevicePath "/dev/input/event*"
-    Driver "wacom"
-  ''];
+  # services.xserver.inputClassSections = [''
+  #   Identifier "Tablet"
+  #   MatchUSBID "28bd:0904"
+  #   MatchDevicePath "/dev/input/event*"
+  #   Driver "wacom"
+  # ''];
 }
 

@@ -21,7 +21,7 @@ in {
     recommendedOptimisation = true;
     recommendedTlsSettings = true;
 
-    virtualHosts = lib.mapAttrs (_: conf: conf // {
+    virtualHosts = lib.mapAttrs (_: vh: vh // {
       onlySSL = true;
       useACMEHost = hostname;
     }) {
@@ -42,12 +42,14 @@ in {
     };
   };
 
+  services.rspamd.locals."classifier-bayes.conf".text = ''
+    autolearn = true;
+  '';
+
   mailserver = {
     enable = true;
     fqdn = hostname;
     domains = [ hostname ];
-
-    localDnsResolver = false;
 
     # A list of all login accounts. To create the password hashes, use
     # nix shell n#apacheHttpd -c htpasswd -nB ""

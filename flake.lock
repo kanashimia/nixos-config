@@ -34,6 +34,23 @@
         "type": "gitlab"
       }
     },
+    "digimend": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1630620500,
+        "narHash": "sha256-AosCgsclkaSP9DWNtt4RpymUG+QmmqYiaD3Dm6vnk/A=",
+        "owner": "kurikaesu",
+        "repo": "digimend-kernel-drivers",
+        "rev": "beb79ff3d92ba500740e5657ca29b9296977f8e1",
+        "type": "github"
+      },
+      "original": {
+        "owner": "kurikaesu",
+        "ref": "xppen-artist22r-pro",
+        "repo": "digimend-kernel-drivers",
+        "type": "github"
+      }
+    },
     "flake-utils": {
       "locked": {
         "lastModified": 1629284811,
@@ -115,11 +132,11 @@
     },
     "nixpkgs_3": {
       "locked": {
-        "lastModified": 1630338749,
-        "narHash": "sha256-J1LsmwGtlYpqIMYEi/amMKkk0VfRrwHaEs/uylugGnE=",
+        "lastModified": 1631015389,
+        "narHash": "sha256-9SKTwRbp7OQGa4wKTo1wB6ctC2VlaIeKFZ+flqzPuoI=",
         "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "8a2ec31e224de9461390cdd03e5e0b0290cdad0b",
+        "rev": "bc06c93905f60a82d6ebbb78f78cf289257860cc",
         "type": "github"
       },
       "original": {
@@ -148,6 +165,7 @@
     "root": {
       "inputs": {
         "agenix": "agenix",
+        "digimend": "digimend",
         "mailserver": "mailserver",
         "nixpkgs": "nixpkgs_3",
         "xmonad-systemd": "xmonad-systemd"
