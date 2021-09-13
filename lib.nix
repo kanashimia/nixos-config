@@ -14,6 +14,9 @@ with lib; rec {
       ) (builtins.readDir dir)
     );
 
+  mkOverlayTree = path:
+    lib.mapAttrsRecursive (_: ovl: import ovl inputs) (mkAttrsTree path);
+
   listNixFilesRecursive = path:
     filter (hasSuffix ".nix") (filesystem.listFilesRecursive path);
 

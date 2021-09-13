@@ -19,9 +19,7 @@
   in {
     nixosModules = nlib.mkAttrsTree ./modules;
 
-    overlays = lib.mapAttrsRecursive (_: ovl: import ovl inputs) (
-      nlib.mkAttrsTree ./overlays
-    );
+    overlays = nlib.mkOverlayTree ./overlays;
      
     nixosConfigurations = nlib.mkNixosConfigs {
       system = "x86_64-linux";
