@@ -5,7 +5,10 @@
     profiles.zfs
     profiles.graphical
     hardware.amdgpu.support-old
+    hardware.fix-tearing
   ];
+
+  services.xserver.dpi = 96;
 
   fileSystems = {
     "/" = {

@@ -6,6 +6,7 @@
     mailserver.url = "gitlab:simple-nixos-mailserver/nixos-mailserver";
     xmonad-systemd.url = "github:kanashimia/xmonad-systemd";
     agenix.url = "github:ryantm/agenix";
+
     digimend.url = "github:kurikaesu/digimend-kernel-drivers/xppen-artist22r-pro";
     digimend.flake = false;
     xp-pen-userland.url = "github:kurikaesu/xp-pen-userland";
@@ -16,45 +17,19 @@
     inherit (inputs.nixpkgs) lib;
     nlib = import ./lib.nix { inherit lib inputs; };
   in {
-    nixosModules = nlib.mkAttrsetTreeOfModules ./modules;
+    nixosModules = nlib.mkAttrsTree ./modules;
 
-    overlays = {
-      digimend = final: prev: {
-        linuxPackagesFor = kernel:
-          (prev.linuxPackagesFor kernel).extend (lnxfinal: lnxprev: {
-            digimend = lnxprev.digimend.overrideAttrs (old: {
-              src = inputs.digimend;
-              patches = [];
-            });
-          });
-      };
-      xp-pen-userland = final: prev: {
-        xp-pen-userland = final.stdenv.mkDerivation {
-          pname = "xp-pen-userland";
-          version = "unstable";
-          src = inputs.xp-pen-userland;
-          patchPhase = ''
-            substituteInPlace ./CMakeLists.txt \
-              --replace 'VERSION 3.20' 'VERSION 3.19' \
-              --replace 'LICENSE' '\''${CMAKE_CURRENT_SOURCE_DIR}/LICENSE'
-          '';
-          nativeBuildInputs = [ final.cmake ];
-          buildInputs = [ final.libusb ];
-          postFixup = ''
-            mkdir -p $out/lib
-            cp -r $src/config/etc/udev $out/lib
-            cp -r $src/config/usr/share $out
-          '';
-        };
-      };
-    };
+    overlays = lib.mapAttrsRecursive (_: ovl: import ovl inputs) (
+      nlib.mkAttrsTree ./overlays
+    );
      
-    nixosConfigurations = nlib.mkNixosConfigurations {
+    nixosConfigurations = nlib.mkNixosConfigs {
       system = "x86_64-linux";
       overlays = with inputs; [
         xmonad-systemd.overlay
         self.overlays.digimend
         self.overlays.xp-pen-userland
+        self.overlays.pentablet-driver
       ];
     } {
       ati-workstation = {};

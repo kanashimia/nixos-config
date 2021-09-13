@@ -1,12 +1,12 @@
 { lib, inputs }:
 
 with lib; rec {
-  mkAttrsetTreeOfModules = dir:
+  mkAttrsTree = dir:
     mapAttrs' (name: type: let path = dir + "/${name}"; in
       if type == "directory" then
         if pathExists (path + "/default.nix")
         then nameValuePair name (path + "/default.nix")
-        else nameValuePair name (mkAttrsetTreeOfModules path)
+        else nameValuePair name (mkAttrsTree path)
       else nameValuePair (removeSuffix ".nix" name) path
     ) (
       filterAttrs (name: type:
@@ -17,7 +17,7 @@ with lib; rec {
   listNixFilesRecursive = path:
     filter (hasSuffix ".nix") (filesystem.listFilesRecursive path);
 
-  mkNixosConfiguration = {
+  mkNixosConfig = {
     name,
     overlays ? [],
     modules ? [],
@@ -38,13 +38,13 @@ with lib; rec {
     }
   );
 
-  mkNixosConfigurations = {
+  mkNixosConfigs = {
     system ? null,
     overlays ? [],
     modules ? [],
     specialArgs ? {}
   }: mapAttrs (name: val:
-    mkNixosConfiguration ({
+    mkNixosConfig ({
       inherit name system overlays modules specialArgs;
     } // val)
   );
