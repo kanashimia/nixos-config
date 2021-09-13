@@ -18,26 +18,7 @@
     nlib = import ./lib.nix { inherit lib inputs; };
   in {
     nixosModules = nlib.mkAttrsTree ./modules;
-
     overlays = nlib.mkOverlayTree ./overlays;
-     
-    nixosConfigurations = nlib.mkNixosConfigs {
-      system = "x86_64-linux";
-      overlays = with inputs; [
-        xmonad-systemd.overlay
-        self.overlays.digimend
-        self.overlays.xp-pen-userland
-        self.overlays.pentablet-driver
-      ];
-    } {
-      ati-workstation = {};
-      hp-laptop = {};
-      personal-server = {
-        modules = with inputs; [
-          agenix.nixosModules.age
-          mailserver.nixosModule
-        ];
-      };
-    };
+    nixosConfigurations = nlib.mkNixosConfigs ./hosts;
   };
 }

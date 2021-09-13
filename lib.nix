@@ -10,7 +10,7 @@ with lib; rec {
       else nameValuePair (removeSuffix ".nix" name) path
     ) (
       filterAttrs (name: type:
-        type != "regular" || hasSuffix ".nix" name
+        type == "directory" || hasSuffix ".nix" name
       ) (builtins.readDir dir)
     );
 
@@ -20,35 +20,28 @@ with lib; rec {
   listNixFilesRecursive = path:
     filter (hasSuffix ".nix") (filesystem.listFilesRecursive path);
 
-  mkNixosConfig = {
-    name,
-    overlays ? [],
-    modules ? [],
-    specialArgs ? {},
-    ...
-  }@args: makeOverridable nixosSystem (
-    filterAttrs (k: v: !elem k [ "name" "overlays" ]) args // {
-      modules = modules ++ [{
-        networking.hostName = name;
-        nixpkgs.overlays = overlays;
-      }] ++ concatMap listNixFilesRecursive [
-        (./hosts + "/${name}")
-      ];
-      specialArgs = specialArgs // {
-        inherit inputs;
-        inherit (inputs.self) nixosModules;
-      };
-    }
-  );
+  mkNixosConfig = path: system: name:
+    makeOverridable nixosSystem {
+      inherit system;
 
-  mkNixosConfigs = {
-    system ? null,
-    overlays ? [],
-    modules ? [],
-    specialArgs ? {}
-  }: mapAttrs (name: val:
-    mkNixosConfig ({
-      inherit name system overlays modules specialArgs;
-    } // val)
-  );
+      modules = [{
+        networking.hostName = name;
+        nixpkgs.overlays = mkIf (inputs.self ? overlays) (
+          collect (a: !isAttrs a) inputs.self.overlays
+        );
+      }] ++ listNixFilesRecursive path;
+
+      specialArgs = optionalAttrs (inputs.self ? nixosModules) {
+        inherit (inputs.self) nixosModules;
+      } // { inherit inputs; };
+    };
+
+  mkNixosConfigs = dir:
+    foldAttrs (confs: conf: confs // conf) {} (
+      map (arch:
+        mapAttrs (host: type:
+          mkNixosConfig (dir + "/${arch}/${host}") arch host
+        ) (builtins.readDir (dir + "/${arch}"))
+      ) (attrNames (builtins.readDir dir))
+    );
 }

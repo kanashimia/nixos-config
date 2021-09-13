@@ -1,9 +1,11 @@
-{ config, lib, ... }:
+{ config, lib, inputs, ... }:
 
 let
   hostname = "redpilled.dev";
   certDir = config.security.acme.certs.${hostname}.directory;
 in {
+  imports = with inputs; [ mailserver.nixosModule ];
+
   security.acme.acceptTerms = true;
   security.acme.email = "acme@${hostname}";
 

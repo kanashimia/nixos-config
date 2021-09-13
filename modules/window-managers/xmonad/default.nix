@@ -1,6 +1,8 @@
-{ pkgs, config, ... }:
+{ pkgs, config, inputs, ... }:
 
 {
+  nixpkgs.overlays = with inputs; [ xmonad-systemd.overlay ];
+
   environment.systemPackages = with pkgs; [
     chromium firefox mpc_cli rofi alacritty tdesktop
   ];

@@ -37,29 +37,12 @@
   #   Driver "wacom"
   # ''];
 
-  # services.xserver.inputClassSections = [''
-  #   Identifier "XP-Pen Deco Pro MD Tablet"
-  #   MatchUSBID "28bd:0904"
-  #   MatchDevicePath "/dev/input/event*"
-  #   MatchIsTablet "on"
-  #   Driver "wacom"
-  #   Option "PressCurve" "64,7,81,46"
-  #   Option "Threshold" "27"
-  # '' ''
-  #   Identifier "XP-Pen Deco Pro MD Frame"
-  #   MatchUSBID "28bd:0904"
-  #   MatchIsKeyboard "on"
-  #   MatchDevicePath "/dev/input/event*"
-  #   Driver "libinput"
-  # '' ''
-  #   Identifier "XP-Pen Deco Pro MD Pointer"
-  #   MatchUSBID "28bd:0904"
-  #   MatchIsPointer "on"
-  #   MatchDevicePath "/dev/input/event*"
-  #   Driver "libinput"
-  # ''];
-
-  environment.systemPackages = with pkgs; [ xp-pen-userland pentablet-driver krita gimp ];
+  environment.systemPackages = with pkgs; [
+    xp-pen-userland
+    pentablet-driver
+    krita
+    mypaint
+  ];
 
   nixpkgs.config.allowUnfreePredicate = pkg: lib.elem (lib.getName pkg) [
     "pentablet-driver"
