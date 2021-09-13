@@ -1,7 +1,7 @@
 { config, inputs, ... }:
 
 {
-  imports = with inputs; [ agenix.nixosModules.age ];
+  imports = [ inputs.agenix.nixosModules.age ];
 
   age.secrets = {
     acme-auth.file = ./acme-auth.age;
