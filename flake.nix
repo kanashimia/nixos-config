@@ -8,6 +8,8 @@
     agenix.url = "github:ryantm/agenix";
     digimend.url = "github:kurikaesu/digimend-kernel-drivers/xppen-artist22r-pro";
     digimend.flake = false;
+    xp-pen-userland.url = "github:kurikaesu/xp-pen-userland";
+    xp-pen-userland.flake = false;
   };
   
   outputs = inputs:  let
@@ -26,6 +28,25 @@
             });
           });
       };
+      xp-pen-userland = final: prev: {
+        xp-pen-userland = final.stdenv.mkDerivation {
+          pname = "xp-pen-userland";
+          version = "unstable";
+          src = inputs.xp-pen-userland;
+          patchPhase = ''
+            substituteInPlace ./CMakeLists.txt \
+              --replace 'VERSION 3.20' 'VERSION 3.19' \
+              --replace 'LICENSE' '\''${CMAKE_CURRENT_SOURCE_DIR}/LICENSE'
+          '';
+          nativeBuildInputs = [ final.cmake ];
+          buildInputs = [ final.libusb ];
+          postFixup = ''
+            mkdir -p $out/lib
+            cp -r $src/config/etc/udev $out/lib
+            cp -r $src/config/usr/share $out
+          '';
+        };
+      };
     };
      
     nixosConfigurations = nlib.mkNixosConfigurations {
@@ -33,6 +54,7 @@
       overlays = with inputs; [
         xmonad-systemd.overlay
         self.overlays.digimend
+        self.overlays.xp-pen-userland
       ];
     } {
       ati-workstation = {};

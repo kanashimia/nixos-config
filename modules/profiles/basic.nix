@@ -14,7 +14,7 @@
 
   # Do not print sometimes helpful, but not always, info during boot,
   # so it is harder to debug system when something goes wrong.
-  boot.kernelParams = [ "quiet" ];
+  # boot.kernelParams = [ "quiet" ];
 
   # Layout config.
   services.xserver = {
@@ -30,5 +30,5 @@
   time.timeZone = "Europe/Kiev";
 
   users.users.root.password = "root";
-  users.mutableUsers = false;
+  # users.mutableUsers = false;
 }

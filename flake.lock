@@ -5,11 +5,11 @@
         "nixpkgs": "nixpkgs"
       },
       "locked": {
-        "lastModified": 1627822587,
-        "narHash": "sha256-AAFgsVe/ahLh1Ij2o98x6IMxz3Z+Tr97bFwa4nthB1w=",
+        "lastModified": 1631325864,
+        "narHash": "sha256-bBvrjUS0qfgC4LPFthGJ5E8Fl0f5UvlrCB3o5Bnn9ys=",
         "owner": "ryantm",
         "repo": "agenix",
-        "rev": "e6752e7b8592502df42066f156165471e62d902d",
+        "rev": "5c5bc282565f03f9c5b3d6e72b7cb985706148a6",
         "type": "github"
       },
       "original": {
@@ -132,11 +132,11 @@
     },
     "nixpkgs_3": {
       "locked": {
-        "lastModified": 1631015389,
-        "narHash": "sha256-9SKTwRbp7OQGa4wKTo1wB6ctC2VlaIeKFZ+flqzPuoI=",
+        "lastModified": 1631295156,
+        "narHash": "sha256-jIriDkYUU09njpjvpRiS2/Yy+iKpmalCGJ2HnC41ZSQ=",
         "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "bc06c93905f60a82d6ebbb78f78cf289257860cc",
+        "rev": "bbbe2b35f736d039884e082ecc6d6e631e126029",
         "type": "github"
       },
       "original": {
@@ -168,7 +168,8 @@
         "digimend": "digimend",
         "mailserver": "mailserver",
         "nixpkgs": "nixpkgs_3",
-        "xmonad-systemd": "xmonad-systemd"
+        "xmonad-systemd": "xmonad-systemd",
+        "xp-pen-userland": "xp-pen-userland"
       }
     },
     "utils": {
@@ -202,6 +203,22 @@
       "original": {
         "owner": "kanashimia",
         "repo": "xmonad-systemd",
+        "type": "github"
+      }
+    },
+    "xp-pen-userland": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1631370986,
+        "narHash": "sha256-b+dmXyK3Eus/6tZbXXcibqw/T4I0finAXzdY8Njjqpo=",
+        "owner": "kurikaesu",
+        "repo": "xp-pen-userland",
+        "rev": "0556ccee8fc626f41ffa5f1afe7833fea690aa38",
+        "type": "github"
+      },
+      "original": {
+        "owner": "kurikaesu",
+        "repo": "xp-pen-userland",
         "type": "github"
       }
     }

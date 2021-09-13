@@ -23,7 +23,7 @@ with lib; rec {
     modules ? [],
     specialArgs ? {},
     ...
-  }@args: nixosSystem (
+  }@args: makeOverridable nixosSystem (
     filterAttrs (k: v: !elem k [ "name" "overlays" ]) args // {
       modules = modules ++ [{
         networking.hostName = name;
