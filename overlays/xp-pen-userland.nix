@@ -3,13 +3,13 @@ inputs: final: prev: {
     pname = "xp-pen-userland";
     version = "unstable";
     src = inputs.xp-pen-userland;
-    patchPhase = ''
-      substituteInPlace ./CMakeLists.txt \
-        --replace 'VERSION 3.20' 'VERSION 3.19' \
-        --replace ${final.lib.escapeShellArgs [
-          "\"LICENSE\"" "\"\${CMAKE_CURRENT_SOURCE_DIR}/LICENSE\""
-        ]}
-    '';
+    # patchPhase = ''
+    #   substituteInPlace ./CMakeLists.txt \
+    #     --replace 'VERSION 3.20' 'VERSION 3.19' \
+    #     --replace ${final.lib.escapeShellArgs [
+    #       "\"LICENSE\"" "\"\${CMAKE_CURRENT_SOURCE_DIR}/LICENSE\""
+    #     ]}
+    # '';
     nativeBuildInputs = [ final.cmake ];
     buildInputs = [ final.libusb ];
     postFixup = ''

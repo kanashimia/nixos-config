@@ -1,5 +1,5 @@
 env:
-  WINIT_X11_SCALE_FACTOR: '@scale@'
+  WINIT_X11_SCALE_FACTOR: '1'
 
 colors:
   primary:

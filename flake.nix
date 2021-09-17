@@ -11,6 +11,8 @@
     digimend.flake = false;
     xp-pen-userland.url = "github:kurikaesu/xp-pen-userland";
     xp-pen-userland.flake = false;
+    evsieve.url = "github:karsmulder/evsieve";
+    evsieve.flake = false;
   };
   
   outputs = inputs:  let

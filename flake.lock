@@ -5,11 +5,11 @@
         "nixpkgs": "nixpkgs"
       },
       "locked": {
-        "lastModified": 1631325864,
-        "narHash": "sha256-bBvrjUS0qfgC4LPFthGJ5E8Fl0f5UvlrCB3o5Bnn9ys=",
+        "lastModified": 1631896269,
+        "narHash": "sha256-DAyCxJ8JacayOzGgGSfzrn7ghtsfL/EsCyk1NEUaAR8=",
         "owner": "ryantm",
         "repo": "agenix",
-        "rev": "5c5bc282565f03f9c5b3d6e72b7cb985706148a6",
+        "rev": "daf1d773989ac5d949aeef03fce0fe27e583dbca",
         "type": "github"
       },
       "original": {
@@ -48,6 +48,22 @@
         "owner": "kurikaesu",
         "ref": "xppen-artist22r-pro",
         "repo": "digimend-kernel-drivers",
+        "type": "github"
+      }
+    },
+    "evsieve": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1631616980,
+        "narHash": "sha256-qAi6Vp8JzdsgMAOFi3QjDzqq+dhEkjORaFrLnZEZBF0=",
+        "owner": "karsmulder",
+        "repo": "evsieve",
+        "rev": "5eb8d884b09f2184154cfdf6b2c06d72386743fc",
+        "type": "github"
+      },
+      "original": {
+        "owner": "karsmulder",
+        "repo": "evsieve",
         "type": "github"
       }
     },
@@ -132,11 +148,11 @@
     },
     "nixpkgs_3": {
       "locked": {
-        "lastModified": 1631295156,
-        "narHash": "sha256-jIriDkYUU09njpjvpRiS2/Yy+iKpmalCGJ2HnC41ZSQ=",
+        "lastModified": 1631785487,
+        "narHash": "sha256-VSKEvOtaY/roDxEHFxXh6GguOqqWCJZ3E06fBdKu8+I=",
         "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "bbbe2b35f736d039884e082ecc6d6e631e126029",
+        "rev": "79c444b5bdeaba142d128afddee14c89ecf2a968",
         "type": "github"
       },
       "original": {
@@ -166,6 +182,7 @@
       "inputs": {
         "agenix": "agenix",
         "digimend": "digimend",
+        "evsieve": "evsieve",
         "mailserver": "mailserver",
         "nixpkgs": "nixpkgs_3",
         "xmonad-systemd": "xmonad-systemd",
@@ -209,11 +226,11 @@
     "xp-pen-userland": {
       "flake": false,
       "locked": {
-        "lastModified": 1631370986,
-        "narHash": "sha256-b+dmXyK3Eus/6tZbXXcibqw/T4I0finAXzdY8Njjqpo=",
+        "lastModified": 1631832474,
+        "narHash": "sha256-+6Jl6dO8mWN+2LIkZTfpXHPrwZcWgUAQQU8i3uYC9wM=",
         "owner": "kurikaesu",
         "repo": "xp-pen-userland",
-        "rev": "0556ccee8fc626f41ffa5f1afe7833fea690aa38",
+        "rev": "de6f5d3cbc33b74df146bbd60f198fa00883135d",
         "type": "github"
       },
       "original": {

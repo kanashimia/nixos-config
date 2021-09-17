@@ -4,7 +4,7 @@
   nixpkgs.overlays = with inputs; [ xmonad-systemd.overlay ];
 
   environment.systemPackages = with pkgs; [
-    chromium firefox mpc_cli rofi alacritty tdesktop
+    chromium firefox mpc_cli rofi st tdesktop
   ];
 
   services.xserver.enable = true;
@@ -12,7 +12,7 @@
     enable = true;
     config = pkgs.substituteAll {
       src = ./xmonad.hs;
-      terminal = "alacritty";
+      terminal = "st";
     };
     extraPackages = hpkgs: with hpkgs; [
       xmonad-contrib xmonad-systemd

@@ -1,16 +1,21 @@
-{ nixosModules, ... }:
+{ nixosModules, pkgs, ... }:
 
 {
   imports = with nixosModules; [
     profiles.basic
     window-managers.xmonad
     terminals.alacritty
+    terminals.st
     themes.colors
     profiles.users.kanashimia
     profiles.drawing
     profiles.pipewire
+    profiles.utils
     shells.zsh
   ];
+
+  hardware.opengl.enable = true;
+  hardware.opengl.driSupport32Bit = true;
 
   services.xserver.libinput.enable = true;
   services.xserver.libinput.touchpad.disableWhileTyping = true;
@@ -30,6 +35,11 @@
   # hardware.opentabletdriver.enable = true;
   
   # services.udev.extraHwdb = ''
+  #   id-input:modalias:input:b0003v28BDp0904e0100-e0,1,2,4*r6*
+  #     ID_INPUT_TABLET=1
+  #     ID_INPUT_TABLET_PAD=1
+  #     ID_INPUT_KEY=0
+  # '';
   #   evdev:input:b0003v28BDp0904e0100-e0,1,2,4*r6*
   #     KEYBOARD_KEY_90001=forward
   #     KEYBOARD_KEY_90002=insert
@@ -56,7 +66,6 @@
   #   #   ID_INPUT_KEY=0
   #   #   ID_INPUT_KEYBOARD=0
   #   #   ID_INPUT_MOUSE=0
-  # '';
    # services.xserver.inputClassSections = [''
    #   Identifier "XP-Pen Deco Pro M"
    #   MatchUSBID "28bd:0904"

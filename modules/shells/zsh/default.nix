@@ -8,7 +8,7 @@
     interactiveShellInit = builtins.readFile ./zshrc;
     shellInit = "zsh-newuser-install () {}";
     shellAliases = {
-      nrs = "sudo nixos-rebuild switch --flake ~/projects/nixos";
+      nrs = "sudo nixos-rebuild switch --flake ~/projects/nixos -L";
       ns = "nix shell";
       nr = "nix run";
       nd = "nix develop";
