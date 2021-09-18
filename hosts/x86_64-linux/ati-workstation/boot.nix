@@ -8,8 +8,6 @@
     hardware.fix-tearing
   ];
 
-  services.xserver.dpi = 96;
-
   fileSystems = {
     "/" = {
       device = "rpool/nixos";

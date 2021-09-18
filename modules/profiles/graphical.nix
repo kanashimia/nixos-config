@@ -11,6 +11,7 @@
     profiles.drawing
     profiles.pipewire
     profiles.utils
+    profiles.music
     shells.zsh
   ];
 

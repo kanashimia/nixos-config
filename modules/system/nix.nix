@@ -1,11 +1,16 @@
 { pkgs, inputs, ... }:
 
 {
-  # Enable flake support for nix, don't warn on dirty repos.
   nix.package = pkgs.nixUnstable;
   nix.extraOptions = ''
+    # Enable flake support
     experimental-features = nix-command flakes ca-references
+
+    # Annoying warning
     warn-dirty = false
+
+    # Disable global flake registry
+    flake-registry = /etc/nix/registry.json
   '';
 
   # Use n as an alias to the current configs nixpkgs.
