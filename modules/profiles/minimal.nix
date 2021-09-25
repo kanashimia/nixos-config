@@ -6,9 +6,10 @@
   ];
 
   documentation = {
-    enable = lib.mkDefault false;
+    enable = false;
     nixos.enable = false;
   };
+
   security.sudo.enable = false;
   #environment.noXlibs = true;
 }
