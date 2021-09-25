@@ -7,6 +7,7 @@
     terminals.alacritty
     terminals.st
     themes.colors
+    themes.lightdm
     profiles.users.kanashimia
     profiles.drawing
     profiles.pipewire

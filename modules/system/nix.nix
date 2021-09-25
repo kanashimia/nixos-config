@@ -4,7 +4,7 @@
   nix.package = pkgs.nixUnstable;
   nix.extraOptions = ''
     # Enable flake support
-    experimental-features = nix-command flakes ca-references
+    experimental-features = nix-command flakes
 
     # Annoying warning
     warn-dirty = false

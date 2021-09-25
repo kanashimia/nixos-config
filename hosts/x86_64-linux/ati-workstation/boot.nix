@@ -23,7 +23,7 @@
     };
   };
 
-  boot.zfs.arcSize = 2;
+  # boot.zfs.arcSize = 2;
 
   hardware = {
     cpu.amd.updateMicrocode = true;

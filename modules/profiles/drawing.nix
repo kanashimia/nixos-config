@@ -15,6 +15,7 @@
     "${pkgs.xp-pen-userland}/share/X11/xorg.conf.d/60-xp-pen.conf";
 
   systemd.user.services.xp-pen-userland = {
+    enable = false;
     description = "Userland driver for XP-Pen tablets";
     wantedBy = [ "graphical-session.target" ];
     serviceConfig.ExecStart = "${pkgs.xp-pen-userland}/bin/xp_pen_userland";

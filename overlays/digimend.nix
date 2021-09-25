@@ -1,9 +1,11 @@
 inputs: final: prev: {
-  linuxPackagesFor = kernel:
-    (prev.linuxPackagesFor kernel).extend (lnxfinal: lnxprev: {
-      digimend = lnxprev.digimend.overrideAttrs (old: {
-        src = inputs.digimend;
-        patches = [];
+  linuxKernel = prev.linuxKernel // {
+    packagesFor = kernel:
+      (prev.linuxKernel.packagesFor kernel).extend (_: lnxprev: {
+        digimend = lnxprev.digimend.overrideAttrs (old: {
+          src = inputs.digimend;
+          patches = [];
+        });
       });
-    });
+  };
 }
