@@ -1,7 +1,7 @@
 { pkgs, inputs, ... }:
 
 {
-  nix.package = pkgs.nixUnstable;
+  nix.package = inputs.nix.defaultPackage.${pkgs.system};
   nix.extraOptions = ''
     # Enable flake support
     experimental-features = nix-command flakes

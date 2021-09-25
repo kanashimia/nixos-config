@@ -6,6 +6,7 @@
     mailserver.url = "gitlab:simple-nixos-mailserver/nixos-mailserver";
     xmonad-systemd.url = "github:kanashimia/xmonad-systemd";
     agenix.url = "github:ryantm/agenix";
+    nix.url = "github:nixos/nix";
 
     digimend.url = "github:kurikaesu/digimend-kernel-drivers/xppen-artist22r-pro";
     digimend.flake = false;
