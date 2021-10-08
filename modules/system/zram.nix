@@ -1,5 +1,4 @@
 {
-  # Enable zram, a compressed block device in ram, as a swap device.
   zramSwap.enable = true;
 
   # This is the size of a block device to be created, in a percentage of ram,
@@ -8,6 +7,6 @@
   # so having values above 100 is ok.
   zramSwap.memoryPercent = 200;
 
-  # Prioritize swapping to paging.
+  # Swapping with zram is much much faster than paging so we prioritize it.
   boot.kernel.sysctl."vm.swappiness" = 190;
 }

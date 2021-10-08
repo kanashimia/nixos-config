@@ -27,20 +27,8 @@ in {
       onlySSL = true;
       useACMEHost = hostname;
     }) {
-      ${hostname} = {
-        locations."/" = {
-          root = "/srv/www";
-        };
-      };
-      "rspamd.${hostname}" = {
-        locations."/" = {
-          proxyPass = "http://unix:/run/rspamd/worker-controller.sock:/";
-        };
-        basicAuthFile = config.age.secrets.rspamd-password.path;
-      };
-      "*.${hostname}" = {
-        globalRedirect = hostname;
-      };
+      ${hostname}.locations."/".root = "/srv/www";
+      "*.${hostname}".globalRedirect = hostname;
     };
   };
 
@@ -69,4 +57,15 @@ in {
 
   networking.firewall.allowedTCPPorts = [ 443 ];
   networking.firewall.logRefusedConnections = false;
+
+  systemd.network.networks."40-wired" = {
+    name = "en*";
+    networkConfig = {
+      DHCP = "yes";
+      Address = [ "2a01:4f8:1c1c:f8e2::/64" ];
+      Gateway = [ "fe80::1" ];
+    };
+    dhcpV4Config.UseDNS = false;
+    dhcpV6Config.UseDNS = false;
+  };
 }

@@ -10,7 +10,7 @@
     pciutils usbutils htop acpi
 
     # Debugging.
-    ltrace gdb hyperfine
+    strace ltrace gdb hyperfine
 
     # Misc.
     atool xsel hydra-check

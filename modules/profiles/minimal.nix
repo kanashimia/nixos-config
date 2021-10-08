@@ -1,4 +1,4 @@
-{ lib, nixosModules, ... }:
+{ nixosModules, ... }:
 
 {
   imports = with nixosModules; [

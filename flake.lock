@@ -51,22 +51,6 @@
         "type": "github"
       }
     },
-    "evsieve": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1631616980,
-        "narHash": "sha256-qAi6Vp8JzdsgMAOFi3QjDzqq+dhEkjORaFrLnZEZBF0=",
-        "owner": "karsmulder",
-        "repo": "evsieve",
-        "rev": "5eb8d884b09f2184154cfdf6b2c06d72386743fc",
-        "type": "github"
-      },
-      "original": {
-        "owner": "karsmulder",
-        "repo": "evsieve",
-        "type": "github"
-      }
-    },
     "flake-utils": {
       "locked": {
         "lastModified": 1629284811,
@@ -85,16 +69,15 @@
     "lowdown-src": {
       "flake": false,
       "locked": {
-        "lastModified": 1628247802,
-        "narHash": "sha256-4XSXGYvKqogR7bubyqYNwBHYCtrIn6XRGXj6+u+BXNs=",
+        "lastModified": 1633514407,
+        "narHash": "sha256-Dw32tiMjdK9t3ETl5fzGrutQTzh2rufgZV4A/BbxuD4=",
         "owner": "kristapsdz",
         "repo": "lowdown",
-        "rev": "b4483d0ef85990f54b864158ab786b4a5b3904fa",
+        "rev": "d2c2b44ff6c27b936ec27358a2653caaef8f73b8",
         "type": "github"
       },
       "original": {
         "owner": "kristapsdz",
-        "ref": "VERSION_0_8_6",
         "repo": "lowdown",
         "type": "github"
       }
@@ -107,17 +90,13 @@
         "utils": "utils"
       },
       "locked": {
-        "lastModified": 1628684416,
-        "narHash": "sha256-zm7JHe/K2NthgV57QhnmfT9i7azGa2tc5fJOzEiYlLo=",
-        "owner": "simple-nixos-mailserver",
-        "repo": "nixos-mailserver",
-        "rev": "fb85a3fe9e4f673f9c017a23ada00b05d61cdc6a",
-        "type": "gitlab"
+        "narHash": "sha256-Qyf3PsnkFjxny6DprFgVOwJY0Ak/RtmKVIZzH+sJmvY=",
+        "path": "/home/kanashimia/projects/nixos-mailserver",
+        "type": "path"
       },
       "original": {
-        "owner": "simple-nixos-mailserver",
-        "repo": "nixos-mailserver",
-        "type": "gitlab"
+        "path": "/home/kanashimia/projects/nixos-mailserver",
+        "type": "path"
       }
     },
     "nix": {
@@ -126,11 +105,11 @@
         "nixpkgs": "nixpkgs_3"
       },
       "locked": {
-        "lastModified": 1632496624,
-        "narHash": "sha256-jd3MRDYlVRkgdCjohD5wFf/2lF+/z3jhoPRW5nPwqCg=",
+        "lastModified": 1633630143,
+        "narHash": "sha256-fe1B4lXkS6/UfpO0rJHwLC06zhOPrdSh4s9PmQ1JgPo=",
         "owner": "nixos",
         "repo": "nix",
-        "rev": "a0bb5c4130268edbd368a4a07d4a30f1064e9c86",
+        "rev": "844dd901a7debe8b03ec93a7f717b6c4038dc572",
         "type": "github"
       },
       "original": {
@@ -184,11 +163,11 @@
     },
     "nixpkgs_3": {
       "locked": {
-        "lastModified": 1628689438,
-        "narHash": "sha256-YMINW6YmubHZVdliGsAJpnnMYXRrvppv59LgwtnyYhs=",
+        "lastModified": 1632864508,
+        "narHash": "sha256-d127FIvGR41XbVRDPVvozUPQ/uRHbHwvfyKHwEt5xFM=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "f6551e1efa261568c82b76c3a582b2c2ceb1f53f",
+        "rev": "82891b5e2c2359d7e58d08849e4c89511ab94234",
         "type": "github"
       },
       "original": {
@@ -199,11 +178,11 @@
     },
     "nixpkgs_4": {
       "locked": {
-        "lastModified": 1632411313,
-        "narHash": "sha256-lekODc44lVo9/0EwGiX6LoEt2KhiPdcfNopealMJ7n4=",
+        "lastModified": 1633528625,
+        "narHash": "sha256-AGj5q58eHACAe0RQGxObrGwMUsjMozTsiznhsLCYisQ=",
         "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "51bcdc4cdaac48535dabf0ad4642a66774c609ed",
+        "rev": "5e2018f7b383aeca6824a30c0cd1978c9532a46a",
         "type": "github"
       },
       "original": {
@@ -233,12 +212,10 @@
       "inputs": {
         "agenix": "agenix",
         "digimend": "digimend",
-        "evsieve": "evsieve",
         "mailserver": "mailserver",
         "nix": "nix",
         "nixpkgs": "nixpkgs_4",
-        "xmonad-systemd": "xmonad-systemd",
-        "xp-pen-userland": "xp-pen-userland"
+        "xmonad-systemd": "xmonad-systemd"
       }
     },
     "utils": {
@@ -272,22 +249,6 @@
       "original": {
         "owner": "kanashimia",
         "repo": "xmonad-systemd",
-        "type": "github"
-      }
-    },
-    "xp-pen-userland": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1632553662,
-        "narHash": "sha256-WWhCNjo/VMps/LNx1fM7+vLm5kaOVR6/qj+Mr9+nAzk=",
-        "owner": "kurikaesu",
-        "repo": "xp-pen-userland",
-        "rev": "01e91e1c270d9fa07cc5ece81ed1b3f96a234abb",
-        "type": "github"
-      },
-      "original": {
-        "owner": "kurikaesu",
-        "repo": "xp-pen-userland",
         "type": "github"
       }
     }

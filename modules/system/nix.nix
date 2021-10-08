@@ -1,28 +1,27 @@
 { pkgs, inputs, ... }:
 
-{
+let
+  emptyRegistry = pkgs.writeText "registry.json"
+    (builtins.toJSON { version = 2; });
+in {
   nix.package = inputs.nix.defaultPackage.${pkgs.system};
   nix.extraOptions = ''
-    # Enable flake support
     experimental-features = nix-command flakes
-
-    # Annoying warning
     warn-dirty = false
 
-    # Disable global flake registry
-    flake-registry = /etc/nix/registry.json
+    # HACK: Disable global flake registry
+    flake-registry = ${emptyRegistry}
   '';
 
   # Use n as an alias to the current configs nixpkgs.
+  # So you can run stuff like this: `nix run n#hello`
   nix.registry.n.flake = inputs.nixpkgs;
 
-  # Hardlink identical files in nix store.
-  nix.autoOptimiseStore = true;
-
-  # Automatically delete old generations.
   nix.gc = {
     automatic = true;
     dates = "daily";
     options = "--delete-older-than 7d";
   };
+
+  nix.autoOptimiseStore = true;
 }

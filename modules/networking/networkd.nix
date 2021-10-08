@@ -1,4 +1,4 @@
-{ config, ... }:
+{ config, lib, ... }:
 
 {
   networking = {
@@ -6,28 +6,29 @@
     useNetworkd = true;
   };
 
-  systemd.network.networks = let
-    networkConfig = {
-      DHCP = "yes";
-      DNSSEC = "yes";
-      DNSOverTLS = "yes";
-      DNS = [ "1.1.1.1" "8.8.8.8" "1.0.0.1" "8.8.4.4" ];
-      LLMNR = "no";
-    };
-  in {
-    "40-wired" = {
+  services.resolved.extraConfig = ''
+    DNSSEC=yes
+    DNSOverTLS=yes
+  '';
+
+  systemd.network.networks = lib.mapAttrs (_: v:
+    lib.recursiveUpdate v {
+      networkConfig.DHCP = "yes";
+      dhcpV4Config.UseDNS = false;
+      dhcpV6Config.UseDNS = false;
+    }
+  ) {
+    "99-dhcp-wired" = {
       name = "en*";
-      inherit networkConfig;
-      dhcpV4Config.RouteMetric = 1024; # Better be explicit
+      dhcpV4Config.RouteMetric = 1024;
     };
-    "40-wireless" = {
+    "99-dhcp-wireless" = {
       name = "wl*";
-      inherit networkConfig;
-      dhcpV4Config.RouteMetric = 2048; # Prefer wired
+      dhcpV4Config.RouteMetric = 2048; # Prefer wired connection.
     };
   };
 
-  # Wait for any interface to become avaible, not for all
+  # Wait for any interface to become avaible, not for all.
   systemd.services."systemd-networkd-wait-online".serviceConfig.ExecStart = [
     "" "${config.systemd.package}/lib/systemd/systemd-networkd-wait-online --any"
   ];

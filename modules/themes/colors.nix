@@ -1,4 +1,4 @@
-{ config, lib, ... }:
+{ lib, ... }:
 
 let
   defaultColors = rec {
@@ -32,8 +32,8 @@ let
     whiteBr = "#d5d5e1";
   };
   
-  mkColorOption = name: value: lib.mkOption {
-    default = value;
+  mkColorOption = name: default: lib.mkOption {
+    inherit default;
     type = lib.types.strMatching "#[a-fA-F0-9]{6}";
     description = "Value of the ${name} color";
   };
