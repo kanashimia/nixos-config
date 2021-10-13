@@ -66,22 +66,6 @@
         "type": "github"
       }
     },
-    "lowdown-src": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1633514407,
-        "narHash": "sha256-Dw32tiMjdK9t3ETl5fzGrutQTzh2rufgZV4A/BbxuD4=",
-        "owner": "kristapsdz",
-        "repo": "lowdown",
-        "rev": "d2c2b44ff6c27b936ec27358a2653caaef8f73b8",
-        "type": "github"
-      },
-      "original": {
-        "owner": "kristapsdz",
-        "repo": "lowdown",
-        "type": "github"
-      }
-    },
     "mailserver": {
       "inputs": {
         "blobs": "blobs",
@@ -90,32 +74,13 @@
         "utils": "utils"
       },
       "locked": {
-        "narHash": "sha256-Qyf3PsnkFjxny6DprFgVOwJY0Ak/RtmKVIZzH+sJmvY=",
+        "narHash": "sha256-RPxrckYY3hCJWqC4JDxiOPg1hYJW4nyIxmFYfQV8Q6s=",
         "path": "/home/kanashimia/projects/nixos-mailserver",
         "type": "path"
       },
       "original": {
         "path": "/home/kanashimia/projects/nixos-mailserver",
         "type": "path"
-      }
-    },
-    "nix": {
-      "inputs": {
-        "lowdown-src": "lowdown-src",
-        "nixpkgs": "nixpkgs_3"
-      },
-      "locked": {
-        "lastModified": 1633630143,
-        "narHash": "sha256-fe1B4lXkS6/UfpO0rJHwLC06zhOPrdSh4s9PmQ1JgPo=",
-        "owner": "nixos",
-        "repo": "nix",
-        "rev": "844dd901a7debe8b03ec93a7f717b6c4038dc572",
-        "type": "github"
-      },
-      "original": {
-        "owner": "nixos",
-        "repo": "nix",
-        "type": "github"
       }
     },
     "nixpkgs": {
@@ -163,36 +128,21 @@
     },
     "nixpkgs_3": {
       "locked": {
-        "lastModified": 1632864508,
-        "narHash": "sha256-d127FIvGR41XbVRDPVvozUPQ/uRHbHwvfyKHwEt5xFM=",
-        "owner": "NixOS",
-        "repo": "nixpkgs",
-        "rev": "82891b5e2c2359d7e58d08849e4c89511ab94234",
-        "type": "github"
-      },
-      "original": {
-        "id": "nixpkgs",
-        "ref": "nixos-21.05-small",
-        "type": "indirect"
-      }
-    },
-    "nixpkgs_4": {
-      "locked": {
-        "lastModified": 1633528625,
-        "narHash": "sha256-AGj5q58eHACAe0RQGxObrGwMUsjMozTsiznhsLCYisQ=",
+        "lastModified": 1634103478,
+        "narHash": "sha256-XZkSSvKqce2vDe4jhdTzS+o6I5aEciHUMID3Qm5gG10=",
         "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "5e2018f7b383aeca6824a30c0cd1978c9532a46a",
+        "rev": "2ae14350dd34a0795ec418a03c076ad6205c0962",
         "type": "github"
       },
       "original": {
         "owner": "nixos",
-        "ref": "nixos-unstable",
+        "ref": "nixos-unstable-small",
         "repo": "nixpkgs",
         "type": "github"
       }
     },
-    "nixpkgs_5": {
+    "nixpkgs_4": {
       "locked": {
         "lastModified": 1629226339,
         "narHash": "sha256-szvgmQcUJM3Kv/wNyIn+wtMrrvsks0bk9JOqI2Ij8Ao=",
@@ -213,8 +163,7 @@
         "agenix": "agenix",
         "digimend": "digimend",
         "mailserver": "mailserver",
-        "nix": "nix",
-        "nixpkgs": "nixpkgs_4",
+        "nixpkgs": "nixpkgs_3",
         "xmonad-systemd": "xmonad-systemd"
       }
     },
@@ -236,7 +185,7 @@
     "xmonad-systemd": {
       "inputs": {
         "flake-utils": "flake-utils",
-        "nixpkgs": "nixpkgs_5"
+        "nixpkgs": "nixpkgs_4"
       },
       "locked": {
         "lastModified": 1629340890,

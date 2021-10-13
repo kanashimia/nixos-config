@@ -4,7 +4,7 @@ let
   emptyRegistry = pkgs.writeText "registry.json"
     (builtins.toJSON { version = 2; });
 in {
-  nix.package = inputs.nix.defaultPackage.${pkgs.system};
+  nix.package = pkgs.nixUnstable;
   nix.extraOptions = ''
     experimental-features = nix-command flakes
     warn-dirty = false
