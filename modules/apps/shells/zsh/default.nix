@@ -1,26 +1,21 @@
-{ pkgs, ... }:
+{ pkgs, nixosModules, ... }:
 
 {
+  imports = with nixosModules; [ environment.aliases ];
+
   programs.zsh = {
     enable = true;
     enableGlobalCompInit = false;
     syntaxHighlighting.enable = true;
     interactiveShellInit = builtins.readFile ./zshrc;
     shellInit = "zsh-newuser-install () {}";
-    shellAliases = {
-      nrs = "sudo nixos-rebuild switch --flake nixos -L";
-      ns = "nix shell";
-      nr = "nix run";
-      nd = "nix develop";
-      s = "systemctl";
-      j = "journalctl --no-hostname -eb -o short-monotonic";
-      jw = "j -p notice";
-      jf = "j -f";
-      jk = "j -k";
-      d = "dmesg";
-    };
     promptInit = ''
-      PS1=$'\n%F{cyan}%~%f\n%(!.!.%F{%(?.green.red)}›)%f'
+      PS1=
+      PS1+=$'\n'
+      PS1+='%F{cyan}%~%f'
+      PS1+='%(2L. %F{red}nested%f.)'
+      PS1+=$'\n'
+      PS1+='%F{%(?.green.red)}%(!.!.›)%f'
     '';
   };
 

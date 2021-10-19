@@ -8,6 +8,8 @@
     system.zram
     system.loader
     ssh-keys
+    apps.shells.bash
+    apps.shells.zsh
   ];
 
   # Documentation slows eval quite a lot.
