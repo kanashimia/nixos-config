@@ -1,6 +1,4 @@
-{ nixosModules, ... }:
-
-{
+{ nixosModules, ... }: {
   imports = with nixosModules; [
     profiles.qemu-guest
     profiles.minimal

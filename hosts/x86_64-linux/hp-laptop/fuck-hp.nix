@@ -1,6 +1,4 @@
-{ pkgs, ... }:
-
-{
+{ pkgs, ... }: {
   # Please, please never buy HP laptops,
   # especially if you are going to be using linux,
   # everything about their firmware makes me wanna cry.
@@ -37,7 +35,7 @@
   '';
 
   # Wait in hope that some updates will fix something (they will not).
-  boot.kernelPackages = pkgs.linuxPackages_latest;
+  boot.kernelPackages = pkgs.linuxPackages_5_14;
   boot.zfs.enableUnstable = true;
 
   # Debugging for acpi.

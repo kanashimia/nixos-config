@@ -1,6 +1,4 @@
-{ lib, ... }:
-
-let
+{ lib, ... }: let
   defaultColors = rec {
     foreground = "#d5d5e1";
     foregroundBr = "#acaccd";

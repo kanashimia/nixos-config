@@ -1,6 +1,4 @@
-{ lib, inputs }:
-
-with lib; rec {
+{ lib, inputs }: with lib; rec {
   mkAttrsTree = dir:
     mapAttrs' (name: type:
       if type == "directory" then

@@ -1,6 +1,4 @@
-{ pkgs, config, nixosModules, ... }:
-
-{
+{ pkgs, config, nixosModules, ... }: {
   imports = with nixosModules; [ themes.colors ];
     
   environment.etc."xdg/alacritty.yml" = {

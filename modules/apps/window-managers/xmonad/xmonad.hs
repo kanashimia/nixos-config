@@ -19,6 +19,7 @@ import XMonad.Util.NamedScratchpad.Systemd
 
 detectVirt = do
     out <- init <$> UR.runProcessWithInput "systemd-detect-virt" [] ""
+    UR.safeSpawn "echo" [ replicate 20 'A' ]
     pure $ out /= "none"
 
 main = do
@@ -74,7 +75,7 @@ myKeys = flip additionalKeysP $
 myScratchpads :: NamedScratchpads
 myScratchpads =
     [ NS "browser" "chromium" [] (className =? "Chromium-browser") nonFloating
-    , NS "telegram" "telegram-desktop" [] (className =? "TelegramDesktop") nonFloating
+    , NS "telegram" "kotatogram-desktop" [] (className =? "KotatogramDesktop") nonFloating
     ]
 
 isUtility = isInProperty "_NET_WM_WINDOW_TYPE" "_NET_WM_WINDOW_TYPE_UTILITY"

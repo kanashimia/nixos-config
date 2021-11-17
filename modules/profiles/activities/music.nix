@@ -1,6 +1,4 @@
-{ pkgs, ...}:
-
-let
+{ pkgs, ...}: let
   plugins = with pkgs; [
     # Standalone synths
     zyn-fusion

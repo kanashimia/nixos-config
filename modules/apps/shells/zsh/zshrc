@@ -19,10 +19,11 @@ zstyle ':completion:*' menu select
 zstyle ':completion:*' group-name ''
 zstyle ':completion:*:descriptions' format '%B%F{blue}Completing %F{yellow}%d%f%b'
 
-eval "$(dircolors -b)"
+eval "$(dircolors)"
 zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
 
-setopt autocd
+# print dir contents after each dir change
+chpwd() ls --color=tty
 
-# setopt correct vi
-# KEYTIMEOUT=0
+KEYTIMEOUT=0
+WORDCHARS='*?_-.[]~=&;!#$%^(){}<>'

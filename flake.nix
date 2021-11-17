@@ -4,7 +4,6 @@
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     agenix.url = "github:ryantm/agenix";
-
     mailserver.url = "path:/home/kanashimia/projects/nixos-mailserver"; # "gitlab:simple-nixos-mailserver/nixos-mailserver";
     xmonad-systemd.url = "github:kanashimia/xmonad-systemd";
 

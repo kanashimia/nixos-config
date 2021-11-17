@@ -1,6 +1,4 @@
-{ config, nixosModules, ... }:
-
-{
+{ config, nixosModules, ... }: {
   imports = with nixosModules; [
     system.zfs
   ];

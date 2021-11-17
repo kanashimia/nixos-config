@@ -1,6 +1,4 @@
-{ nixosModules, ... }:
-
-{
+{ nixosModules, ... }: {
   imports = with nixosModules.profiles; [
     zfs
     graphical

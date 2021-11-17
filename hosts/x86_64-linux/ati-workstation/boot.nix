@@ -1,11 +1,8 @@
-{ nixosModules, ... }:
-
-{
+{ nixosModules, config, ... }: {
   imports = with nixosModules; [
     profiles.zfs
     profiles.graphical
     hardware.amdgpu.support-old
-    hardware.fix-tearing
   ];
 
   fileSystems = {
@@ -30,10 +27,10 @@
     enableRedistributableFirmware = true;
   };
 
-  boot.loader.systemd-boot = {
-    enable = true;
-    # consoleMode = "max";
-  };
+  boot.zfs.enableUnstable = true;
+  boot.kernelPackages = config.boot.zfs.package.latestCompatibleLinuxPackages;
+
+  boot.loader.systemd-boot.enable = true;
 
   services.xserver.videoDrivers = [ "amdgpu" ];
 } 

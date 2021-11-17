@@ -1,6 +1,4 @@
-{ pkgs, inputs, ... }:
-
-let
+{ pkgs, inputs, ... }: let
   emptyRegistry = pkgs.writeText "registry.json"
     (builtins.toJSON { version = 2; });
 in {

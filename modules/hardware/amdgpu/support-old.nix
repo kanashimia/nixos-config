@@ -1,6 +1,4 @@
-{ config, lib, ... }:
-
-let
+{ config, lib, ... }: let
   drivers = config.services.xserver.videoDrivers;
 in {
   # For SI/CIK cards radeon driver is used by default, 

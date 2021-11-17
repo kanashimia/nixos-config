@@ -1,6 +1,4 @@
-{ config, lib, ... }:
-
-{
+{ config, lib, ... }: {
   networking = {
     useDHCP = false;
     useNetworkd = true;
@@ -28,7 +26,7 @@
     };
   };
 
-  # Wait for any interface to become avaible, not for all.
+  # Wait for any interface to become available, not for all.
   systemd.services."systemd-networkd-wait-online".serviceConfig.ExecStart = [
     "" "${config.systemd.package}/lib/systemd/systemd-networkd-wait-online --any"
   ];

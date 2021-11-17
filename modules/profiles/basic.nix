@@ -1,12 +1,11 @@
-{ pkgs, nixosModules, lib, ... }:
-
-{
+{ pkgs, nixosModules, lib, ... }: {
   imports = with nixosModules; [
     networking.networkd
     environment.xdg-user-dirs
     system.nix
     system.zram
     system.loader
+    system.oomd
     ssh-keys
     apps.shells.bash
     apps.shells.zsh
@@ -20,6 +19,9 @@
   environment.defaultPackages = with pkgs; [
     gitMinimal kakoune rsync
   ];
+
+  # Don't create ~/.lesshst
+  environment.variables.LESSHISTFILE = "-";
 
   # Do not print sometimes helpful, but not always, info during boot,
   # so it is harder to debug system when something goes wrong.

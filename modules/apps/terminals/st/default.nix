@@ -1,6 +1,4 @@
-{ pkgs, config,	... }:
-
-let
+{ pkgs, config,	... }: let
   st-config = pkgs.substituteAll (
     config.themes.colors // {
       src = ./config.h;

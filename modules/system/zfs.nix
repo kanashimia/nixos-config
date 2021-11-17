@@ -1,6 +1,4 @@
-{ lib, config, ... }:
-
-let
+{ lib, config, ... }: let
   cfg = config.boot.zfs;
 in {
   options.boot.zfs.arcSize = lib.mkOption {

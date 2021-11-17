@@ -1,6 +1,4 @@
-{ pkgs, ... }:
-
-{
+{ pkgs, ... }: {
   # Configuration of the xdg user dirs to create,.
   # As you may see i've added PROJECTS dir,
   # and made so all dirs are in lowercase.

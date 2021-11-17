@@ -1,6 +1,4 @@
-{ lib, ... }:
-
-{
+{ lib, ... }: {
   services.syncthing = rec {
     enable = true;
     openDefaultPorts = true;

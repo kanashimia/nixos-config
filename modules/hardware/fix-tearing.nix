@@ -1,6 +1,4 @@
-{ config, lib, ... }:
-
-let
+{ config, lib, ... }: let
   drivers = config.services.xserver.videoDrivers;
 in {
   services.xserver.deviceSection = lib.mkIf (lib.elem "amdgpu" drivers) ''

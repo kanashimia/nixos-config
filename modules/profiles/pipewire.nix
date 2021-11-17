@@ -1,7 +1,5 @@
-{ pkgs, ... }:
-
-{
-  environment.systemPackages = with pkgs; [ alsaUtils ];
+{ pkgs, ... }: {
+  environment.systemPackages = with pkgs; [ alsaUtils pulseaudio ];
 
   security.rtkit.enable = true;
   services.pipewire = {

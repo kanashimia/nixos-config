@@ -1,6 +1,4 @@
-{ config, lib, inputs, ... }:
-
-let
+{ config, lib, inputs, ... }: let
   hostname = "redpilled.dev";
   certDir = config.security.acme.certs.${hostname}.directory;
 in {
