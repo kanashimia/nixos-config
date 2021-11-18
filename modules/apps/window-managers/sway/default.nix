@@ -17,7 +17,6 @@ in {
       kotatogram-desktop
       keepassxc
 
-      chromium
       qutebrowser
 
       wev
@@ -65,7 +64,7 @@ in {
   services.greetd = {
     enable = true;
     settings.default_session.command = ''
-      ${pkgs.greetd.greetd}/bin/agreety --cmd ${runSession "sway"}
+      ${pkgs.greetd.greetd}/bin/agreety --cmd sway
     '';
   };
 

@@ -5,7 +5,6 @@
     system.nix
     system.zram
     system.loader
-    system.oomd
     ssh-keys
     apps.shells.bash
     apps.shells.zsh
@@ -17,7 +16,7 @@
   # Some default programs that i always use.
   environment.variables.EDITOR = "kak";
   environment.defaultPackages = with pkgs; [
-    gitMinimal kakoune rsync
+    git kakoune rsync
   ];
 
   # Don't create ~/.lesshst
