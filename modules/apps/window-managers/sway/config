@@ -135,3 +135,10 @@ mode "resize" bindsym --to-code {
     Return mode "default"
     Escape mode "default"
 }
+
+bar {
+    position top
+    mode hide
+    modifier $mod
+    colors background '#00000000'
+}
