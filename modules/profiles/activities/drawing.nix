@@ -5,14 +5,18 @@
   };
 
   environment.systemPackages = with pkgs; [
-    krita mypaint sxiv
+    krita mypaint
   ];
-
-  services.xserver.inputClassSections = [''
-    Identifier "XP-Pen Deco Pro M"
-    MatchUSBID "28bd:0904"
-    MatchDevicePath "/dev/input/event*"
-    Driver "wacom"
-  ''];
+  services.udev.extraHwdb = ''
+    evdev:input:b0003v28BDp0904e0100-e0,1,2,4*r6*
+      KEYBOARD_KEY_90001=btn_0
+      KEYBOARD_KEY_90002=btn_1
+      KEYBOARD_KEY_90003=btn_2
+      KEYBOARD_KEY_90004=btn_3
+      KEYBOARD_KEY_90005=btn_4
+      KEYBOARD_KEY_90006=btn_5
+      KEYBOARD_KEY_90007=btn_6
+      KEYBOARD_KEY_90008=btn_7
+  '';
 }
    
