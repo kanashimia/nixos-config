@@ -10,5 +10,6 @@
     jf = "j -f";
     jk = "j -k";
     d = "dmesg";
+    sudo = "sudo "; # this will make sudo work with shell aliases
   };
 }
