@@ -5,15 +5,9 @@
     enable = true;
     enableGlobalCompInit = false;
     syntaxHighlighting.enable = true;
-    interactiveShellInit = builtins.readFile ./zshrc;
+    interactiveShellInit = builtins.readFile ./zshrc.sh;
+    promptInit = builtins.readFile ./prompt.sh;
     shellInit = "zsh-newuser-install () {}";
-    promptInit = ''
-      PS1=$'\n'
-      PS1+='%F{cyan}%~%f'
-      PS1+='%(2L.%F{red} lvl %L%f.)'
-      PS1+=$'\n'
-      PS1+='%F{%(?.green.red)}%(!.!.›)%f'
-    '';
   };
 
   users.defaultUserShell = pkgs.zsh;

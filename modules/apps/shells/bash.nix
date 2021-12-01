@@ -7,7 +7,7 @@
     exitStatusClr = mkClr "3$((1+($?==0)))";
   in ''
     PS1='\n${cyan}\w${clear}'
-    ((SHLVL > 1)) && PS1+='${red} lvl $SHLVL${clear}'
+    ((SHLVL > 1)) && PS1+='${red} lvl:$SHLVL${clear}'
     PS1+='\n${exitStatusClr}'
     (( UID == 0 )) && PS1+='!' || PS1+='›'
     PS1+='${clear}'
