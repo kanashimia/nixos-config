@@ -1,9 +1,0 @@
-[identities]
-hp-laptop = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICCY/7XSfCq7YTu7/z3Dzm1FzVaPbBrCvdOM2opDUm15"
-personal-server = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIB/jCp7yrN/UtgzaqkHMlyC85j9k0Lp9GUjm15vFJ2zE"
-ati-workstation = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFKT4IvaipZW694RsavGtogmPj8NAEpai0SxDpenGdc6"
-battleworn-phone = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFrBusNaxOXfGBVdtMOj97hbD4NCDE59i/f+C6JKWjB5"
-
-[[paths]]
-glob = "hosts/*/*/secrets/*.age"
-identities = [ "hp-laptop", "ati-workstation", "personal-server", "battleworn-phone" ]
