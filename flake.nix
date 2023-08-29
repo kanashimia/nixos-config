@@ -35,7 +35,7 @@
   in {
     overlays = mkOverlays {
       liquidsfz = final: prev: final.stdenv.mkDerivation {
-        name = "liquidsfz";
+        pname = "liquidsfz";
         version = "unstable";
 
         nativeBuildInputs = with final; [ autoreconfHook pkg-config ];
