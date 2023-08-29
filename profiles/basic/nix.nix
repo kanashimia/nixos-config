@@ -12,7 +12,8 @@
   };
 
   nix.registry = {
-    n = { 
+    n.flake = inputs.nixpkgs;
+    pkgs = { 
       to = { type = "github"; owner = "NixOS"; repo = "nixpkgs"; rev = inputs.nixpkgs.rev; };
       exact = false; 
     };
