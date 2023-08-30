@@ -58,9 +58,6 @@ in {
     # WLR_EGL_NO_MODIFIERS = "1";
     
     # GBM_BACKEND = "nvidia-drm";
-    # __GLX_VENDOR_LIBRARY_NAME = "nvidia";
-    
-    # WLR_BACKENDS = "drm,libinput";
-    # VK_LAYER_PATH = "${pkgs.vulkan-validation-layers}/share/vulkan/explicit_layer.d";
+    __GLX_VENDOR_LIBRARY_NAME = "nvidia";
   };
 }

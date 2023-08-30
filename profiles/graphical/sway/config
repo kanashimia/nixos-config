@@ -28,12 +28,8 @@ set {
     $term foot
     $browser chromium
     $telegram telegram-desktop
-    $runner j4-dmenu-desktop --dmenu=bemenu --term=$term --no-generic --wrapper="swaymsg exec --"
-    $rofi rofi -terminal $term -show drun
     $wofi wofi --show drun --insensitive --allow-images --filter
     $restarter printf 'img:/run/current-system/sw/share/icons/Papirus/32x32/apps/system-%s.svg:text:%s\n' shutdown poweroff suspend suspend reboot reboot hibernate hibernate | wofi --show dmenu -I -H "$(( (32 + 10 * 2) * 4 + 10 * 2 ))" | sed 's/.*://' | xargs -i systemctl '{}' -i
-    # $restarter wofi --show power --insensitive
-    $restarter2 printf '%s\n' poweroff suspend reboot | bemenu | xargs -r systemctl -i
 }
 
 seat * {
@@ -42,11 +38,6 @@ seat * {
 }
 
 floating_modifier $mod normal
-
-# bindgesture {
-#     swipe:right workspace prev
-#     swipe:left workspace next
-# }
 
 bindsym --to-code {
     $mod+Shift+0 input * xkb_layout "us"
@@ -61,7 +52,7 @@ bindsym --to-code {
     $mod+Return       $exec $term
     $mod+Shift+Return $exec $term -D "$(swaycwd)"
 
-    $mod+r exec $wofi -D drun-print_command=true | xargs swaymsg $exec
+    $mod+r $exec $wofi 
     $mod+Shift+e exec $restarter
     $mod+Shift+b $exec $browser
     $mod+Shift+t $exec $telegram
@@ -132,7 +123,6 @@ bindsym --to-code {
     Print exec grim -  | wl-copy -t image/png
     Shift+Print exec slurp | grim -g - -  | wl-copy -t image/png
     $mod+Print exec ~/screenshot.sh
-    # Ctrl+Print exec grimshot copy active
 
     XF86AudioRaiseVolume exec wpctl set-volume @DEFAULT_SINK@ -l 1.0 5%+
     XF86AudioLowerVolume exec wpctl set-volume @DEFAULT_SINK@ -l 1.0 5%-
