@@ -40,48 +40,15 @@ in {
     in {
       ${hostname} = def {
         locations."/".root = "/srv/www";
-
-        locations."/.well-known/webfinger" = {
-          extraConfig = ''
-            add_header Access-Control-Allow-Origin '*';
-          '';
-          return = "301 https://social.${hostname}$request_uri";
-        };
       };
 
       ${config.services.roundcube.hostName} = def {};
-
-      # ${config.services.mastodon.localDomain} = def {};
-
-      "social.${hostname}" = def {
-        root = "${config.services.mastodon.package}/public/";
-
-        locations."/system/".alias = "/var/lib/mastodon/public-system/";
-
-        locations."/" = {
-          tryFiles = "$uri @proxy";
-        };
-
-        locations."@proxy" = {
-          proxyPass = "http://unix:/run/mastodon-web/web.socket";
-          proxyWebsockets = true;
-        };
-
-        locations."/api/v1/streaming/" = {
-          proxyPass = "http://unix:/run/mastodon-streaming/streaming.socket";
-          proxyWebsockets = true;
-        };
-      };
 
       "*.${hostname}" = def {
         globalRedirect = hostname;
       };
     };
   };
-
-  services.rspamd.locals."classifier-bayes.conf".text = ''
-    autolearn = true;
-  '';
 
   systemd.services.dovecot2.serviceConfig.LoadCredentialEncrypted =
     "chad-password:${./secrets/chad-password.creds}";
@@ -98,6 +65,13 @@ in {
       "chad@${hostname}" = {
         hashedPasswordFile = "/run/credentials/dovecot2.service/chad-password";
         aliases = [ "@${hostname}" ];
+        "sieveScript" = ''
+          require ["variables", "fileinto", "envelope", "subaddress", "mailbox"];
+          if address :localpart :matches ["to", "cc", "bcc"] ["github", "uni"] {
+            set :lower :upperfirst "name" "''${0}";
+            fileinto :create "INBOX.''${name}";
+          }
+        '';
       };
     };
 
@@ -115,72 +89,6 @@ in {
       $config['smtp_pass'] = "%p";
     '';
   };
-
-  # services.freshrss = {
-  #   enable = true;
-  #   baseUrl = "rssreader.${hostname}";
-  #   virtualHost = "rssreader";
-  # };
-
-  systemd.services.mastodon-init-dirs.serviceConfig.LoadCredentialEncrypted =
-    "chad-password:${./secrets/chad-password.creds}";
-
-  services.mastodon = {
-    enable = true;
-    localDomain = hostname;
-    enableUnixSocket = true;
-    # configureNginx = true;
-    smtp = {
-      createLocally = false;
-      # port = 465;
-      # authenticate = true;
-      # user = "chad@${hostname}";
-      # passwordFile = "/run/credentials/dovecot2.service/chad-password";
-
-      fromAddress = "noreply@${hostname}"; # Email address used by Mastodon to send emails, replace with your own
-    };
-    extraConfig = {
-      SINGLE_USER_MODE = "true";
-      WEB_DOMAIN = "social.${hostname}";
-    };
-  };
-
-  systemd.timers.fedifetcher = {
-    enable = false;
-    wantedBy = [ "timers.target" ];
-    timerConfig = {
-      OnCalendar = "0/2:0";
-      Persistent = "yes";
-      Unit = "fedifetcher.service";
-    };
-  };
-  systemd.services.fedifetcher = let
-    configFile = pkgs.writeText "config.json" (builtins.toJSON {
-      server = "social.redpilled.dev";
-      home-timeline-length = 200;
-      max-followings = 80;
-      from-notifications = 1;
-    });
-  in {
-    enable = false;
-    after = [ "mastodon-web.service" ];
-    requires = [ "mastodon-web.service" ];
-    serviceConfig = {
-      StateDirectory = "fedifetcher";
-      Type = "oneshot";
-      LoadCredentialEncrypted = "fedifetcher-access-token:${./secrets/fedifetcher-access-token.creds}";
-      ExecStart = "-${pkgs.writeShellScriptBin "fedifetcher" ''
-        read -r ACCESS_TOKEN < "$CREDENTIALS_DIRECTORY/fedifetcher-access-token"
-        exec ${pkgs.fedifetcher}/bin/fedifetcher \
-          --access-token="''${ACCESS_TOKEN}" \
-          --state-dir="''${STATE_DIRECTORY}" \
-          -c ${configFile}
-      ''}/bin/fedifetcher";
-      User = "mastodon";
-    };
-  };
-
-  users.groups.${config.services.mastodon.group}.members = [ config.services.nginx.user ];
 
   networking.firewall = {
     allowedTCPPorts = [ 80 443 ];

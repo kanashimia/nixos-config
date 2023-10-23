@@ -1,6 +1,5 @@
 { config, inputs, ... }: {
   nix.settings = {
-    auto-optimise-store = true;
     experimental-features = [
       "nix-command"
       "flakes"
@@ -12,8 +11,7 @@
   };
 
   nix.registry = {
-    n.flake = inputs.nixpkgs;
-    pkgs = { 
+    n = {
       to = { type = "github"; owner = "NixOS"; repo = "nixpkgs"; rev = inputs.nixpkgs.rev; };
       exact = false; 
     };
@@ -27,7 +25,7 @@
 
   system.activationScripts.diff = {
     supportsDryActivation = true;
-    text = ''
+    text = /*bash*/''
       echo "system changes:"
       ${config.nix.package}/bin/nix store diff-closures /run/current-system "$systemConfig" 
     '';

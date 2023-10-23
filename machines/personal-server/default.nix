@@ -1,5 +1,6 @@
-{
+{ modulesPath, ... }: {
   imports = [
+    "${modulesPath}/profiles/qemu-guest.nix"
     ./vpn.nix
     ./ssh.nix
     ./server.nix

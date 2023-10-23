@@ -1,4 +1,4 @@
-{ pkgs, nixosModules, ... }: {
+{ pkgs, ... }: {
   programs.zsh = {
     enable = true;
     enableGlobalCompInit = false;

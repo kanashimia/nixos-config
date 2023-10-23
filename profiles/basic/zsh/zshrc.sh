@@ -36,3 +36,17 @@ WORDCHARS='*?_-~=&;!$'
 
 unalias run-help
 autoload run-help run-help-git run-help-nix run-help-sudo
+
+setopt auto_continue
+
+fancy-ctrl-z () {
+  if [[ $#BUFFER -eq 0 ]]; then
+    zle push-input
+    BUFFER="disown"
+    zle accept-line
+  else
+    zle push-input
+  fi
+}
+zle -N fancy-ctrl-z
+bindkey '^Z' fancy-ctrl-z

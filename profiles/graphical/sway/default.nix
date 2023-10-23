@@ -1,4 +1,4 @@
-{ config, pkgs, lib, nixosModules, ... }: {
+{ config, pkgs, lib, ... }: {
   programs.sway = {
     enable = true;
     wrapperFeatures.gtk = true;
@@ -43,7 +43,7 @@
     "sway/config".source = ./config;
     "sway/config.d/nixos.conf".text = lib.mkForce "";
     "sway/config.d/20-start-session.conf".text = ''
-      exec 'systemctl import-environment --user DISPLAY WAYLAND_DISPLAY SWAYSOCK XDG_CURRENT_DESKTOP; systemctl start --user graphical-session.target'
+      exec 'systemctl import-environment --user DISPLAY WAYLAND_DISPLAY SWAYSOCK XDG_CURRENT_DESKTOP'
     '';
   };
 
@@ -52,7 +52,7 @@
       exec systemd-cat -t sway -- \
         systemd-run --user --scope --quiet --no-ask-password \
           --slice session -u sway \
-          -p PartOf=graphical-session.target \
+          -p BindsTo=graphical-session.target \
           -- sway
     '';
   in {

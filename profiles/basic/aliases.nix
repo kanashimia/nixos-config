@@ -30,8 +30,14 @@
     ls = "ls --color=tty";
   };
 
-  environment.interactiveShellInit = ''
+  environment.interactiveShellInit = /*bash*/''
     function nd() {
+      local p
+      nix flake archive --json | \
+        jq -r '.inputs | to_entries[] | .value.path' | \
+        while read -r p; do \
+          ln -fsT "$p" /nix/var/nix/profiles/per-user/"$USER"/"''${p//\//_}"; \
+        done
       nix develop "$@" \
         --profile /nix/var/nix/profiles/per-user/"$USER"/develop \
         -c "$SHELL"

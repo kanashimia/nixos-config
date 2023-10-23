@@ -1,5 +1,5 @@
-{ nixosModules, pkgs, lib, config, ... }: {
-  imports = with nixosModules; [
+{ pkgs, lib, config, ... }: {
+  imports = [
     ../basic
     ./chromium.nix
     ./foot
@@ -31,8 +31,14 @@
     };
   };
 
+  environment.sessionVariables = {
+    NIXOS_OZONE_WL = "1";
+  };
+
   environment.systemPackages = with pkgs; [
     mypaint krita
+
+    libreoffice
     
     ripgrep fd sd tree dua nix-tree du-dust
     pciutils usbutils htop-vim hydra-check

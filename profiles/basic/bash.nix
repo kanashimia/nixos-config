@@ -5,7 +5,7 @@
     red = mkColor "31";
     cyan = mkColor "36";
     exitStatusColor = mkColor "3$((1+($?==0)))";
-  in ''
+  in /*bash*/''
     PS1='\n${cyan}\w${clear}'
     ((SHLVL > 1)) && PS1+='${red} lvl:$SHLVL${clear}'
     PS1+='\n${exitStatusColor}'
@@ -14,7 +14,7 @@
   '';
 
   # Support XDG base dir spec to some degree.
-  programs.bash.interactiveShellInit = ''
+  programs.bash.interactiveShellInit = /*bash*/''
     mkdir -p "''${XDG_STATE_HOME:-$HOME/.local/state}"/bash
     HISTFILE="$_"/history
     HISTSIZE=10000

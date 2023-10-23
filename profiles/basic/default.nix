@@ -1,5 +1,5 @@
-{ pkgs, nixosModules, lib, ... }: {
-  imports = with nixosModules; [
+{ pkgs, lib, ... }: {
+  imports = [
     ./networkd.nix
     ./xdg-user-dirs.nix
     ./nix.nix

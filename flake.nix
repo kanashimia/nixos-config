@@ -12,6 +12,7 @@
     };
 
     liquidsfz = { url = "github:swesterfeld/liquidsfz"; flake = false; };
+    zathura = { url = "gitlab:pwmt/zathura/develop?host=git.pwmt.org"; flake = false; };
   };
 
   outputs = inputs:  let
@@ -44,8 +45,16 @@
         src = inputs.liquidsfz;
       };
 
+      zathura = final: prev: prev.zathura.override {
+        zathura_core = prev.zathuraPkgs.zathura_core.overrideAttrs (old: {
+          src = inputs.zathura;
+          buildInputs = with final; [ json-glib xvfb-run ] ++ old.buildInputs;
+          doCheck = false;
+        });
+      };
+
       foot = final: prev: let
-        desktopEntry  = ''
+        desktopEntry  = /*ini*/''
           [Desktop Entry]
           Type=Application
           Exec=foot
@@ -76,11 +85,14 @@
         '';
       };
 
+      mpv-unwrapped = final: prev: prev.mpv-unwrapped.override {
+        ffmpeg_5 = final.ffmpeg_5-full;
+      };
+
       mpv = final: prev: final.symlinkJoin {
         inherit (prev.mpv ) name;
         paths = [ prev.mpv ];
-        postBuild = let
-        in ''
+        postBuild = ''
           rm $out/share/applications/umpv.desktop
         '';
       };
@@ -106,7 +118,6 @@
     nixosConfigurations = mkNixosSystems {
       personal-server = [
         ./machines/personal-server
-        ./profiles/qemu-guest.nix
         ./profiles/basic
       ];
       hp-laptop = [

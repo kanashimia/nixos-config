@@ -11,18 +11,45 @@
 
   fileSystems = {
     "/" = {
-      device = "/dev/disk/by-label/sirriah";
-      fsType = "ext4";
-      options = [ "discard" "noatime" "errors=remount-ro" ];
+      label = "iris";
+      fsType = "btrfs";
+      options = [ "subvol=root" "noatime" ];
+    };
+    "/nix" = {
+      label = "iris";
+      fsType = "btrfs";
+      options = [ "subvol=nix" "noatime" ];
+    };
+    "/home" = {
+      label = "iris";
+      fsType = "btrfs";
+      options = [ "subvol=home" "noatime" ];
     };
     "/boot" = {
-      device = "/dev/disk/by-label/boot";
+      label = "boot";
       fsType = "vfat";
-      options = [ "discard" ];
     }; 
   };
 
-  # services.fstrim.enable = true;
+  environment.systemPackages = with pkgs; [ compsize ];
+
+  systemd.services."btrfs-snapshot-home" = {
+    after = [ "local-fs.target" ];
+    script = ''
+      export PATH="${pkgs.btrfs-progs}/bin:$PATH"
+      SNAPSHOT_DIR="/snapshots/home"
+      mkdir -p "$SNAPSHOT_DIR"
+      cd "$SNAPSHOT_DIR"
+      ls -r | tail -n +10 | xargs -I {} btrfs subvolume delete {}
+      btrfs subvolume snapshot -r "/home" "$(date --iso-8601=seconds)"
+    '';
+    restartIfChanged = false;
+  };
+
+  systemd.timers."btrfs-snapshot-home".timerConfig = {
+    OnCalendar = "*:0/15";
+    Persistent = "yes";
+  };
 
   hardware.opengl = {
     enable = true;
@@ -37,11 +64,6 @@
   nixpkgs.config.allowUnfree = true;
   environment.sessionVariables.NIXPKGS_ALLOW_UNFREE = "1";
 
-  console = {
-    packages = [ pkgs.terminus_font ];
-    font = "ter-v20b";
-  };
-
   hardware = {
     enableRedistributableFirmware = true;
     cpu.intel.updateMicrocode = true;
@@ -51,11 +73,6 @@
     IdleAction=suspend
     IdleActionSec=10min
   '';
-
-  boot.kernel.sysctl = {
-    "vm.dirty_bytes" = 14 * 1024 * 1024;
-    "vm.dirty_background_bytes" = 48 * 1024 * 1024;
-  };
 
   boot.kernelPackages = pkgs.linuxPackages_latest;
 
@@ -87,14 +104,6 @@
     };
   };
 
-  environment.systemPackages = with pkgs; [ powertop ];
-
-  # services.power-profiles-daemon.enable = true;
-  powerManagement.cpuFreqGovernor = "powersave";
-
-  # hardware.bluetooth.enable = true;
-  # boot.kernelModules = [ "uhid" ];
-
   services.udev.packages = let
     udevRule = name: text: pkgs.writeTextFile {
       inherit name text;
@@ -108,10 +117,10 @@
       SUBSYSTEM=="drm", SYMLINK=="dri/by-path/pci-0000:00:02.0-card", SYMLINK+="dri/intel", TAG+="systemd"
       SUBSYSTEM=="drm", SYMLINK=="dri/by-path/pci-0000:01:00.0-card", SYMLINK+="dri/nvidia", TAG+="systemd"
     '';
-    # "90-lowbat" = ''
-    #   SUBSYSTEM=="power_supply", ATTR{status}=="Discharging", ATTR{capacity}=="[0-15]", \
-    #     RUN+="${config.systemd.package}/bin/systemctl suspend -i"
-    # '';
+    "90-lowbat" = ''
+      SUBSYSTEM=="power_supply", ATTR{status}=="Discharging", ATTR{capacity}=="[0-15]", \
+        RUN+="${config.systemd.package}/bin/systemctl suspend -i"
+    '';
     "80-usb-automount" = ''
       ACTION=="add", SUBSYSTEMS=="usb", SUBSYSTEM=="block", ENV{ID_FS_USAGE}=="filesystem", \
         RUN{program}+="${config.systemd.package}/bin/systemd-mount --owner kanashimia --no-block -AG %N"

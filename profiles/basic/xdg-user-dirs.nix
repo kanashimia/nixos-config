@@ -15,17 +15,16 @@
   #   ${pkgs.xdg-user-dirs}/bin/xdg-user-dirs-update &
   # '';
 
-  environment.sessionVariables = {
-    XDG_CONFIG_DIRS = "/etc/xdg";
-  };
-
   environment.variables = let
     data = "\${XDG_DATA_HOME:-$HOME/.local/share}";
     cache = "\${XDG_CACHE_HOME:-$HOME/.cache}";
     config = "\${XDG_CONFIG_HOME:-$HOME/.config}";
     state = "\${XDG_STATE_HOME:-$HOME/.local/state}";
   in {
-    XDG_CONFIG_DIRS = lib.mkForce "/etc/xdg";
+    XDG_DATA_HOME = "$HOME/.local/share";
+    XDG_CACHE_HOME = "$HOME/.cache";
+    XDG_CONFIG_HOME = "$HOME/.config";
+    XDG_STATE_HOME = "$HOME/.local/state";
 
     IPYTHONDIR = "${config}/ipython";
 

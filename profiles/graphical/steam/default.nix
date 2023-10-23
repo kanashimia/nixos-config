@@ -7,7 +7,7 @@
     ];
   };
   coolXdgFix = pkg: bin: dirName:
-    wrapBinScript pkg bin ''
+    wrapBinScript pkg bin /*bash*/''
       DATA_DIR="''${XDG_DATA_HOME:-$HOME/.local/share}"
       CACHE_DIR="''${XDG_CACHE_HOME:-$HOME/.cache}"
       CONFIG_DIR="''${XDG_CONFIG_HOME:-$HOME/.config}"

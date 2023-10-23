@@ -182,7 +182,7 @@ bar {
     # status_command nix shell n\#i3status -c i3status
     modifier $mod
 
-    position top
+    position bottom
     mode     hide
 
     colors {
