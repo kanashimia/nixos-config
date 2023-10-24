@@ -55,15 +55,12 @@ proprietary-cfg = {
 in {
   imports = [ proprietary-cfg ];
 
-  programs.sway.extraOptions = [
-    "--unsupported-gpu"
-    "-Dnoscanout"
-  ];
+  programs.sway.extraOptions = [ "--unsupported-gpu" ];
 
   environment.systemPackages = with pkgs; [ nvtop ];
 
   environment.sessionVariables = {
-    # WLR_RENDERER = "vulkan";
+    WLR_RENDERER = "vulkan";
 
     # WLR_DRM_DEVICES = "/dev/dri/intel";
     # WLR_DRM_NO_ATOMIC = "1";
@@ -74,6 +71,6 @@ in {
     # WLR_EGL_NO_MODIFIERS = "1";
     
     # GBM_BACKEND = "nvidia-drm";
-    # __GLX_VENDOR_LIBRARY_NAME = "nvidia";
+    __GLX_VENDOR_LIBRARY_NAME = "nvidia";
   };
 }
