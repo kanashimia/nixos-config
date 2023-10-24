@@ -2,6 +2,7 @@
   programs.sway = {
     enable = true;
     wrapperFeatures.gtk = true;
+    enableRealtime = false;
     extraPackages = with pkgs; [
       foot
       wofi
@@ -43,8 +44,14 @@
     "sway/config".source = ./config;
     "sway/config.d/nixos.conf".text = lib.mkForce "";
     "sway/config.d/20-start-session.conf".text = ''
-      exec 'systemctl import-environment --user DISPLAY WAYLAND_DISPLAY SWAYSOCK XDG_CURRENT_DESKTOP'
+      exec 'systemctl import-environment --user DISPLAY WAYLAND_DISPLAY SWAYSOCK XDG_CURRENT_DESKTOP; systemctl --user start sway.target'
     '';
+  };
+
+  systemd.user.targets.sway = {
+    bindsTo = [ "graphical-session.target" ];
+    wants = [ "graphical-session-pre.target" ];
+    after = [ "graphical-session-pre.target" ];
   };
 
   services.greetd = let
@@ -52,7 +59,7 @@
       exec systemd-cat -t sway -- \
         systemd-run --user --scope --quiet --no-ask-password \
           --slice session -u sway \
-          -p BindsTo=graphical-session.target \
+          -p PartOf=sway.target \
           -- sway
     '';
   in {
