@@ -64,7 +64,7 @@
     '';
   in {
     enable = true;
-    vt = 7;
+    vt = 1;
     settings.default_session = {
       command = swaySession;
       user = "kanashimia";

@@ -2,11 +2,6 @@
 proprietary-cfg = {
   services.xserver.videoDrivers = [ "nvidia" ];
 
-  # systemd.services.greetd.unitConfig = {
-  #   Wants = [ "dev-dri-nvidia.device" ];
-  #   After = [ "dev-dri-nvidia.device" ];
-  # };
-
   hardware.nvidia = {
     nvidiaSettings = false;
     powerManagement = {

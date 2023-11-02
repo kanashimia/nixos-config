@@ -25,7 +25,6 @@
 
   # Do not print sometimes helpful, but not always, info during boot,
   # so it is harder to debug system when something goes wrong.
-  # boot.kernelParams = [ "quiet" "vt.global_cursor_default=0" "fbcon=nodefer" ];
   boot.kernelParams = [ "quiet" ];
 
   boot.initrd.systemd.enable = true;
@@ -38,25 +37,13 @@
   networking.firewall.enable = true;
 
   console.keyMap = "dvorak";
-  # console.earlySetup = true;
-
-  # Use same layout for console.
-  # console.useXkbConfig = true;
 
   services.dbus.implementation = "broker";
 
   time.timeZone = "Europe/Kyiv";
   i18n = {
-    supportedLocales = [ 
-      # "en_US.UTF-8"
-      # "en_IE.UTF-8"
-      # "en_DK.UTF-8"
-      # "uk_UA.UTF-8"
-      # "ja_JP.UTF-8"
-      "all" 
-    ];
+    supportedLocales = [ "all" ];
     defaultLocale = "en_IE.UTF-8";
-    extraLocaleSettings.LC_TIME = "en_DK.UTF-8";
   };
 
   users.users.root.password = null;

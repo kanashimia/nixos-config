@@ -43,12 +43,7 @@
       ls -r | tail -n +10 | xargs -I {} btrfs subvolume delete {}
       btrfs subvolume snapshot -r "/home" "$(date --iso-8601=seconds)"
     '';
-    restartIfChanged = false;
-  };
-
-  systemd.timers."btrfs-snapshot-home".timerConfig = {
-    OnCalendar = "*:0/15";
-    Persistent = "yes";
+    startAt = "*:0/15";
   };
 
   hardware.opengl = {

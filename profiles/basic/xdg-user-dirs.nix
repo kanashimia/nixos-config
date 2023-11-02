@@ -30,18 +30,19 @@
 
     JUPYTER_CONFIG_DIR = "${config}/jupyter";
 
-    ANDROID_HOME = "${data}/android";
+    ANDROID_HOME = "${state}/android";
 
-    TEXMFHOME = "${data}/texmf";
+    TEXMFHOME = "${state}/texmf";
     TEXMFVAR = "${cache}/texmf";
     TEXMFCONFIG = "${config}/texmf";
 
-    CARGO_HOME = "${data}/cargo";
+    CARGO_HOME = "${state}/cargo";
+    CARGO_TARGET_DIR = "${state}/cargo";
 
     CUDA_CACHE_PATH = "${cache}/nv";
 
     NPM_CONFIG_USERCONFIG = "${config}/npm/npmrc";
     NPM_CONFIG_CACHE = "${cache}/npm";
-    NPM_CONFIG_PREFIX = "${data}/npm";
+    NPM_CONFIG_PREFIX = "${state}/npm";
   };
 }

@@ -46,19 +46,12 @@ in {
     '';
   };
 
-  # environment.sessionVariables.GTK_THEME = theme;
   environment.sessionVariables = {
-    # QT_STYLE_OVERRIDE = "Adwaita-dark";
     QT_QPA_PLATFORMTHEME = "gtk3";
     # KRITA_NO_STYLE_OVERRIDE = "1";
   };
 
   environment.systemPackages = with pkgs; [
-    # libsForQt5.qtstyleplugin-kvantum
-    # libsForQt5.qtstyleplugins
-    # qt5ct
-    qgnomeplatform
-    adwaita-qt
     gnome-themes-extra
     papirus-icon-theme
     adw-gtk3
