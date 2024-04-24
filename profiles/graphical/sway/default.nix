@@ -32,8 +32,8 @@ in {
 
       brightnessctl
 
-      (linkFarm "default-terminal" [ 
-        { name = "bin/gnome-terminal"; path = "${pkgs.foot}/bin/foot"; } 
+      (linkFarm "xdg-terminal-exec" [ 
+        { name = "bin/xdg-terminal-exec"; path = "${pkgs.foot}/bin/foot"; } 
       ])
     ];
   };
