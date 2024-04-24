@@ -1,4 +1,6 @@
-{ config, inputs, ... }: {
+{ config, inputs, pkgs, ... }: {
+  nix.package = pkgs.nixVersions.nix_2_21;
+
   nix.settings = {
     experimental-features = [
       "nix-command"
@@ -12,7 +14,7 @@
 
   nix.registry = {
     n = {
-      to = { type = "github"; owner = "NixOS"; repo = "nixpkgs"; rev = inputs.nixpkgs.rev; };
+      to = builtins.parseFlakeRef "github:nixos/nixpkgs/${inputs.nixpkgs.rev}";
       exact = false; 
     };
   };

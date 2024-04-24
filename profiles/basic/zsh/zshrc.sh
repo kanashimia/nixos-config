@@ -6,6 +6,11 @@ HISTSIZE=10000
 SAVEHIST="$HISTSIZE"
 
 setopt hist_ignore_all_dups hist_ignore_space
+
+for p in ${(@s/:/)XDG_DATA_DIRS}; do  
+  fpath=($p/zsh/site-functions $fpath)
+done
+
 # hist_find_no_dups hist_save_no_dups 
 autoload -Uz compinit
 
@@ -34,7 +39,6 @@ chpwd() {
 KEYTIMEOUT=0
 WORDCHARS='*?_-~=&;!$'
 
-unalias run-help
 autoload run-help run-help-git run-help-nix run-help-sudo
 
 setopt auto_continue

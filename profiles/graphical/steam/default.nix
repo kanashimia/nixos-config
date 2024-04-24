@@ -35,12 +35,13 @@
       exec ${pkg}/bin/${bin} "$@"
     '';
 in {
-  programs.steam.package = pkgs.steam.override { 
-    steam = coolXdgFix pkgs.steamPackages.steam "steam" "Steam";
-  };
+  programs.steam.package = pkgs.steam-xdg;
 
   nixpkgs.overlays = [ (final: prev: {
-    chromium = coolXdgFix prev.chromium "chromium" "chromium";
-    firefox = coolXdgFix prev.firefox "firefox" "firefox";
+    steam-xdg = pkgs.steam.override {
+      steam = coolXdgFix pkgs.steamPackages.steam "steam" "Steam";
+    };
+    chromium-xdg = coolXdgFix final.chromium "chromium" "chromium";
+    firefox-xdg = coolXdgFix final.firefox "firefox" "firefox";
   }) ];
 }

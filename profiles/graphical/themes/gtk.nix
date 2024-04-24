@@ -52,6 +52,8 @@ in {
   };
 
   environment.systemPackages = with pkgs; [
+    qgnomeplatform
+    adwaita-qt
     gnome-themes-extra
     papirus-icon-theme
     adw-gtk3

@@ -9,6 +9,15 @@
 
   boot.loader.systemd-boot.enable = true;
 
+  hardware.bluetooth.enable = true;
+
+  # Whatever bug with bcachefs 
+  systemd.tmpfiles.rules = [
+    "w /sys/block/nvme0n1/queue/max_sectors_kb - - - - 64"
+  ];
+
+  boot.supportedFilesystems = [ "bcachefs" "btrfs" "ext4" "xfs" ];
+
   fileSystems = {
     "/" = {
       label = "iris";
@@ -31,7 +40,10 @@
     }; 
   };
 
-  environment.systemPackages = with pkgs; [ compsize ];
+  environment.systemPackages = with pkgs; [ 
+    prismlauncher
+    vial
+  ];
 
   systemd.services."btrfs-snapshot-home" = {
     after = [ "local-fs.target" ];
@@ -69,7 +81,8 @@
     IdleActionSec=10min
   '';
 
-  boot.kernelPackages = pkgs.linuxPackages_latest;
+  # boot.kernelPackages = pkgs.linuxPackages_latest;
+  boot.kernelPackages = pkgs.linuxPackages_testing;
 
   services.udev.extraHwdb = ''
     evdev:atkbd:dmi:bvn*:bvr*:bd*:br*:efr*:svnHP:pnHP15-cx00*:pvr*
@@ -113,7 +126,7 @@
       SUBSYSTEM=="drm", SYMLINK=="dri/by-path/pci-0000:01:00.0-card", SYMLINK+="dri/nvidia", TAG+="systemd"
     '';
     "90-lowbat" = ''
-      SUBSYSTEM=="power_supply", ATTR{status}=="Discharging", ATTR{capacity}=="[0-15]", \
+      SUBSYSTEM=="power_supply", ATTR{status}=="Discharging", ATTR{capacity}=="[0-9]", \
         RUN+="${config.systemd.package}/bin/systemctl suspend -i"
     '';
     "80-usb-automount" = ''
@@ -123,12 +136,19 @@
     "50-arduino-promicro-flash-access" = ''
       KERNEL=="ttyACM*", ATTRS{idVendor}=="1b4f", ATTRS{idProduct}=="9205", MODE="0660", TAG+="uaccess"
     '';
-  };
+    "90-logi-bolt-wakeup" = ''
+      ACTION=="add", SUBSYSTEM=="usb", DRIVERS=="usb", ATTRS{idVendor}=="046d", ATTRS{idProduct}=="c548", ATTR{power/wakeup}="disabled"
+    '';
+  } ++ [ pkgs.vial ];
 
   boot.kernelParams = [
     "mitigations=off"
     "preempt=full"
-    "snd_hda_intel.model=hp-mute-led-mic3" # Mute led fix.
+    "i915.enable_guc=2"
+    # "snd_hda_intel.model=hp-mute-led-mic3" # Mute led fix.
+    # "snd_hda_intel.model=103c:820d" # Mute led fix.
+    "snd_hda_intel.model=,103c:820d" # Mute led fix.
+    # "bgrt_disable"
   ];
 
   # Hide ACPI error messages.

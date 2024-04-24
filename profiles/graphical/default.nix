@@ -17,23 +17,27 @@
     password = "kanashimia";
   };
 
-  programs.git.enable = true;
-  programs.git.config = {
-    init.defaultBranch = "mistress";
-    user = {
-        signingKey = "~/.ssh/id_ed25519.pub";
-        email = "chad@redpilled.dev";
-        name = "Mia Kanashi";
-    };
-    commit.gpgsign = true;
-    gpg = {
-       format = "ssh";
+  programs.git = {
+    enable = true;
+    config = {
+      init.defaultBranch = "mistress";
+      user = {
+          signingKey = "~/.ssh/id_ed25519.pub";
+          email = "chad@redpilled.dev";
+          name = "Mia Kanashi";
+      };
+      commit.gpgsign = true;
+      gpg = {
+         format = "ssh";
+      };
     };
   };
 
-  environment.sessionVariables = {
-    NIXOS_OZONE_WL = "1";
-  };
+  # systemd.tmpfiles.rules = [
+  #   "w /sys/kernel/mm/lru_gen/min_ttl_ms - - - - 1000"
+  # ];
+
+  environment.sessionVariables.NIXOS_OZONE_WL = "1";
 
   environment.systemPackages = with pkgs; [
     mypaint krita
@@ -54,11 +58,66 @@
 
     ardour
     qpwgraph
-    musescore
+    carla
+    # musescore
 
     liquidsfz
     sfizz
     distrho
+
+    noise-repellent
+    dragonfly-reverb
+    x42-plugins
+    zita-at1
+    vocproc
+    rubberband
+    talentedhack
+    speech-denoiser
+    # aether-lv2
+    boops
+    rnnoise-plugin
+    deepfilternet
+
+    gxplugins-lv2
+    zam-plugins #
+    tap-plugins
+    # lsp-plugins ##
+    infamousPlugins
+    # calf
+    (stdenv.mkDerivation (self: {
+      pname = "wolf-spectrum";
+      version = "1.0.0";
+
+      src = fetchFromGitHub {
+        owner = "wolf-plugins";
+        repo = "wolf-spectrum";
+        rev = "b2188962d81a203f4e3c859dbdac5b4d58933591";
+        hash = "sha256-fjpFJ8s/ELf3qrF+Mj0EQMRveEZV1XuEOAg7lSRWt48=";
+        fetchSubmodules = true;
+      };
+
+      nativeBuildInputs = [ pkg-config ];
+      buildInputs = [ libjack2 lv2 xorg.libX11 liblo libGL xorg.libXcursor ];
+
+      makeFlags = [
+        "BUILD_LV2=true"
+        "BUILD_VST2=true"
+        "BUILD_JACK=true"
+      ];
+
+      patchPhase = ''
+        patchShebangs ./dpf/utils/generate-ttl.sh
+      '';
+
+      installPhase = ''
+        mkdir -p $out/lib/lv2
+        mkdir -p $out/lib/vst
+        mkdir -p $out/bin/
+        cp -r bin/wolf-spectrum.lv2    $out/lib/lv2/
+        cp -r bin/wolf-spectrum-vst.so $out/lib/vst/
+        cp -r bin/wolf-spectrum        $out/bin/
+      '';
+    }))
   ];
 
   environment.variables = {
@@ -93,6 +152,9 @@
     jack.enable = true;
     alsa.enable = true;
     alsa.support32Bit = true;
+    extraLv2Packages = with pkgs; [
+      distrho
+    ];
   };
 
   boot.kernelModules = [ "snd-seq" "snd-rawmidi" ];
@@ -123,5 +185,42 @@
     ""
     "${pkgs.rtkit}/libexec/rtkit-daemon ${cmdline}"
   ];
+
+  services.syncthing = rec {
+    enable = true;
+    openDefaultPorts = true;
+
+    user = "kanashimia";
+    group = "users";
+    dataDir = "/home/${user}";
+
+    settings = {
+      options = {
+        urAccepted = -1; # no
+      };
+      devices = {
+        # battleworn-phone.id = "XN3GANY-G7LQZU6-D73DSBJ-FCYMRHN-XGO6L3L-R6RJP64-GGNW4TX-VS2EXQF";
+        xiaoxiao-tablet.id = "XN3GANY-G7LQZU6-D73DSBJ-FCYMRHN-XGO6L3L-R6RJP64-GGNW4TX-VS2EXQF";
+        hp-laptop.id = "PUICPVJ-X345CLK-F4FTBBA-7LKLLMI-FAVGXYV-GE73Q2Y-I6WECLS-4YGWGQE";
+      };
+      folders = {
+        "~/Sync" = { enable = false; };
+        "~/music" = { devices = lib.attrNames settings.devices; };
+        # documents
+        # pictures
+        # projects
+      };
+      # folders = let
+      #   emptyDefault = { Sync.enable = false; };
+        # dirs = lib.genAttrs [
+        #   "documents" "pictures" "music" "projects"
+        # ] (folder: {
+        #   enable = true;
+        #   path = "~/${folder}";
+        #   devices = lib.attrNames settings.devices;
+        # });
+      # in emptyDefault // dirs;
+    };
+  };
 }
 

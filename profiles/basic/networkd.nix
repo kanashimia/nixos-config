@@ -5,14 +5,14 @@
   };
 
   services.timesyncd.servers = [
-    "194.54.161.214" # pool1.ntp.od.ua
-    "91.237.127.90" # pool2.ntp.od.ua
+    "time.cloudflare.com"
+    "ntp.time.in.ua"
     "216.239.35.4" # time2.google.com
     "216.239.35.12" # time4.google.com
   ];
 
   services.resolved.extraConfig = lib.generators.toKeyValue {} {
-    DNSSEC = "yes";
+    DNSSEC = "allow-downgrade";
     DNSOverTLS = "yes";
   };
 

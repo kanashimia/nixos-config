@@ -44,6 +44,9 @@
   i18n = {
     supportedLocales = [ "all" ];
     defaultLocale = "en_IE.UTF-8";
+    extraLocaleSettings = {
+      LC_COLLATE = "C.UTF-8";
+    };
   };
 
   users.users.root.password = null;

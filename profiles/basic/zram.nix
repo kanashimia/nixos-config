@@ -9,7 +9,7 @@
 
   boot.kernel.sysctl = {
     # Swapping with zram is much much faster than paging so we prioritize it.
-    "vm.swappiness" = 180;
+    "vm.swappiness" = 100;
     # With zstd, the decompression is so slow
     # that that there's essentially zero throughput gain from readahead.
     # Prevents uncompressing any more than you absolutely have to,

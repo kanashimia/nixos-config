@@ -30,7 +30,7 @@
 
     JUPYTER_CONFIG_DIR = "${config}/jupyter";
 
-    ANDROID_HOME = "${state}/android";
+    ANDROID_USER_HOME = "${data}/android";
 
     TEXMFHOME = "${state}/texmf";
     TEXMFVAR = "${cache}/texmf";
@@ -44,5 +44,7 @@
     NPM_CONFIG_USERCONFIG = "${config}/npm/npmrc";
     NPM_CONFIG_CACHE = "${cache}/npm";
     NPM_CONFIG_PREFIX = "${state}/npm";
+
+    GRADLE_USER_HOME = "${data}/gradle";
   };
 }

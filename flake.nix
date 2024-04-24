@@ -12,29 +12,60 @@
     };
 
     liquidsfz = { url = "github:swesterfeld/liquidsfz"; flake = false; };
-    zathura = { url = "gitlab:pwmt/zathura/develop?host=git.pwmt.org"; flake = false; };
+    stalwart = { url = "github:stalwartlabs/mail-server/v0.7.2"; flake = false; };
   };
 
-  outputs = inputs:  let
+  outputs = inputs: let
     inherit (inputs.nixpkgs) lib;
 
-    mkNixosSystems = lib.mapAttrs (name: modules: 
-      lib.nixosSystem { 
-        modules = modules ++ [ {
-          networking.hostName = name; 
+    mkNixosSystems = lib.mapAttrs (name: modules:
+      lib.nixosSystem {
+        modules = modules ++ [{
+          networking.hostName = name;
           nixpkgs.overlays = lib.attrValues inputs.self.overlays;
-        } ]; 
+        }];
         specialArgs = {
           inherit inputs;
         };
       }
     );
 
-    mkOverlays = lib.mapAttrs (name: overlay: 
+    mkOverlays = lib.mapAttrs (name: overlay:
       (final: prev: { ${name} = overlay final prev; })
     );
   in {
     overlays = mkOverlays {
+      stalwart-mail = final: prev: final.rustPlatform.buildRustPackage rec {
+        pname = "stalwart-mail";
+        version = "unstable";
+
+        src = inputs.stalwart;
+
+        cargoLock.lockFile = "${src}/Cargo.lock";
+
+        nativeBuildInputs = with final; [
+          pkg-config
+          protobuf
+          rustPlatform.bindgenHook
+        ];
+
+        buildInputs = with final; [
+          bzip2
+          openssl
+          sqlite
+          zstd
+        ];
+
+        env = {
+          OPENSSL_NO_VENDOR = true;
+          ZSTD_SYS_USE_PKG_CONFIG = true;
+          # ROCKSDB_INCLUDE_DIR = "${final.rocksdb}/include";
+          # ROCKSDB_LIB_DIR = "${final.rocksdb}/lib";
+        };
+
+        doCheck = false;
+      };
+
       liquidsfz = final: prev: final.stdenv.mkDerivation {
         pname = "liquidsfz";
         version = "unstable";
@@ -45,16 +76,8 @@
         src = inputs.liquidsfz;
       };
 
-      zathura = final: prev: prev.zathura.override {
-        zathura_core = prev.zathuraPkgs.zathura_core.overrideAttrs (old: {
-          src = inputs.zathura;
-          buildInputs = with final; [ json-glib xvfb-run ] ++ old.buildInputs;
-          doCheck = false;
-        });
-      };
-
       foot = final: prev: let
-        desktopEntry  = /*ini*/''
+        desktopEntry = /*ini*/''
           [Desktop Entry]
           Type=Application
           Exec=foot
@@ -86,18 +109,18 @@
       };
 
       mpv-unwrapped = final: prev: prev.mpv-unwrapped.override {
-        ffmpeg_5 = final.ffmpeg_5-full;
+        ffmpeg = final.ffmpeg-full;
       };
 
       mpv = final: prev: final.symlinkJoin {
-        inherit (prev.mpv ) name;
+        inherit (prev.mpv) name;
         paths = [ prev.mpv ];
         postBuild = ''
           rm $out/share/applications/umpv.desktop
         '';
       };
 
-      nvtop = final: prev: prev.nvtop-amd.overrideAttrs (old: {
+      nvtop = final: prev: prev.nvtopPackages.amd.overrideAttrs (old: {
         pname = "nvtop";
 
         cmakeFlags = with final; [
@@ -110,8 +133,8 @@
           addOpenGLRunpath $out/bin/nvtop
         '';
       });
-      
-      sway-unwrapped = final: prev: 
+
+      sway-unwrapped = final: prev:
         inputs.nixpkgs-wayland.packages.${final.system}.sway-unwrapped;
     };
 
