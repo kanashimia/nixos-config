@@ -213,8 +213,8 @@ StandardError="journal";
   };
   */
 
-  systemd.user.slices."app".sliceConfig = {
-    ManagedOOMMemoryPressure = "kill";
-    ManagedOOMMemoryPressureLimit = "40%";
-  };
+  # systemd.user.slices."app".sliceConfig = {
+  #   ManagedOOMMemoryPressure = "kill";
+  #   ManagedOOMMemoryPressureLimit = "40%";
+  # };
 } 

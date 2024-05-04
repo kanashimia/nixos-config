@@ -37,6 +37,10 @@
   #   "w /sys/kernel/mm/lru_gen/min_ttl_ms - - - - 1000"
   # ];
 
+  # systemd.extraConfig = ''
+  #   DefaultOOMPolicy=continue
+  # '';
+
   environment.sessionVariables.NIXOS_OZONE_WL = "1";
 
   environment.systemPackages = with pkgs; [
@@ -143,7 +147,7 @@
 
   boot.kernel.sysctl."kernel.sysrq" = 1;
 
-  fonts.packages = with pkgs; [ noto-fonts-cjk ];
+  fonts.packages = with pkgs; [ noto-fonts-cjk monaspace ];
 
   security.rtkit.enable = true;
   services.pipewire = {
