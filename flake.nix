@@ -4,15 +4,15 @@
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
 
-    mailserver.url = "gitlab:simple-nixos-mailserver/nixos-mailserver";
-
     nixpkgs-wayland = {
       url = "github:nix-community/nixpkgs-wayland";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
     liquidsfz = { url = "github:swesterfeld/liquidsfz"; flake = false; };
-    stalwart = { url = "github:stalwartlabs/mail-server/v0.7.2"; flake = false; };
+    stalwart = { url = "github:stalwartlabs/mail-server"; flake = false; };
+    caddy = { url = "github:caddyserver/caddy"; flake = false; };
+    cypht = { url = "github:cypht-org/cypht"; flake = false; };
   };
 
   outputs = inputs: let
@@ -35,6 +35,84 @@
     );
   in {
     overlays = mkOverlays {
+      cypht = final: prev: final.php.buildComposerProject (finalAttrs: {
+        pname = "cypht";
+        version = "2.0.0";
+
+        src = inputs.cypht;
+
+        php = final.php.withExtensions ({ enabled, all }:
+          enabled ++ [ all.openssl all.curl ]);
+
+        vendorHash = "sha256-DtQDl3O6pB4gm8HfZFmTknEgYTt0O775B4ocIau0n2k=";
+
+        installPhase = ''
+          runHook preInstall
+
+          mv $out/share/php/cypht/* $out
+          rm -r $out/share
+
+          touch $out/.env
+          cd $out
+          php ./scripts/config_gen.php
+
+          runHook postInstall
+        '';
+
+        postFixup = ''
+          substituteInPlace $out/index.php --replace-fail \
+            "define('APP_PATH', ''')" \
+            "define('APP_PATH', '$out/')"
+        '';
+
+        # Upstream composer.json file is missing the name, description and license fields
+        composerStrictValidation = false;
+      });
+
+      caddyWith = final: prev:
+        { plugins, vendorHash, caddyRev ? inputs.caddy.rev }: with final;
+          caddy.override {
+            buildGoModule = args: buildGoModule (args // {
+            src = stdenv.mkDerivation {
+              pname = "caddy-using-xcaddy-${xcaddy.version}";
+              inherit (caddy) version;
+
+              dontUnpack = true;
+              dontFixup = true;
+
+              nativeBuildInputs = [
+                cacert
+                go
+              ];
+
+              configurePhase = ''
+                export GOCACHE="$TMPDIR/go-cache"
+                export GOPATH="$TMPDIR/go"
+                export XCADDY_SKIP_BUILD=1
+              '';
+
+              buildPhase = ''
+                ${lib.getExe xcaddy} build "${caddyRev}" \
+                  ${lib.concatMapStringsSep " " (plugin: "--with ${plugin}") plugins}
+                cd buildenv*
+                go mod vendor
+              '';
+
+              installPhase = ''
+                cp -r . "$out"
+              '';
+
+              outputHash = vendorHash;
+              outputHashMode = "recursive";
+              outputHashAlgo = if vendorHash == "" then "sha256" else null;
+            };
+
+            subPackages = [ "." ];
+            ldflags = [ "-s" "-w" ]; ## don't include version info twice
+            vendorHash = null;
+          });
+        };
+
       stalwart-mail = final: prev: final.rustPlatform.buildRustPackage rec {
         pname = "stalwart-mail";
         version = "unstable";
@@ -64,6 +142,8 @@
         };
 
         doCheck = false;
+
+        meta.mainProgram = "stalwart-mail";
       };
 
       liquidsfz = final: prev: final.stdenv.mkDerivation {
