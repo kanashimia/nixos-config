@@ -46,5 +46,7 @@
     NPM_CONFIG_PREFIX = "${state}/npm";
 
     GRADLE_USER_HOME = "${data}/gradle";
+
+    GOPATH = "${state}/go";
   };
 }

@@ -47,6 +47,4 @@
   systemd.network.wait-online.anyInterface = true;
 
   systemd.targets."network-online".wantedBy = lib.mkForce [];
-
-  services.nscd.enableNsncd = true;
 }
