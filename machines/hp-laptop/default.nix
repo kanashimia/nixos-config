@@ -1,5 +1,5 @@
 { pkgs, lib, config, inputs, ... }: {
-  imports = [ ./nvidia.nix ];
+  imports = [ ./nvidia.nix ./vpn.nix ];
 
   networking.wireless.iwd.enable = true;
 

@@ -23,6 +23,10 @@ in {
         PublicKey = "Gsc/Ho2hXNLWwGwg5yC9MwtHhA0veBjL908/2I684WA=";
         AllowedIPs = "10.0.0.3/32";
       };
+      "hp-laptop" = {
+        PublicKey = "pcGX/CPAt12kBRrjA1ZcIjuHfI+LNSUZoavcNj3WnzA=";
+        AllowedIPs = "10.0.0.4/32";
+      };
     };
   };
 
