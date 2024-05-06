@@ -10,13 +10,15 @@ set {
     $term foot
     $browser chromium
     $telegram telegram-desktop
+    $exec exec ~/run.sh
+    # $exec exec
     $wofi wofi --show drun --insensitive --allow-images --filter
     $restarter printf 'img:/run/current-system/sw/share/icons/Papirus/32x32/apps/system-%s.svg:text:%s\n' shutdown poweroff suspend suspend reboot reboot hibernate hibernate | wofi --show dmenu -I -H "$(( (32 + 10 * 2) * 4 + 10 * 2 ))" | sed 's/.*://' | xargs -i systemctl '{}' -i
 }
 
 input type:keyboard {
     xkb_layout $layout
-    xkb_options "caps:swapescape,grp_led:num,grp:rctrl_rshift_toggle,compose:menu,compose:rctrl"
+    xkb_options "caps:escape,grp_led:num,grp:rctrl_rshift_toggle,compose:menu,compose:rctrl"
 }
 
 input type:touchpad {
@@ -44,12 +46,11 @@ seat * {
 floating_modifier $mod normal
 
 bindsym --no-repeat --whole-window {
-    BTN_EXTRA exec wpctl set-mute @DEFAULT_SOURCE@ 0
-    BTN_SIDE  exec wpctl set-mute @DEFAULT_SOURCE@ 1
+    BTN_EXTRA $exec wpctl set-mute @DEFAULT_SOURCE@ 0
+    BTN_SIDE  $exec wpctl set-mute @DEFAULT_SOURCE@ 1
 }
 
 bindsym --to-code {
-    F12 exec foot
     $mod+Shift+0 input type:keyboard xkb_layout "us"
     $mod+0 input type:keyboard xkb_layout $layout
 
@@ -58,9 +59,6 @@ bindsym --to-code {
     $mod+F3 input type:keyboard xkb_switch_layout 2
     $mod+F4 input type:keyboard xkb_switch_layout 3
     $mod+F5 input type:keyboard xkb_switch_layout 4
-
-    $mod+m mark --replace swap
-    $mod+Shift+m swap container with mark swap
 
     $mod+Shift+c kill
 
@@ -71,6 +69,9 @@ bindsym --to-code {
     $mod+$down  focus down
     $mod+$up    focus up
     $mod+$right focus right
+
+    $mod+m mark --replace swap
+    $mod+Shift+m swap container with mark swap
 
     $mod+Shift+$left  move left  100px
     $mod+Shift+$down  move down  100px
@@ -127,25 +128,25 @@ bindsym --to-code {
 }
 
 bindsym --to-code {
-    $mod+Return       exec $term
-    $mod+Shift+Return exec $term -D "$(swaycwd)"
+    $mod+Return       $exec $term
+    $mod+Shift+Return $exec $term -D "$(swaycwd)"
 
-    $mod+r exec $wofi 
+    $mod+r $exec $wofi 
 
     $mod+Shift+e exec $restarter
-    $mod+Shift+b exec $browser
-    $mod+Shift+t exec $telegram
+    $mod+Shift+b $exec $browser
+    $mod+Shift+t $exec $telegram
 
     Print       exec grim - | wl-copy -t image/png
     Shift+Print exec slurp | grim -g - - | wl-copy -t image/png
     $mod+Print  exec ~/screenshot.sh
 
-    XF86AudioRaiseVolume exec wpctl set-volume @DEFAULT_SINK@ -l 1.0 5%+
-    XF86AudioLowerVolume exec wpctl set-volume @DEFAULT_SINK@ -l 1.0 5%-
-    XF86AudioMute        exec wpctl set-mute   @DEFAULT_SINK@ toggle
+    XF86AudioRaiseVolume $exec wpctl set-volume @DEFAULT_SINK@ -l 1.0 5%+
+    XF86AudioLowerVolume $exec wpctl set-volume @DEFAULT_SINK@ -l 1.0 5%-
+    XF86AudioMute        $exec wpctl set-mute   @DEFAULT_SINK@ toggle
 
-    XF86MonBrightnessUp   exec brightnessctl set --quiet --exponent 5%+
-    XF86MonBrightnessDown exec brightnessctl set --quiet --exponent 5%-
+    XF86MonBrightnessUp   $exec brightnessctl set --quiet --exponent 5%+
+    XF86MonBrightnessDown $exec brightnessctl set --quiet --exponent 5%-
 }
 
 set {
@@ -192,7 +193,7 @@ force_display_urgency_hint 5000 ms
 #     swaybar_command waybar
 #     position top
 # }
-# exec nix run n#waybar
+# $$exec nix run n#waybar
 
 bar {
     # status_command nix shell n\#i3status -c i3status
