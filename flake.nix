@@ -23,6 +23,7 @@
         modules = modules ++ [{
           networking.hostName = name;
           nixpkgs.overlays = lib.attrValues inputs.self.overlays;
+          imports = lib.attrValues inputs.self.nixosModules;
         }];
         specialArgs = {
           inherit inputs;
@@ -33,6 +34,8 @@
     mkOverlays = lib.mapAttrs (name: overlay:
       (final: prev: { ${name} = overlay final prev; })
     );
+
+    mkNixosModules = lib.mapAttrs (name: path: import path);
   in {
     overlays = mkOverlays {
       cypht = final: prev: final.php.buildComposerProject (finalAttrs: {
@@ -216,6 +219,10 @@
 
       sway-unwrapped = final: prev:
         inputs.nixpkgs-wayland.packages.${final.system}.sway-unwrapped;
+    };
+
+    nixosModules = mkNixosModules {
+      unfree = ./modules/unfree.nix;
     };
 
     nixosConfigurations = mkNixosSystems {
