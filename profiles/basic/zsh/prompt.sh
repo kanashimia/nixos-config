@@ -5,6 +5,8 @@
 # }
 
 precmd() { 
+    print -n '\e]133;D\e\\'
+    print -n '\e]133;A\e\\'
     # psvar[2]=''
     # if (( timer )); then
     #     local -rF elapsed=$(( EPOCHREALTIME - timer ))
@@ -39,3 +41,7 @@ precmd() {
 PROMPT='
 %F{cyan}%~%f %(2L.%F{red}lvl:%L%f .)%(1V.%F{yellow}git:%1v%f.)
 %F{%(?.green.red)}%(!.!.›)%f '
+
+preexec() {
+    print -n '\e]133;C\e\\'
+}
