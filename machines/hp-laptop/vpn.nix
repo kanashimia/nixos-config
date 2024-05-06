@@ -34,8 +34,7 @@ in {
     };
     routes = mkWrap "routeConfig" {
       "default" = {
-        Gateway = "10.0.0.1";
-        GatewayOnLink = true;
+        Destination = "0.0.0.0/0";
         Table = 1000;
       };
     };
