@@ -46,13 +46,18 @@
       dane = "optional";
     };
 
-    acme."letsencrypt" = {
-      directory = "https://acme-v02.api.letsencrypt.org/directory";
-      challenge = "dns-01";
-      contact = "acme3@${domain}";
-      domains = [ domain ];
-      provider = "cloudflare";
-      secret = "%{file:/run/credentials/stalwart-mail.service/cool-secret}%";
+    # acme."letsencrypt" = {
+    #   directory = "https://acme-v02.api.letsencrypt.org/directory";
+    #   challenge = "dns-01";
+    #   contact = "acme3@${domain}";
+    #   domains = [ domain ];
+    #   provider = "cloudflare";
+    #   secret = "%{file:/run/credentials/stalwart-mail.service/cool-secret}%";
+    # };
+
+    certificate."default" = {
+      cert = "%{file:/var/lib/stalwart-mail/acme/redpilled.dev/cert.pem}%";
+      private-key = "%{file:/var/lib/stalwart-mail/acme/redpilled.dev/key.pem}%";
     };
 
     auth.arc.verify = "relaxed";
@@ -84,9 +89,14 @@
       attempts = 3;
     };
 
-    lookup.default = {
-      hostname = domain;
-      domain = domain;
+    lookup = {
+      default = {
+        hostname = domain;
+        domain = domain;
+      };
+      spam-trap = { 
+        "trans-migrated@*" = "";
+      };
     };
 
     server.listener = {
@@ -101,11 +111,16 @@
         tls.implicit = true;
       };
       "smtp" = {
-        bind = [ "[::]:25" "[::]:587" ];
+        bind = "[::]:25";
         protocol = "smtp";
         tls.implicit = false;
       };
-      "smtps" = {
+      "smtp-submission" = {
+        bind = "[::]:587";
+        protocol = "smtp";
+        tls.implicit = false;
+      };
+      "smtps-submission" = {
         bind = "[::]:465";
         protocol = "smtp";
         tls.implicit = true;
@@ -156,6 +171,7 @@
   };
 
   configFile = (pkgs.formats.toml {}).generate "stalwart-mail.toml" stalwartConfig;
+  # configFile = "/var/lib/stalwart-mail/config2.toml";
 in {
   networking.firewall.allowedTCPPorts = [
     25 # smtp

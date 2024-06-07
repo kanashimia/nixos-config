@@ -1,11 +1,11 @@
 { config, inputs, pkgs, ... }: {
-  nix.package = pkgs.nixVersions.nix_2_21;
+  nix.package = pkgs.nixVersions.nix_2_22;
 
   nix.settings = {
     experimental-features = [
       "nix-command"
       "flakes"
-      "repl-flake"
+      # "repl-flake"
     ];
     use-xdg-base-directories = true;
     warn-dirty = false;

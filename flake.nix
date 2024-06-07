@@ -10,9 +10,8 @@
     };
 
     liquidsfz = { url = "github:swesterfeld/liquidsfz"; flake = false; };
-    stalwart = { url = "github:stalwartlabs/mail-server"; flake = false; };
-    caddy = { url = "github:caddyserver/caddy"; flake = false; };
-    cypht = { url = "github:cypht-org/cypht"; flake = false; };
+    stalwart = { url = "github:stalwartlabs/mail-server/v0.8.1"; flake = false; };
+    openobserve = { url = "github:openobserve/openobserve"; flake = false; };
   };
 
   outputs = inputs: let
@@ -38,81 +37,70 @@
     mkNixosModules = lib.mapAttrs (name: path: import path);
   in {
     overlays = mkOverlays {
-      cypht = final: prev: final.php.buildComposerProject (finalAttrs: {
-        pname = "cypht";
-        version = "2.0.0";
-
-        src = inputs.cypht;
-
-        php = final.php.withExtensions ({ enabled, all }:
-          enabled ++ [ all.openssl all.curl ]);
-
-        vendorHash = "sha256-DtQDl3O6pB4gm8HfZFmTknEgYTt0O775B4ocIau0n2k=";
-
-        installPhase = ''
-          runHook preInstall
-
-          mv $out/share/php/cypht/* $out
-          rm -r $out/share
-
-          touch $out/.env
-          cd $out
-          php ./scripts/config_gen.php
-
-          runHook postInstall
-        '';
-
-        postFixup = ''
-          substituteInPlace $out/index.php --replace-fail \
-            "define('APP_PATH', ''')" \
-            "define('APP_PATH', '$out/')"
-        '';
-
-        # Upstream composer.json file is missing the name, description and license fields
-        composerStrictValidation = false;
-      });
+      openobserve = final: prev:
+        prev.openobserve.override {
+          rustPlatform = final.rustPlatform // {
+            buildRustPackage = args: final.rustPlatform.buildRustPackage (args // {
+              src = inputs.openobserve;
+              cargoLock.lockFile = "${inputs.openobserve}/Cargo.lock";
+              cargoLock.outputHashes = {
+                "chromiumoxide-0.5.7" = "sha256-GHrm5u8FtXRUjSRGMU4PNU6AJZ5W2KcgfZY1c/CBVYA=";
+                "enrichment-0.1.0" = "sha256-FDPSCBkx+DPeWwTBz9+ORcbbiSBC2a8tJaay9Pxwz4w=";
+              };
+              doCheck = false;
+            });
+          };
+          buildNpmPackage = args: final.buildNpmPackage (args // {
+            src = inputs.openobserve;
+            sourceRoot = "source/web";
+            npmDeps = final.importNpmLock {
+              npmRoot = "${inputs.openobserve}/web";
+            };
+            npmConfigHook = final.importNpmLock.npmConfigHook;
+          });
+        };
 
       caddyWith = final: prev:
-        { plugins, vendorHash, caddyRev ? inputs.caddy.rev }: with final;
+        { plugins, vendorHash, caddyRev ? final.caddy.src.rev }: with final;
           caddy.override {
             buildGoModule = args: buildGoModule (args // {
-            src = stdenv.mkDerivation {
-              pname = "caddy-using-xcaddy-${xcaddy.version}";
-              inherit (caddy) version;
+              src = stdenv.mkDerivation {
+                pname = "caddy-using-xcaddy-${xcaddy.version}";
+                inherit (caddy) version;
 
-              dontUnpack = true;
-              dontFixup = true;
+                dontUnpack = true;
+                dontFixup = true;
 
-              nativeBuildInputs = [
-                cacert
-                go
-              ];
+                nativeBuildInputs = [
+                  cacert
+                  go
+                ];
 
-              configurePhase = ''
-                export GOCACHE="$TMPDIR/go-cache"
-                export GOPATH="$TMPDIR/go"
-                export XCADDY_SKIP_BUILD=1
-              '';
+                configurePhase = ''
+                  export GOCACHE="$TMPDIR/go-cache"
+                  export GOPATH="$TMPDIR/go"
+                  export XCADDY_SKIP_BUILD=1
+                '';
 
-              buildPhase = ''
-                ${lib.getExe xcaddy} build "${caddyRev}" \
-                  ${lib.concatMapStringsSep " " (plugin: "--with ${plugin}") plugins}
-                cd buildenv*
-                go mod vendor
-              '';
+                buildPhase = ''
+                  ${lib.getExe xcaddy} build "${caddyRev}" \
+                    ${lib.concatMapStringsSep " " ({ src, rev }: "--with ${src}@${rev}") plugins}
+                  cd buildenv*
+                  go mod vendor
+                '';
 
-              installPhase = ''
-                cp -r . "$out"
-              '';
+                installPhase = ''
+                  cp -r . "$out"
+                '';
 
-              outputHash = vendorHash;
-              outputHashMode = "recursive";
-              outputHashAlgo = if vendorHash == "" then "sha256" else null;
-            };
+                outputHash = vendorHash;
+                outputHashMode = "recursive";
+                outputHashAlgo = if vendorHash == "" then "sha256" else null;
+              };
 
-            subPackages = [ "." ];
-            ldflags = [ "-s" "-w" ]; ## don't include version info twice
-            vendorHash = null;
+              subPackages = [ "." ];
+              ldflags = [ "-s" "-w" ]; ## don't include version info twice
+              vendorHash = null;
           });
         };
 
@@ -135,13 +123,12 @@
           openssl
           sqlite
           zstd
+          foundationdb
         ];
 
         env = {
           OPENSSL_NO_VENDOR = true;
           ZSTD_SYS_USE_PKG_CONFIG = true;
-          # ROCKSDB_INCLUDE_DIR = "${final.rocksdb}/include";
-          # ROCKSDB_LIB_DIR = "${final.rocksdb}/lib";
         };
 
         doCheck = false;

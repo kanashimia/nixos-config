@@ -29,6 +29,9 @@
 
   boot.initrd.systemd.enable = true;
 
+  system.switch.enable = false;
+  system.switch.enableNg = true;
+
   systemd.coredump.extraConfig = ''
     Storage=none
     ProcessSizeMax=0

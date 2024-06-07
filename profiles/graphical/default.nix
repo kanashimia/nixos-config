@@ -63,7 +63,7 @@
     ardour
     qpwgraph
     carla
-    # musescore
+    musescore
 
     liquidsfz
     sfizz

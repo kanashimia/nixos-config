@@ -41,7 +41,7 @@
   };
 
   environment.systemPackages = with pkgs; [ 
-    prismlauncher
+    # prismlauncher
     vial
   ];
 
@@ -81,8 +81,8 @@
     IdleActionSec=10min
   '';
 
-  # boot.kernelPackages = pkgs.linuxPackages_latest;
-  boot.kernelPackages = pkgs.linuxPackages_testing;
+  boot.kernelPackages = pkgs.linuxPackages_latest;
+  # boot.kernelPackages = pkgs.linuxPackages_testing;
 
   services.udev.extraHwdb = ''
     evdev:atkbd:dmi:bvn*:bvr*:bd*:br*:efr*:svnHP:pnHP15-cx00*:pvr*

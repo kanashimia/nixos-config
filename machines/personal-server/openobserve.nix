@@ -17,14 +17,21 @@
         };
       };
       exporters = {
-        "otlp/openobserve" = {
-          endpoint = "localhost:5081";
+        # "otlp/openobserve" = {
+        #   endpoint = "localhost:5081";
+        #   headers = {
+        #     Authorization = "Basic b2JzZXJ2ZUByZWRwaWxsZWQuZGV2OmhJMTNaSmJhWng1SmtzeUQ=";
+        #     organization = "default";
+        #     stream-name = "default";
+        #   };
+        #   tls.insecure = true;
+        # };
+        "otlphttp/openobserve" = {
+          endpoint = "http://localhost:5080/api/default/";
           headers = {
-            Authorization = "Basic b2JzZXJ2ZUByZWRwaWxsZWQuZGV2OmhJMTNaSmJhWng1SmtzeUQ=";
-            organization = "default";
+            Authorization = "Basic b2JzZXJ2ZUByZWRwaWxsZWQuZGV2OlJ0THdGams0d0plSE04YVM=";
             stream-name = "default";
           };
-          tls.insecure = true;
         };
       };
       processors = {
@@ -33,9 +40,9 @@
             {
               context = "log";
               statements = [
-                ''set(severity_text, "debug") where Int(body["PRIORITY"]) == 7''
+                ''set(severity_text, "debug") where Int(body["PRIORITY"]) >= 7''
                 ''set(severity_text, "info") where Int(body["PRIORITY"]) == 6''
-                ''set(severity_text, "info2") where Int(body["PRIORITY"]) == 5''
+                ''set(severity_text, "notice") where Int(body["PRIORITY"]) == 5''
                 ''set(severity_text, "warn") where Int(body["PRIORITY"]) == 4''
                 ''set(severity_text, "error") where Int(body["PRIORITY"]) == 3''
                 ''set(severity_text, "fatal") where Int(body["PRIORITY"]) <= 2''
@@ -49,24 +56,63 @@
           ];
         };
       };
+
+      # telemetry = {
+      #   logs = {
+      #     level = "info";
+      #     encoding = "json";
+      #     output_paths = ["stdout"];
+      #     error_output_paths = ["stdout"];
+      #   };
+      #   metrics = {
+      #     address = "localhost:8888";
+      #   };
+      # };
+
+      # extensions = {
+      #   "basicauth/client" = {
+      #     client_auth = {
+      #       username = "observe@redpilled.dev";
+      #       password = "lmaopass2";
+      #     };
+      #   };
+      # };
       service = {
+        # extensions = ["basicauth/client"];
         extensions = [];
         pipelines = {
           logs = {
             receivers = ["otlp" "journald"];
             processors = ["transform"];
-            exporters = ["otlp/openobserve"];
+            exporters = ["otlphttp/openobserve"];
           };
           traces = {
             receivers = ["otlp"];
             processors = [];
-            exporters = ["otlp/openobserve"];
+            exporters = ["otlphttp/openobserve"];
           };
         };
       };
     };
   };
 
+  # services.grafana = {
+  #   enable = true;
+  #   settings = {
+  #     server = {
+  #       http_addr = "localhost";
+  #       http_port = 3000;
+  #       domain = "redpilled.dev";
+  #       # root_url = "https://your.domain/grafana/"; # Not needed if it is `https://your.domain/`
+  #       # serve_from_sub_path = true;
+  #     };
+  #     plugins = {
+  #       enable_alpha = true;
+  #       app_tls_skip_verify_insecure = false;
+  #       allow_loading_unsigned_plugins = "zinclabs_openobserve";
+  #     };
+  #   };
+  # };
 
   systemd.services."openobserve" = {
     wantedBy = [ "multi-user.target" ];
@@ -76,6 +122,7 @@
       ZO_ROOT_USER_EMAIL = "observe@redpilled.dev";
       ZO_ROOT_USER_PASSWORD = "lmaopass";
       ZO_DATA_DIR = "/var/lib/openobserve";
+      RUST_LOG = "warn";
     };
 
     serviceConfig = {

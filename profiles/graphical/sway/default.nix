@@ -25,7 +25,8 @@ in {
       slurp
       wf-recorder
       wl-screenrec
-      vulkan-tools 
+      vulkan-tools
+      mesa-demos
 
       swaylock
       swayidle

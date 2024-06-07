@@ -15,15 +15,7 @@ proprietary-cfg = {
     };
   };
 
-  # hardware.nvidia.package = config.boot.kernelPackages.nvidiaPackages.stable.overrideAttrs (old: {
-  #   postPatch = ''
-  #     substituteInPlace ./kernel/nvidia-drm/nvidia-drm-drv.c --replace \
-  #       '#if defined(NV_SYNC_FILE_GET_FENCE_PRESENT)' \
-  #       '#if 0'
-  #   '';
-  # });
-
-  # hardware.nvidia.package = config.boot.kernelPackages.nvidiaPackages.beta;
+  hardware.nvidia.package = config.boot.kernelPackages.nvidiaPackages.beta;
 
   boot.extraModprobeConfig = ''
     options nvidia-drm modeset=1
@@ -50,7 +42,7 @@ proprietary-cfg = {
 in {
   imports = [ proprietary-cfg ];
 
-  programs.sway.extraOptions = [ "--unsupported-gpu" "-Dlegacy-wl-drm" ];
+  programs.sway.extraOptions = [ "--unsupported-gpu" ];
 
   environment.systemPackages = with pkgs; [ nvtop ];
 
