@@ -31,9 +31,9 @@
       algorithm = "ed25519-sha256";
     };
 
-    report.dmarc.aggregate = {
-      send = "never";
-    };
+    # report.dmarc.aggregate = {
+    #   send = "never";
+    # };
 
     report.analysis = {
       addresses = [ "dmarc-ruf@*" "dmarc-rua@*" "tlsrpt@*" ];
@@ -46,36 +46,19 @@
       dane = "optional";
     };
 
-    # acme."letsencrypt" = {
-    #   directory = "https://acme-v02.api.letsencrypt.org/directory";
-    #   challenge = "dns-01";
-    #   contact = "acme3@${domain}";
-    #   domains = [ domain ];
-    #   provider = "cloudflare";
-    #   secret = "%{file:/run/credentials/stalwart-mail.service/cool-secret}%";
-    # };
-
-    certificate."default" = {
-      cert = "%{file:/var/lib/stalwart-mail/acme/redpilled.dev/cert.pem}%";
-      private-key = "%{file:/var/lib/stalwart-mail/acme/redpilled.dev/key.pem}%";
+    acme."letsencrypt" = {
+      directory = "https://acme-v02.api.letsencrypt.org/directory";
+      challenge = "dns-01";
+      contact = "acme3@${domain}";
+      domains = [ domain ];
+      provider = "cloudflare";
+      secret = "%{file:/run/credentials/stalwart-mail.service/cool-secret}%";
     };
 
-    auth.arc.verify = "relaxed";
-
-    auth.dmarc.verify = [
-      { "if" = "local_port == 25"; "then" = "relaxed"; }
-      { "else" = "disable"; }
-    ];
-
-    auth.spf.verify.ehlo = [
-      { "if" = "local_port == 25"; "then" = "relaxed"; }
-      { "else" = "disable"; }
-    ];
-
-    auth.spf.verify.mail-from = [
-      { "if" = "local_port == 25"; "then" = "relaxed"; }
-      { "else" = "disable"; }
-    ];
+    # certificate."default" = {
+    #   cert = "%{file:/var/lib/stalwart-mail/acme/redpilled.dev/cert.pem}%";
+    #   private-key = "%{file:/var/lib/stalwart-mail/acme/redpilled.dev/key.pem}%";
+    # };
 
     authentication = {
       fail2ban = "1000/1d";
@@ -96,45 +79,20 @@
       };
       spam-trap = { 
         "trans-migrated@*" = "";
+        "roqwrqworqw@*" = "";
       };
     };
 
+    server.proxy.trusted-networks = ["127.0.0.1" "::1"];
+
     server.listener = {
-      "imap" = {
-        bind = "[::]:143";
-        protocol = "imap";
-        tls.implicit = false;
-      };
-      "imaps" = {
-        bind = "[::]:993";
-        protocol = "imap";
-        tls.implicit = true;
-      };
-      "smtp" = {
-        bind = "[::]:25";
-        protocol = "smtp";
-        tls.implicit = false;
-      };
-      "smtp-submission" = {
-        bind = "[::]:587";
-        protocol = "smtp";
-        tls.implicit = false;
-      };
-      "smtps-submission" = {
-        bind = "[::]:465";
-        protocol = "smtp";
-        tls.implicit = true;
-      };
-      "https" = {
-        bind = "[::]:8080";
-        protocol = "http";
-        tls.implicit = true;
-      };
-      "sieve" = {
-        bind = "[::]:4190";
-        protocol = "managesieve";
-        tls.implicit = true;
-      };
+      # "imap"      = { bind = "[::]:143";  protocol = "imap";        tls.implicit = false; };
+      "imaps"     = { bind = "[::]:993";  protocol = "imap";        tls.implicit = true;  };
+      "smtp"      = { bind = "[::]:25";   protocol = "smtp";        tls.implicit = false; };
+      # "smtp-sub"  = { bind = "[::]:587";  protocol = "smtp";        tls.implicit = false; };
+      "smtps-sub" = { bind = "[::]:465";  protocol = "smtp";        tls.implicit = true;  };
+      "http"      = { bind = "[::]:8080"; protocol = "http";        tls.implicit = true; };
+      "sieve"     = { bind = "[::]:4190"; protocol = "managesieve"; tls.implicit = true;  };
     };
 
     storage = {
@@ -197,11 +155,7 @@ in {
       Type = "simple";
       Restart = "on-failure";
       RestartSec = 5;
-      StandardOutput = "journal";
-      StandardError = "journal";
       SyslogIdentifier = "stalwart-mail";
-      PermissionsStartOnly = true;
-      LimitNOFILE = 65536;
 
       DynamicUser = true;
       User = "stalwart-mail";

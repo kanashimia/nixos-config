@@ -131,11 +131,7 @@
       Type = "simple";
       Restart = "on-failure";
       RestartSec = 5;
-      StandardOutput = "journal";
-      StandardError = "journal";
       SyslogIdentifier = "openobserve";
-      PermissionsStartOnly = true;
-      LimitNOFILE = 65536;
 
       DynamicUser = true;
       User = "openobserve";

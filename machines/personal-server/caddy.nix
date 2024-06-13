@@ -24,8 +24,8 @@
         # { src = "github.com/dunglas/mercure/caddy"; rev = "c9f42a623b6b9be6242a46be5370f81d43097b1e"; }
         # { src = "github.com/dunglas/vulcain/caddy"; rev = "f66da22c7234f2cdab1e5d546d37652d5ea38784"; }
       ];
-      caddyRev = "4baebcc0494db1990912cbe5ceddada9e674008d";
-      vendorHash = "sha256-uBMDkFvfUXfL7ZHN2chQ9sOj9GMoVTx7NkPN4WQdWx4=";
+      caddyRev = "8e0d3e1ec56cd349f02c9d201234c56373688ddd";
+      vendorHash = "sha256-cB7YZNqpNiW3KZIIaCNmF6muoypCPEDAn8EB3BmZ22M=";
     });
     /* .overrideAttrs (old: let
       phpEmbedWithZts = pkgs.php.override {
@@ -91,8 +91,8 @@
     configFile = pkgs.writeText "Caddyfile" ''
       {
         email acme2@redpilled.dev
-        auto_https prefer_wildcard
-        acme_ca https://acme-v02.api.letsencrypt.org/directory
+        # auto_https prefer_wildcard
+        acme_dns cloudflare {file.{$CREDENTIALS_DIRECTORY}/cool-secret}
 
         log {
           format console {
@@ -103,39 +103,33 @@
         }
       }
 
-      (mail-proxy) {
-        reverse_proxy {args[0]} :8080 {
+      mta-sts.redpilled.dev/.well-known/mta-sts.txt,
+      autoconfig.redpilled.dev/.well-known/mail-v1.xml,
+      autoconfig.redpilled.dev/.well-known/autoconfig/mail/config-v1.1.xml,
+      redpilled.dev/.well-known/jmap {
+        reverse_proxy :8080 {
           transport http {
-            tls_server_name {host}
+            tls_insecure_skip_verify
+            proxy_protocol v2
           }
         }
       }
 
-      mta-sts.redpilled.dev,
-      autoconfig.redpilled.dev,
-      autodiscover.redpilled.dev {
-        import mail-proxy /.well-known/*
-        import mail-proxy /autodiscover/autodiscover.xml
-        import mail-proxy /mail/*
-        file_server
-      }
-
       redpilled.dev {
-        root * /srv/www
         file_server
+        root * /srv/www
         encode zstd gzip
 
-        import mail-proxy /.well-known/jmap
-
         handle_errors {
-          rewrite * /{err.status_code}.html
+          header Content-Type text/html
+          templates
+          rewrite * errors.html
           file_server
         }
       }
 
       *.redpilled.dev {
-        file_server
-        tls /var/lib/caddy/whatever-acme/cert.pem /var/lib/caddy/whatever-acme/key.pem
+        respond 404
       }
     '';
   };
