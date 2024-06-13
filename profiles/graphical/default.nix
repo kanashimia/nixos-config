@@ -48,8 +48,8 @@
 
     libreoffice
     
-    ripgrep fd sd tree dua nix-tree du-dust
-    pciutils usbutils htop-vim hydra-check
+    ripgrep fd tree dua nix-tree du-dust
+    pciutils usbutils htop-vim
     strace ltrace hyperfine
     fwts lshw cpuid evtest nvme-cli hwinfo
     jq swaycwd watchexec file xdg-utils
@@ -59,6 +59,7 @@
     iw
     config.boot.kernelPackages.perf
     libinput
+    nmap
 
     ardour
     qpwgraph
