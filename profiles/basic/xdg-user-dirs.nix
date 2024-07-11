@@ -15,38 +15,37 @@
   #   ${pkgs.xdg-user-dirs}/bin/xdg-user-dirs-update &
   # '';
 
-  environment.variables = let
-    data = "\${XDG_DATA_HOME:-$HOME/.local/share}";
-    cache = "\${XDG_CACHE_HOME:-$HOME/.cache}";
-    config = "\${XDG_CONFIG_HOME:-$HOME/.config}";
-    state = "\${XDG_STATE_HOME:-$HOME/.local/state}";
-  in {
+  environment.sessionVariables = rec {
     XDG_DATA_HOME = "$HOME/.local/share";
     XDG_CACHE_HOME = "$HOME/.cache";
     XDG_CONFIG_HOME = "$HOME/.config";
     XDG_STATE_HOME = "$HOME/.local/state";
 
-    IPYTHONDIR = "${config}/ipython";
+    IPYTHONDIR = "${XDG_CONFIG_HOME}/ipython";
 
-    JUPYTER_CONFIG_DIR = "${config}/jupyter";
+    JUPYTER_CONFIG_DIR = "${XDG_CONFIG_HOME}/jupyter";
 
-    ANDROID_USER_HOME = "${data}/android";
+    ANDROID_USER_HOME = "${XDG_DATA_HOME}/android";
 
-    TEXMFHOME = "${state}/texmf";
-    TEXMFVAR = "${cache}/texmf";
-    TEXMFCONFIG = "${config}/texmf";
+    TEXMFHOME = "${XDG_STATE_HOME}/texmf";
+    TEXMFVAR = "${XDG_CACHE_HOME}/texmf";
+    TEXMFCONFIG = "${XDG_CONFIG_HOME}/texmf";
 
-    CARGO_HOME = "${state}/cargo";
-    CARGO_TARGET_DIR = "${state}/cargo";
+    CARGO_HOME = "${XDG_STATE_HOME}/cargo";
+    CARGO_TARGET_DIR = "${XDG_STATE_HOME}/cargo";
 
-    CUDA_CACHE_PATH = "${cache}/nv";
+    CUDA_CACHE_PATH = "${XDG_CACHE_HOME}/nv";
 
-    NPM_CONFIG_USERCONFIG = "${config}/npm/npmrc";
-    NPM_CONFIG_CACHE = "${cache}/npm";
-    NPM_CONFIG_PREFIX = "${state}/npm";
+    NPM_CONFIG_USERCONFIG = "${XDG_CONFIG_HOME}/npm/npmrc";
+    NPM_CONFIG_CACHE = "${XDG_CACHE_HOME}/npm";
+    NPM_CONFIG_PREFIX = "${XDG_STATE_HOME}/npm";
 
-    GRADLE_USER_HOME = "${data}/gradle";
+    GRADLE_USER_HOME = "${XDG_DATA_HOME}/gradle";
 
-    GOPATH = "${state}/go";
+    GOPATH = "${XDG_STATE_HOME}/go";
+
+    BUNDLE_USER_CONFIG = "${XDG_CONFIG_HOME}/bundle";
+    BUNDLE_USER_CACHE = "${XDG_CACHE_HOME}/bundle";
+    BUNDLE_USER_PLUGIN = "${XDG_DATA_HOME}/bundle";
   };
 }

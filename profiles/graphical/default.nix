@@ -14,7 +14,6 @@
     description = "Kanashimia";
     isNormalUser = true;
     extraGroups = [ "wheel" ];
-    password = "kanashimia";
   };
 
   programs.git = {
@@ -32,14 +31,6 @@
       };
     };
   };
-
-  # systemd.tmpfiles.rules = [
-  #   "w /sys/kernel/mm/lru_gen/min_ttl_ms - - - - 1000"
-  # ];
-
-  # systemd.extraConfig = ''
-  #   DefaultOOMPolicy=continue
-  # '';
 
   environment.sessionVariables.NIXOS_OZONE_WL = "1";
 
@@ -60,6 +51,7 @@
     config.boot.kernelPackages.perf
     libinput
     nmap
+    wireguard-tools
 
     ardour
     qpwgraph

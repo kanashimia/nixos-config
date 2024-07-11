@@ -15,8 +15,6 @@ proprietary-cfg = {
     };
   };
 
-  hardware.nvidia.package = config.boot.kernelPackages.nvidiaPackages.beta;
-
   boot.extraModprobeConfig = ''
     options nvidia-drm modeset=1
     options nvidia-drm fbdev=1

@@ -1,8 +1,6 @@
-{ config, lib, ... }: let
-  mkWrap = key: lib.mapAttrsToList (k: v: { ${key} = v; });
-in {
+{ config, lib, ... }: {
   systemd.services.systemd-networkd.serviceConfig = {
-    LoadCredentialEncrypted = "wg-vpn:${./secrets/wg-vpn.creds}";
+    LoadCredential = "wg-vpn";
   };
 
   systemd.network.netdevs."50-wg0" = {
@@ -14,7 +12,7 @@ in {
       PrivateKeyFile = "/run/credentials/systemd-networkd.service/wg-vpn";
       FirewallMark = 34952;
     };
-    wireguardPeers = mkWrap "wireguardPeerConfig" {
+    wireguardPeers = lib.attrValues {
       "personal-server" = {
         PublicKey = "qRHM8s/fgTNWGQDV6l4v53aBrt7sh0mbIQIh7Osz32k=";
         AllowedIPs = "0.0.0.0/0";
@@ -32,20 +30,16 @@ in {
     linkConfig = {
       ActivationPolicy = "manual";
     };
-    routes = mkWrap "routeConfig" {
-      "default" = {
-        Destination = "0.0.0.0/0";
-        Table = 1000;
-      };
-    };
-    routingPolicyRules = mkWrap "routingPolicyRuleConfig" {
-      "default" = {
-        FirewallMark = 34952;
-        InvertRule = true;
-        Table = 1000;
-        Priority = 10;
-      };
-    };
+    routes = [{
+      Destination = "0.0.0.0/0";
+      Table = 1000;
+    }];
+    routingPolicyRules = [{
+      FirewallMark = 34952;
+      InvertRule = true;
+      Table = 1000;
+      Priority = 10;
+    }];
   };
 
   networking.nftables.tables."wg-wg0" = {

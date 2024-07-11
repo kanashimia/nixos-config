@@ -16,14 +16,13 @@
     # su = "machinectl shell";
     su = "systemd-run --shell -E SHELL -q";
     sudo = "systemd-run --pty --same-dir --wait --collect --service-type=exec "
-      + "--quiet -E SHELL -E LOCALE_ARCHIVE -E TZDIR -E PATH -- ";
+      + "--quiet -E SHELL -E LOCALE_ARCHIVE -E TZDIR -E PATH -E EDITOR -- ";
 
-    ip = "ip --color=auto";
     diff = "diff --color=auto";
     grep = "grep --color=auto";
 
     rm = "rm -vI";
-    rmr = "rm -vIr";
+    rmr = "rm -Ir";
 
     l = "ls -lAh --group-directories-first";
     ll = "ls -la --group-directories-first";
@@ -45,7 +44,7 @@
 
     function ndwith() {
       nix develop --impure --expr \
-        "with (builtins.getFlake "n").legacyPackages.$""{builtins.currentSystem};
+        "with (builtins.getFlake \"n\").legacyPackages.$""{builtins.currentSystem};
         mkShell { packages = [ $* ]; }" \
         -c "$SHELL"
     }

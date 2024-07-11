@@ -4,6 +4,8 @@
     useNetworkd = true;
   };
 
+  networking.nftables.enable = true;
+
   # This gives me PTSD, I suggest you all keep at least two good IPs here just in case.
   services.timesyncd.servers = [
     "time.cloudflare.com"

@@ -1,8 +1,6 @@
-{ config, lib, ... }: let
-  mkWgPeers = lib.mapAttrsToList (k: v: { wireguardPeerConfig = v; });
-in {
+{ config, lib, ... }: {
   systemd.services.systemd-networkd.serviceConfig = {
-    LoadCredentialEncrypted = "wg-private:${./secrets/wg-private.creds}";
+    LoadCredential = "wg-private";
   };
 
   systemd.network.netdevs."50-wg0" = {
@@ -14,7 +12,7 @@ in {
       PrivateKeyFile = "/run/credentials/systemd-networkd.service/wg-private";
       ListenPort = 42069;
     };
-    wireguardPeers = mkWgPeers {
+    wireguardPeers = lib.attrValues {
       "phone" = {
         PublicKey = "mUf5d7oD9VrRRCw5DE6KxB1CKU2D7yKQM0cMkjv1YT0=";
         AllowedIPs = "10.0.0.2/32";

@@ -10,8 +10,10 @@
     };
 
     liquidsfz = { url = "github:swesterfeld/liquidsfz"; flake = false; };
-    stalwart = { url = "github:stalwartlabs/mail-server/v0.8.1"; flake = false; };
-    openobserve = { url = "github:openobserve/openobserve"; flake = false; };
+    stalwart = { url = "github:stalwartlabs/mail-server/v0.8.4"; flake = false; };
+    # openobserve = { url = "github:openobserve/openobserve/v0.10.8-rc3"; flake = false; };
+    helix = { url = "github:pascalkuthe/helix/inline-diagnostics"; };
+    # musescore = { url = "github:musescore/MuseScore"; flake = false; };
   };
 
   outputs = inputs: let
@@ -37,12 +39,120 @@
     mkNixosModules = lib.mapAttrs (name: path: import path);
   in {
     overlays = mkOverlays {
+      helix = final: prev: (
+        inputs.helix.packages.${final.system}.helix
+      );
+
+      /*musescore-master = final: prev: (
+        with final;
+        stdenv.mkDerivation (finalAttrs: {
+          pname = "musescore";
+          version = "4.4.0-unstable";
+
+          src = inputs.musescore;
+
+          cmakeFlags = [
+            "-DMUSESCORE_BUILD_MODE=release"
+            "-DMUE_BUILD_CRASHPAD_CLIENT=OFF"
+            "-DMUE_COMPILE_USE_SYSTEM_FREETYPE=ON"
+            "-DMUE_COMPILE_USE_SYSTEM_TINYXML=ON"
+            "-DMUE_COMPILE_USE_SYSTEM_OPUSENC=ON"
+            "-DMUE_COMPILE_USE_SYSTEM_FLAC=ON"
+            "-DMUE_COMPILE_BUILD_MACOS_APPLE_SILICON=ON"
+            "-DMUE_COMPILE_INSTALL_QTQML_FILES=OFF"
+            "-DMUSE_MODULE_DRAW_USE_QTFONTMETRICS=ON"
+          ];
+
+          qtWrapperArgs = [
+            "--prefix LD_LIBRARY_PATH : ${lib.makeLibraryPath [ libjack2 ]}"
+            "--set ALSA_PLUGIN_DIR ${alsa-plugins}/lib/alsa-lib"
+          ];
+
+          nativeBuildInputs = [
+            qt6.wrapQtAppsHook
+            cmake
+            pkg-config
+            ninja
+          ];
+
+          buildInputs = [
+            libjack2
+            freetype
+            lame
+            libogg
+            libpulseaudio
+            libsndfile
+            libvorbis
+            portaudio
+            portmidi
+            flac
+            libopusenc
+            libopus
+            tinyxml-2
+            qt6.qtbase
+            qt6.qtnetworkauth
+            qt6.qtdeclarative
+            qt6.qtdeclarative
+            qt6.qtsvg
+            qt6.qttools
+            qt6.qt5compat
+            qt6.qtscxml
+
+            qt6.qtwayland
+            # qtdeclarative
+            # qtgraphicaleffects
+            # qtquickcontrols
+            # qtquickcontrols2
+            # qtscript
+            # qtsvg
+            # qtxmlpatterns
+            # qtnetworkauth
+            # qtx11extras
+            alsa-lib
+          ];
+
+          postPatch = ''
+            substituteInPlace src/project/internal/projectactionscontroller.cpp \
+              --replace-fail \
+                '#include "cloud/clouderrors.h"' \
+                '#include "cloud/clouderrors.h"
+                #include "cloud/cloudqmltypes.h"'
+            substituteInPlace src/appshell/view/navigableappmenumodel.cpp \
+              --replace-fail \
+                'QList<int> keys = QKeyMapper::possibleKeys(correctedKeyEvent)' \
+                'QSet<int> keys; for (auto key: QKeyMapper::possibleKeys(correctedKeyEvent)) keys << key.toCombined();' \
+              --replace-fail \
+                'QList<int> keys = QKeyMapper::possibleKeys(&fakeKey)' \
+                'QSet<int> keys; for (auto key: QKeyMapper::possibleKeys(&fakeKey)) keys << key.toCombined();' \
+              --replace-fail \
+                'return QSet<int>(keys.cbegin(), keys.cend());' \
+                'return keys;'
+          '';
+
+          postInstall = ''
+            rm -r $out/{include,lib}
+          '';
+
+          doCheck = false;
+        })
+      );*/
+
+      # helix = final: prev:
+      #   prev.helix.override {
+      #     rustPlatform = final.rustPlatform // {
+      #       buildRustPackage = args: final.rustPlatform.buildRustPackage (args // rec {
+      #         src = inputs.helix-diagnostics;
+      #         cargoLock.lockFile = "${src}/Cargo.lock";
+      #       });
+      #     };
+      #   };
+
       openobserve = final: prev:
         prev.openobserve.override {
           rustPlatform = final.rustPlatform // {
-            buildRustPackage = args: final.rustPlatform.buildRustPackage (args // {
+            buildRustPackage = args: final.rustPlatform.buildRustPackage (args // rec {
               src = inputs.openobserve;
-              cargoLock.lockFile = "${inputs.openobserve}/Cargo.lock";
+              cargoLock.lockFile = "${src}/Cargo.lock";
               cargoLock.outputHashes = {
                 "chromiumoxide-0.5.7" = "sha256-GHrm5u8FtXRUjSRGMU4PNU6AJZ5W2KcgfZY1c/CBVYA=";
                 "enrichment-0.1.0" = "sha256-FDPSCBkx+DPeWwTBz9+ORcbbiSBC2a8tJaay9Pxwz4w=";
@@ -169,9 +279,18 @@
           Name=Foot Server
           Exec=foot --server
         '';
+        foot = prev.foot.overrideAttrs (old: {
+          src = final.fetchFromGitea {
+            domain = "codeberg.org";
+            owner = "dnkl";
+            repo = "foot";
+            rev = "64e7f2512481d33fb46b1cd3eff4b4854d634a2c";
+            hash = "sha256-aT65k+hez06gx+zWdvAGpKdfdzP5DodrI1KVw3TmlC4=";
+          };
+        });
       in final.symlinkJoin {
-        inherit (prev.foot) name;
-        paths = [ prev.foot ];
+        inherit (foot) name;
+        paths = [ foot ];
         postBuild = ''
           rm $out/share/applications/*
           echo "${desktopEntry}" > $out/share/applications/foot.desktop
@@ -210,6 +329,8 @@
 
     nixosModules = mkNixosModules {
       unfree = ./modules/unfree.nix;
+      terraria = ./modules/terraria.nix;
+      stalwart-mail = ./modules/stalwart-mail.nix;
     };
 
     nixosConfigurations = mkNixosSystems {

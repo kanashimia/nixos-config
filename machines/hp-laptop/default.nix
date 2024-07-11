@@ -42,6 +42,7 @@
 
   environment.systemPackages = with pkgs; [ 
     # prismlauncher
+    android-file-transfer
     vial
   ];
 
@@ -58,7 +59,7 @@
     startAt = "*:0/15";
   };
 
-  hardware.opengl = {
+  hardware.graphics = {
     enable = true;
     extraPackages = with pkgs; [
       intel-media-driver

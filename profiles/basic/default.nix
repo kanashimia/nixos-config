@@ -1,10 +1,10 @@
 { pkgs, lib, ... }: {
   imports = [
-    ./networkd.nix
+    ./networking.nix
     ./xdg-user-dirs.nix
     ./nix.nix
     ./zram.nix
-    ./loader.nix
+    ./system.nix
     ./ssh-keys.nix
     ./bash.nix
     ./zsh
@@ -14,36 +14,18 @@
   # Documentation slows eval quite a lot.
   documentation.nixos.enable = false;
 
+  # Useless stuff.
+  programs.less.lessopen = null;
+  documentation.info.enable = false;
+
   # Some default programs that i always use.
-  environment.variables.EDITOR = "kak";
+  environment.variables.EDITOR = "hx";
   environment.defaultPackages = with pkgs; [
     git kakoune rsync helix
   ];
 
-  # Don't create ~/.lesshst
-  environment.variables.LESSHISTFILE = "-";
-
-  # Do not print sometimes helpful, but not always, info during boot,
-  # so it is harder to debug system when something goes wrong.
-  boot.kernelParams = [ "quiet" ];
-
-  boot.initrd.systemd.enable = true;
-
-  system.switch.enable = false;
-  system.switch.enableNg = true;
-
-  systemd.coredump.extraConfig = ''
-    Storage=none
-    ProcessSizeMax=0
-  '';
-
-  networking.firewall.enable = true;
-  networking.nftables.enable = true;
-
+  # Locale and keymaps
   console.keyMap = "dvorak";
-
-  services.dbus.implementation = "broker";
-
   time.timeZone = "Europe/Kyiv";
   i18n = {
     supportedLocales = [ "all" ];
@@ -52,9 +34,4 @@
       LC_COLLATE = "C.UTF-8";
     };
   };
-
-  users.users.root.password = null;
-  users.mutableUsers = false;
-
-  security.sudo.enable = false;
 }
