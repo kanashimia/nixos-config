@@ -24,10 +24,16 @@ in {
       wantedBy = [ "multi-user.target" ];
       after = [ "local-fs.target" "network.target" ];
 
+      script = ''
+        ${pkgs.stalwart-mail}/bin/stalwart-mail --config=${configFile} 2>&1 \
+          | sed -u -E 's/^[^ ]+ //g; s/^INFO /<6>/g; s/^DEBUG /<7>/g; s/^WARN /<4>/g; s/^ERROR /<3>/g; s/^TRACE /<7>/g' \
+          | systemd-cat --level-prefix=true -t stalwart-mail
+      '';
+
       serviceConfig = {
         LoadCredential = cfg.loadCredential;
 
-        ExecStart = "${lib.getExe pkgs.stalwart-mail} --config=${configFile}";
+        # ExecStart = "${pkgs.stalwart-mail}/bin/stalwart-mail --config=${configFile} | ${pkgs.gnused}/bin/sed -E 's/^[^ ]+ //g; s/^INFO /<6>/g; s/^DEBUG /<7>/g; s/^WARN /<4>/g; s/^ERROR /<3>/g; s/^TRACE /<7>/g' | ${pkgs.systemd}/bin/systemd-cat --level-prefix=true";
 
         Type = "simple";
         Restart = "on-failure";

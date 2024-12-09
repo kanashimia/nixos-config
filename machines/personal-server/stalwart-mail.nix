@@ -3,7 +3,7 @@
 in {
   services.stalwart-mail = {
     enable = true;
-    loadCredential = [ "cool-secret" ];
+    loadCredential = [ "cool-secret" "cool-eab-hmac" "cool-eab-kid" ];
     settings = {
       config.local-keys = [
         "store.*"
@@ -18,6 +18,8 @@ in {
         "report.analysis.*"
         "certificate.*"
         "acme.*"
+        "!acme.*.account-key"
+        "!acme.*.cert"
         "signature.*"
       ];
 
@@ -55,9 +57,25 @@ in {
         secret = "%{file:/run/credentials/stalwart-mail.service/cool-secret}%";
       };
 
+      acme."zerossl" = {
+        directory = "https://acme.zerossl.com/v2/DV90";
+        challenge = "dns-01";
+        contact = "zerossl@${domain}";
+        domains = [ domain ];
+        provider = "cloudflare";
+        secret = "%{file:/run/credentials/stalwart-mail.service/cool-secret}%";
+        eab.kid = "%{file:/run/credentials/stalwart-mail.service/cool-eab-kid}%";
+        eab.hmac-key = "%{file:/run/credentials/stalwart-mail.service/cool-eab-hmac}%";
+      };
+
       authentication = {
-        fail2ban = "1000/1d";
-        rate-limit = "100/1m";
+        fail2ban = "200/1d";
+        rate-limit = "20/1m";
+      };
+
+      server.auto-ban = {
+        abuse.rate = "60/1d";
+        loiter.rate = "300/1d";
       };
 
       resolver = {
@@ -90,6 +108,8 @@ in {
         "sieve"     = { bind = "[::]:4190"; protocol = "managesieve"; tls.implicit = true;  };
       };
 
+      server.http.url = "'https://${domain}:443'";
+
       storage = {
         blob = "rocksdb";
         data = "rocksdb";
@@ -111,7 +131,7 @@ in {
 
       tracer."stdout" = {
         type = "stdout";
-        level = "info";
+        level = "debug";
         ansi = false;
         enable = true;
       };
@@ -126,7 +146,7 @@ in {
     993 # imap tls
     587 # smtp starttls
     143 # imap starttls
-    8080 # stalwart http
+    # 8080 # stalwart http
     4190 # manage sieve
   ];
 }
