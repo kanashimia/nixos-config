@@ -11,7 +11,7 @@
 
   hardware.bluetooth.enable = true;
 
-  # Whatever bug with bcachefs 
+  # Whatever bug with bcachefs
   systemd.tmpfiles.rules = [
     "w /sys/block/nvme0n1/queue/max_sectors_kb - - - - 64"
   ];
@@ -36,15 +36,10 @@
     };
     "/boot" = {
       label = "boot";
+      options = [ "x-systemd.automount,x-systemd.idle-timeout=5" ];
       fsType = "vfat";
-    }; 
+    };
   };
-
-  environment.systemPackages = with pkgs; [ 
-    # prismlauncher
-    android-file-transfer
-    vial
-  ];
 
   systemd.services."btrfs-snapshot-home" = {
     after = [ "local-fs.target" ];
@@ -63,7 +58,10 @@
     enable = true;
     extraPackages = with pkgs; [
       intel-media-driver
+      intel-vaapi-driver
       nvidia-vaapi-driver
+      vaapiVdpau
+      libvdpau-va-gl
     ];
   };
 
@@ -83,7 +81,6 @@
   '';
 
   boot.kernelPackages = pkgs.linuxPackages_latest;
-  # boot.kernelPackages = pkgs.linuxPackages_testing;
 
   services.udev.extraHwdb = ''
     evdev:atkbd:dmi:bvn*:bvr*:bd*:br*:efr*:svnHP:pnHP15-cx00*:pvr*
@@ -96,13 +93,13 @@
     settings = {
       DISK_SPINDOWN_TIMEOUT_ON_AC = "keep 1";
       DISK_SPINDOWN_TIMEOUT_ON_BAT = "keep 1";
-      
+
       DISK_APM_LEVEL_ON_BAT = "keep 127";
       DISK_APM_LEVEL_ON_AC = "keep 127";
 
       SATA_LINKPWR_ON_AC = "med_power_with_dipm min_power";
       SATA_LINKPWR_ON_BAT = "med_power_with_dipm min_power";
-      
+
       AHCI_RUNTIME_PM_ON_AC="on";
       AHCI_RUNTIME_PM_ON_BAT="on";
 
@@ -140,11 +137,11 @@
     "90-logi-bolt-wakeup" = ''
       ACTION=="add", SUBSYSTEM=="usb", DRIVERS=="usb", ATTRS{idVendor}=="046d", ATTRS{idProduct}=="c548", ATTR{power/wakeup}="disabled"
     '';
-  } ++ [ pkgs.vial ];
+  };
 
   boot.kernelParams = [
     "mitigations=off"
-    "preempt=full"
+    # "preempt=full"
     "i915.enable_guc=2"
     # "snd_hda_intel.model=hp-mute-led-mic3" # Mute led fix.
     # "snd_hda_intel.model=103c:820d" # Mute led fix.

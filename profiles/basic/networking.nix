@@ -14,29 +14,30 @@
     "216.239.35.12" # time4.google.com
   ];
 
-  services.resolved.extraConfig = lib.generators.toKeyValue {} {
-    DNSSEC = false; # Maybe some time in the future DNSSEC will be usable.
-    DNSOverTLS = true;
-    DNS = lib.concatStringsSep " " [
-      "9.9.9.9#dns9.quad9.net"
-      "1.1.1.1#cloudflare-dns.com"
-      "8.8.8.8#dns.google"
+  networking.nameservers = [
+    "1.1.1.1#cloudflare-dns.com"
+    "9.9.9.9#dns9.quad9.net"
+    "8.8.8.8#dns.google"
 
-      "149.112.112.112#dns.quad9.net"
-      "1.0.0.1#cloudflare-dns.com"
-      "8.8.4.4#dns.google"
+    "1.0.0.1#cloudflare-dns.com"
+    "149.112.112.112#dns.quad9.net"
+    "8.8.4.4#dns.google"
 
-      "2620:fe::fe#dns.quad9.net"
-      "2606:4700:4700::1111#cloudflare-dns.com"
-      "2001:4860:4860::8888#dns.google"
+    "2620:fe::fe#dns.quad9.net"
+    "2606:4700:4700::1111#cloudflare-dns.com"
+    "2001:4860:4860::8888#dns.google"
 
-      "2620:fe::9#dns9.quad9.net"
-      "2606:4700:4700::1001#cloudflare-dns.com"
-      "2001:4860:4860::8844#dns.google"
-    ];
+    "2620:fe::9#dns9.quad9.net"
+    "2606:4700:4700::1001#cloudflare-dns.com"
+    "2001:4860:4860::8844#dns.google"
+  ];
+
+  services.resolved = {
+    dnssec = "false"; # Maybe some time in the future DNSSEC will be usable.
+    dnsovertls = "opportunistic";
   };
 
-  systemd.network.networks = let 
+  systemd.network.networks = let
     dhcpRAConf = metric: {
       UseDNS = false;
       RouteMetric = metric;

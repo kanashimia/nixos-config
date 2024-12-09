@@ -3,6 +3,8 @@ proprietary-cfg = {
   services.xserver.videoDrivers = [ "nvidia" ];
 
   hardware.nvidia = {
+    package = config.boot.kernelPackages.nvidiaPackages.beta;
+    open = false;
     nvidiaSettings = false;
     powerManagement = {
       enable = true;
@@ -17,8 +19,8 @@ proprietary-cfg = {
 
   boot.extraModprobeConfig = ''
     options nvidia-drm modeset=1
-    options nvidia-drm fbdev=1
   '';
+  # options nvidia-drm fbdev=1
 
   systemd.services.nvidia-poweroff = rec {
     enable = true;
@@ -45,6 +47,7 @@ in {
   environment.systemPackages = with pkgs; [ nvtop ];
 
   environment.sessionVariables = {
+    WLR_RENDER_NO_EXPLICIT_SYNC = "1";
     # WLR_RENDERER = "vulkan";
     # WLR_DRM_DEVICES = "/dev/dri/intel";
     # WLR_DRM_NO_ATOMIC = "1";

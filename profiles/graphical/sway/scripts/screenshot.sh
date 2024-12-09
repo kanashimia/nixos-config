@@ -2,19 +2,19 @@
 # swaymsg -t get_outputs | jq -r '.[]|select(has("focused")) | [.name, .rect.x, .rect.y, .rect.width, .rect.height] | @sh'
 
 OUTPUT=eDP-1
-WIDTH=1920 
+WIDTH=1920
 HEIGHT=1080
 SCALE=3
 
 swaymsg -t get_outputs | jq -r '.[].name | select(startswith("HEADLESS-"))' | while read OUT; do
   swaymsg output "$OUT" unplug
 done
-  
-swaymsg create_output
-
-FAKEOUT=$(swaymsg -t get_outputs | jq -r '.[].name | select(startswith("HEADLESS-"))')
 
 XYWH="$(slurp)"
+
+swaymsg create_output
+
+FAKEOUT="$(swaymsg -t get_outputs | jq -r '.[].name | select(startswith("HEADLESS-"))')"
 
 swaymsg output "$FAKEOUT" resolution "$((WIDTH * SCALE))"x"$((HEIGHT * SCALE))"
 swaymsg output "$FAKEOUT" scale "$SCALE"

@@ -10,10 +10,9 @@
     };
 
     liquidsfz = { url = "github:swesterfeld/liquidsfz"; flake = false; };
-    stalwart = { url = "github:stalwartlabs/mail-server/v0.8.4"; flake = false; };
-    # openobserve = { url = "github:openobserve/openobserve/v0.10.8-rc3"; flake = false; };
-    helix = { url = "github:pascalkuthe/helix/inline-diagnostics"; };
-    # musescore = { url = "github:musescore/MuseScore"; flake = false; };
+    # stalwart = { url = "github:stalwartlabs/mail-server/v0.10.4"; flake = false; };
+    helix = { url = "github:alevinval/helix/issue-2719"; };
+    slang = { url = "github:shader-slang/slang"; flake = false; };
   };
 
   outputs = inputs: let
@@ -43,111 +42,185 @@
         inputs.helix.packages.${final.system}.helix
       );
 
-      /*musescore-master = final: prev: (
-        with final;
-        stdenv.mkDerivation (finalAttrs: {
-          pname = "musescore";
-          version = "4.4.0-unstable";
+      slang-shader-compiler = final: prev:
+        let
+          # dependency for this library has been removed in master (i.e. next release)
+          unordered_dense = final.stdenv.mkDerivation rec {
+            version = "2.0.1";
+            pname = "unordered_dense";
+            src = final.fetchFromGitHub {
+              owner = "martinus";
+              repo = pname;
+              rev = "v${version}";
+              sha256 = "sha256-9zlWYAY4lOQsL9+MYukqavBi5k96FvglRgznLIwwRyw=";
+            };
+            nativeBuildInputs = with final; [
+              cmake
+            ];
+          };
 
-          src = inputs.musescore;
+          imgui-old = final.imgui.overrideAttrs (old: {
+            outputs = ["out"];
+            src = final.fetchFromGitHub {
+              owner = "ocornut";
+              repo = "imgui";
+              rev = "3c15dffc944419eb4bb17984548468270ca90486";
+              sha256 = "sha256-GZ8OJqmQ9gQEgKkKbp5gMaFMrlj640yQpncvL6kj6yg=";
+            };
+            cmakeRules = let
+              vcpkgSource = final.fetchFromGitHub {
+                owner = "microsoft";
+                repo = "vcpkg";
+                rev = "7befb86005462db5ad8ccf26ab4a370226ae614f";
+                hash = "sha256-QXdUCzhT88lTUDE5oAB0T8Lmo/ufXwhJ+yXKuECGxBQ=";
+              };
+            in "${vcpkgSource}/ports/imgui";
+          });
+        in
+       final.stdenv.mkDerivation {
+        pname = "slang";
+        version = "unstable";
 
-          cmakeFlags = [
-            "-DMUSESCORE_BUILD_MODE=release"
-            "-DMUE_BUILD_CRASHPAD_CLIENT=OFF"
-            "-DMUE_COMPILE_USE_SYSTEM_FREETYPE=ON"
-            "-DMUE_COMPILE_USE_SYSTEM_TINYXML=ON"
-            "-DMUE_COMPILE_USE_SYSTEM_OPUSENC=ON"
-            "-DMUE_COMPILE_USE_SYSTEM_FLAC=ON"
-            "-DMUE_COMPILE_BUILD_MACOS_APPLE_SILICON=ON"
-            "-DMUE_COMPILE_INSTALL_QTQML_FILES=OFF"
-            "-DMUSE_MODULE_DRAW_USE_QTFONTMETRICS=ON"
-          ];
+        src = inputs.slang;
 
-          qtWrapperArgs = [
-            "--prefix LD_LIBRARY_PATH : ${lib.makeLibraryPath [ libjack2 ]}"
-            "--set ALSA_PLUGIN_DIR ${alsa-plugins}/lib/alsa-lib"
-          ];
+        # src = final.fetchFromGitHub {
+        #   owner = "shader-slang";
+        #   repo = "slang";
+        #   rev = "dbc28b4fe9b0a6e8215640c04a9f245c150150a8";
+        #   sha256 = "sha256-beczsP5Fen0Icb3FYsONI0EjTF8zII89oxxVnwtSazI=";
+        #   fetchSubmodules = true;
+        # };
 
-          nativeBuildInputs = [
-            qt6.wrapQtAppsHook
-            cmake
-            pkg-config
-            ninja
-          ];
+        cmakeFlags = [
+          "-DCMAKE_BUILD_TYPE=Release"
 
-          buildInputs = [
-            libjack2
-            freetype
-            lame
-            libogg
-            libpulseaudio
-            libsndfile
-            libvorbis
-            portaudio
-            portmidi
-            flac
-            libopusenc
-            libopus
-            tinyxml-2
-            qt6.qtbase
-            qt6.qtnetworkauth
-            qt6.qtdeclarative
-            qt6.qtdeclarative
-            qt6.qtsvg
-            qt6.qttools
-            qt6.qt5compat
-            qt6.qtscxml
+          "-DSLANG_ENABLE_PREBUILT_BINARIES=OFF"
+          "-DSLANG_ENABLE_SLANG_RHI=OFF"
 
-            qt6.qtwayland
-            # qtdeclarative
-            # qtgraphicaleffects
-            # qtquickcontrols
-            # qtquickcontrols2
-            # qtscript
-            # qtsvg
-            # qtxmlpatterns
-            # qtnetworkauth
-            # qtx11extras
-            alsa-lib
-          ];
+          "-DSLANG_EMBED_STDLIB_SOURCE=ON"
+          "-DSLANG_EMBED_STDLIB=ON"
 
-          postPatch = ''
-            substituteInPlace src/project/internal/projectactionscontroller.cpp \
-              --replace-fail \
-                '#include "cloud/clouderrors.h"' \
-                '#include "cloud/clouderrors.h"
-                #include "cloud/cloudqmltypes.h"'
-            substituteInPlace src/appshell/view/navigableappmenumodel.cpp \
-              --replace-fail \
-                'QList<int> keys = QKeyMapper::possibleKeys(correctedKeyEvent)' \
-                'QSet<int> keys; for (auto key: QKeyMapper::possibleKeys(correctedKeyEvent)) keys << key.toCombined();' \
-              --replace-fail \
-                'QList<int> keys = QKeyMapper::possibleKeys(&fakeKey)' \
-                'QSet<int> keys; for (auto key: QKeyMapper::possibleKeys(&fakeKey)) keys << key.toCombined();' \
-              --replace-fail \
-                'return QSet<int>(keys.cbegin(), keys.cend());' \
-                'return keys;'
-          '';
+          "-DSLANG_EMBED_CORE_MODULE=ON"
+          "-DSLANG_EMBED_CORE_MODULE_SOURCE=ON"
 
-          postInstall = ''
-            rm -r $out/{include,lib}
-          '';
+          "-DSLANG_ENABLE_SLANG_GLSLANG=OFF"
 
-          doCheck = false;
+          "-DSLANG_USE_SYSTEM_MINIZ=ON"
+          "-DSLANG_USE_SYSTEM_LZ4=ON"
+          "-DSLANG_USE_SYSTEM_VULKAN_HEADERS=ON"
+          "-DSLANG_USE_SYSTEM_UNORDERED_DENSE=ON"
+
+          "-DSLANG_SLANG_LLVM_FLAVOR=DISABLE"
+
+          "-DSLANG_ENABLE_EXAMPLES=OFF"
+
+          "-DSLANG_USE_SYSTEM_SPIRV_HEADERS=ON"
+
+          # "-DSLANG_ENABLE_SLANG_GLSLANG=OFF"
+          # "-DSLANG_USE_SYSTEM_SPIRV_HEADERS=OFF"
+          "-DSLANG_SPIRV_HEADERS_INCLUDE_DIR=${final.spirv-headers}/include"
+        ];
+
+        nativeBuildInputs = with final; [
+          cmake ninja
+          vulkan-headers
+          spirv-headers
+          pkg-config
+          (miniz.overrideAttrs (old: {
+            preFixup = ''
+              ls -la
+              echo '-----'
+              cp $out/include/miniz/* $out/include/
+              ls -la $out/include
+              # exit -1
+            '';
+          }))
+          python3
+
+          glm
+
+          (tinyobjloader.overrideAttrs (old: {
+            src = fetchFromGitHub {
+              owner = "tinyobjloader";
+              repo = "tinyobjloader";
+              rev = "d541711a794343de4ef5ea76f037c9fb9c127a55";
+              sha256 = "sha256-QjJ2nh6B+engUKViVaZ3MZf5O2v0ZYFkfXuh/j6nCBk=";
+            };
+          }))
+          # pkgsStatic.lz4
+        ];
+
+        buildInputs = with final; [
+          lz4
+          unordered_dense
+          imgui-old
+
+          # pkgsStatic.lz4
+          # miniz
+          # lz4
+          spirv-tools
+          pkg-config
+          cmake
+          xorg.libX11
+        ];
+
+        postPatch = ''
+          rmdir external/imgui/
+          ln -fTs ${imgui-old.src} external/imgui
+
+          # substituteInPlace ./source/core/slang-deflate-compression-system.cpp \
+          #   --replace-fail '<miniz.h>' '<miniz/miniz.h>'
+
+          # substituteInPlace ./source/core/slang-lz4-compression-system.cpp \
+          #   --replace-fail '<lz4.h>' '<lz4/lz4.h>'
+
+          # substituteInPlace ./external/CMakeLists.txt \
+          #   --replace-fail 'if(NOT ''${SLANG_USE_SYSTEM_SPIRV_HEADERS})' 'if(FALSE)'
+          substituteInPlace ./source/core/CMakeLists.txt --replace-fail 'lz4_static' 'lz4'
+          substituteInPlace ./source/slang-rt/CMakeLists.txt --replace-fail 'lz4_static' 'lz4'
+          substituteInPlace ./source/slang-wasm/CMakeLists.txt --replace-fail 'lz4_static' 'lz4'
+
+          substituteInPlace ./tools/CMakeLists.txt --replace-fail 'Vulkan-Headers' ""
+          substituteInPlace ./source/slang/CMakeLists.txt --replace-fail 'SPIRV-Headers' ""
+          substituteInPlace ./source/compiler-core/CMakeLists.txt --replace-fail 'INCLUDE_FROM_PUBLIC SPIRV-Headers' ""
+          substituteInPlace ./source/slang-core-module/CMakeLists.txt --replace-fail 'SPIRV-Headers' ""
+
+          substituteInPlace source/core/slang-dictionary.h --replace-fail '../../external/unordered_dense/include/ankerl/unordered_dense.h' 'ankerl/unordered_dense.h'
+          substituteInPlace source/core/slang-hash.h --replace-fail '../../external/unordered_dense/include/ankerl/unordered_dense.h' 'ankerl/unordered_dense.h'
+
+          substituteInPlace source/core/slang-deflate-compression-system.cpp --replace-fail 'miniz.h' 'miniz/miniz.h'
+          substituteInPlace source/core/slang-zip-file-system.cpp --replace-fail 'miniz.h' 'miniz/miniz.h'
+
+          substituteInPlace tools/platform/gui.h --replace-fail 'external/imgui/imgui.h' 'imgui.h'
+
+          # substituteInPlace tools/platform/gui.cpp --replace-fail '#include <imgui.cpp>' ""
+          # substituteInPlace tools/platform/gui.cpp --replace-fail '#include <imgui_draw.cpp>' ""
+          # substituteInPlace tools/platform/gui.cpp --replace-fail '#include <imgui_widgets.cpp>' ""
+
+          substituteInPlace tools/platform/vector-math.h --replace-fail '../../external/glm/' ""
+          substituteInPlace tools/platform/model.cpp --replace-fail '../../external/glm/' ""
+
+          substituteInPlace tools/platform/model.cpp --replace-fail '../../external/tinyobjloader/tiny_obj_loader.h' "tiny_obj_loader.h"
+
+          # substituteInPlace tools/CMakeLists.txt --replace-fail 'EXPORT_MACRO_PREFIX SLANG_PLATFORM' "EXPORT_MACRO_PREFIX SLANG_PLATFORM LINK_WITH_PUBLIC imgui"
+
+          # substituteInPlace ./cmake/SlangTarget.cmake --replace-fail 'SPIRV-Headers' ' '
+          # substituteInPlace ./tools/CMakeLists.txt --replace-fail 'SPIRV-Headers' ' '
+          # exit 1
+        '';
+          # cp -r --no-preserve=mode ${glslang} third_party/glslang
+          # cp -r --no-preserve=mode ${spirv-tools} third_party/spirv-tools
+          # patchShebangs --build utils/
+      };
+
+      mypaint = final: prev: (
+        prev.mypaint.overrideAttrs (old: {
+          doInstallCheck = false;
+          checkPhase = null;
         })
-      );*/
+      );
 
-      # helix = final: prev:
-      #   prev.helix.override {
-      #     rustPlatform = final.rustPlatform // {
-      #       buildRustPackage = args: final.rustPlatform.buildRustPackage (args // rec {
-      #         src = inputs.helix-diagnostics;
-      #         cargoLock.lockFile = "${src}/Cargo.lock";
-      #       });
-      #     };
-      #   };
-
-      openobserve = final: prev:
+      openobserve = final: prev: (
         prev.openobserve.override {
           rustPlatform = final.rustPlatform // {
             buildRustPackage = args: final.rustPlatform.buildRustPackage (args // rec {
@@ -168,10 +241,11 @@
             };
             npmConfigHook = final.importNpmLock.npmConfigHook;
           });
-        };
+        }
+      );
 
-      caddyWith = final: prev:
-        { plugins, vendorHash, caddyRev ? final.caddy.src.rev }: with final;
+      caddyWith = final: prev: with final; (
+        { plugins, vendorHash, caddyRev ? caddy.src.rev }: (
           caddy.override {
             buildGoModule = args: buildGoModule (args // {
               src = stdenv.mkDerivation {
@@ -211,9 +285,40 @@
               subPackages = [ "." ];
               ldflags = [ "-s" "-w" ]; ## don't include version info twice
               vendorHash = null;
-          });
-        };
+            });
+          }
+        )
+      );
 
+      # stalwart-mail = final: prev: prev.stalwart-mail.overrideAttrs (old: {
+      #   prePatch = ''
+      #     cat <<EOF > Cargo.toml
+      #     [workspace]
+      #     resolver = "2"
+      #     members = [
+      #         "crates/main",
+      #         "crates/jmap",
+      #         "crates/jmap-proto",
+      #         "crates/imap",
+      #         "crates/imap-proto",
+      #         "crates/smtp",
+      #         "crates/managesieve",
+      #         "crates/pop3",
+      #         "crates/nlp",
+      #         "crates/store",
+      #         "crates/directory",
+      #         "crates/utils",
+      #         "crates/common",
+      #         "crates/trc",
+      #         "crates/cli",
+      #         # "tests",
+      #     ]
+      #     EOF
+      #   '';
+      #   doCheck = false;
+      # });
+
+      /*
       stalwart-mail = final: prev: final.rustPlatform.buildRustPackage rec {
         pname = "stalwart-mail";
         version = "unstable";
@@ -245,6 +350,7 @@
 
         meta.mainProgram = "stalwart-mail";
       };
+      */
 
       liquidsfz = final: prev: final.stdenv.mkDerivation {
         pname = "liquidsfz";
@@ -279,18 +385,18 @@
           Name=Foot Server
           Exec=foot --server
         '';
-        foot = prev.foot.overrideAttrs (old: {
-          src = final.fetchFromGitea {
-            domain = "codeberg.org";
-            owner = "dnkl";
-            repo = "foot";
-            rev = "64e7f2512481d33fb46b1cd3eff4b4854d634a2c";
-            hash = "sha256-aT65k+hez06gx+zWdvAGpKdfdzP5DodrI1KVw3TmlC4=";
-          };
-        });
+        # foot = prev.foot.overrideAttrs (old: {
+        #   src = final.fetchFromGitea {
+        #     domain = "codeberg.org";
+        #     owner = "dnkl";
+        #     repo = "foot";
+        #     rev = "64e7f2512481d33fb46b1cd3eff4b4854d634a2c";
+        #     hash = "sha256-aT65k+hez06gx+zWdvAGpKdfdzP5DodrI1KVw3TmlC4=";
+        #   };
+        # });
       in final.symlinkJoin {
-        inherit (foot) name;
-        paths = [ foot ];
+        inherit (prev.foot) name;
+        paths = [ prev.foot ];
         postBuild = ''
           rm $out/share/applications/*
           echo "${desktopEntry}" > $out/share/applications/foot.desktop
@@ -317,14 +423,15 @@
           "-DUSE_LIBUDEV_OVER_LIBSYSTEMD=ON"
         ];
 
-        nativeBuildInputs = old.nativeBuildInputs ++ [ final.addOpenGLRunpath ];
+        nativeBuildInputs = old.nativeBuildInputs ++ [ final.addDriverRunpath ];
         postFixup = old.postFixup + ''
-          addOpenGLRunpath $out/bin/nvtop
+          addDriverRunpath $out/bin/nvtop
         '';
       });
 
       sway-unwrapped = final: prev:
-        inputs.nixpkgs-wayland.packages.${final.system}.sway-unwrapped;
+        with inputs.nixpkgs-wayland.packages.${final.system};
+          sway-unwrapped;
     };
 
     nixosModules = mkNixosModules {

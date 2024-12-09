@@ -47,5 +47,11 @@
     BUNDLE_USER_CONFIG = "${XDG_CONFIG_HOME}/bundle";
     BUNDLE_USER_CACHE = "${XDG_CACHE_HOME}/bundle";
     BUNDLE_USER_PLUGIN = "${XDG_DATA_HOME}/bundle";
+
+    KERAS_HOME = "${XDG_STATE_HOME}/keras";
+
+    JULIA_DEPOT_PATH = "${XDG_DATA_HOME}/julia";
+
+    RUSTUP_HOME="${XDG_DATA_HOME}/rustup";
   };
 }

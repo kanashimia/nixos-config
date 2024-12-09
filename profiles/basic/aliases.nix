@@ -15,8 +15,9 @@
 
     # su = "machinectl shell";
     su = "systemd-run --shell -E SHELL -q";
-    sudo = "systemd-run --pty --same-dir --wait --collect --service-type=exec "
-      + "--quiet -E SHELL -E LOCALE_ARCHIVE -E TZDIR -E PATH -E EDITOR -- ";
+    # sudo = "systemd-run --pty --same-dir --wait --collect --service-type=exec "
+    #   + "--quiet -E SHELL -E LOCALE_ARCHIVE -E TZDIR -E PATH -E EDITOR -- ";
+    sudo = "run0 --background= --setenv=SHELL --setenv=LOCALE_ARCHIVE --setenv=TZDIR --setenv=PATH --setenv=EDITOR -- ";
 
     diff = "diff --color=auto";
     grep = "grep --color=auto";
@@ -27,6 +28,8 @@
     l = "ls -lAh --group-directories-first";
     ll = "ls -la --group-directories-first";
     ls = "ls --color=tty";
+
+    adb = "HOME=~/.local/share/android adb";
   };
 
   environment.interactiveShellInit = /*bash*/''
@@ -39,7 +42,7 @@
         done
       nix develop "$@" \
         --profile /nix/var/nix/profiles/per-user/"$USER"/develop \
-        -c "$SHELL"
+        -c env SHELL="$SHELL" "$SHELL"
     }
 
     function ndwith() {

@@ -38,8 +38,8 @@ in {
   programs.steam.package = pkgs.steam-xdg;
 
   nixpkgs.overlays = [ (final: prev: {
-    steam-xdg = pkgs.steam.override {
-      steam = coolXdgFix pkgs.steamPackages.steam "steam" "Steam";
+    steam-xdg = final.steam.override {
+      steam-unwrapped = coolXdgFix final.steam-unwrapped "steam" "Steam";
     };
     chromium-xdg = coolXdgFix final.chromium "chromium" "chromium";
     firefox-xdg = coolXdgFix final.firefox "firefox" "firefox";

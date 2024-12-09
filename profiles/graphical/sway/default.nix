@@ -12,32 +12,51 @@ in {
 
       telegram-desktop
       keepassxc
-      zathura 
+      zathura
       chromium-xdg
+      thunderbird
+      firefox-devedition
 
       wev
       imv
       libsixel
       mpv
 
-      wl-clipboard 
-      grim 
+      wl-clipboard
+      grim
       slurp
       wf-recorder
-      wl-screenrec
+      # wl-screenrec
       vulkan-tools
       mesa-demos
+      wayland-utils
+      libva-utils
 
       swaylock
       swayidle
 
       brightnessctl
 
-      (linkFarm "xdg-terminal-exec" [ 
-        { name = "bin/xdg-terminal-exec"; path = "${pkgs.foot}/bin/foot"; } 
+      (linkFarm "xdg-terminal-exec" [
+        { name = "bin/xdg-terminal-exec"; path = "${pkgs.foot}/bin/foot"; }
       ])
     ];
   };
+
+  # programs.kdeconnect.enable = true;
+  # programs.kdeconnect.package = pkgs.kdePackages.kdeconnect-kde;
+
+  # systemd.user.services.kdeconnect = {
+  #   description = "Adds communication between your desktop and your smartphone";
+  #   after = [ "graphical-session-pre.target" ];
+  #   partOf = [ "graphical-session.target" ];
+  #   wantedBy = [ "graphical-session.target" ];
+  #   # environment.PATH=${config.home.profileDirectory}/bin";
+  #   serviceConfig = {
+  #     ExecStart = "${pkgs.kdePackages.kdeconnect-kde}/bin/kdeconnectd";
+  #     Restart = "on-abort";
+  #   };
+  # };
 
   xdg.portal.enable = true;
   xdg.portal.xdgOpenUsePortal = true;
@@ -45,6 +64,8 @@ in {
     xdg-desktop-portal-wlr
     xdg-desktop-portal-gtk
   ];
+
+  xdg.portal.wlr.enable = lib.mkForce false;
 
   environment.etc = {
     "sway/config".source = ./config;
@@ -81,7 +102,9 @@ in {
         xkb_options "caps:escape,grp_led:num,grp:rctrl_rshift_toggle,compose:menu"
       }
 
-      output * background #303030 solid_color
+      output * background #242424 solid_color
+
+      bindsym Mod4+shift+q swaymsg exit
 
       bindsym Mod4+shift+e exec swaynag \
         -t warning \
@@ -218,4 +241,4 @@ StandardError="journal";
   #   ManagedOOMMemoryPressure = "kill";
   #   ManagedOOMMemoryPressureLimit = "40%";
   # };
-} 
+}

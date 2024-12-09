@@ -20,6 +20,7 @@
 
   # Some default programs that i always use.
   environment.variables.EDITOR = "hx";
+  environment.variables.LESS = "-RiF --mouse --wheel-lines=3";
   environment.defaultPackages = with pkgs; [
     git kakoune rsync helix
   ];

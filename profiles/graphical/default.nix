@@ -35,10 +35,10 @@
   environment.sessionVariables.NIXOS_OZONE_WL = "1";
 
   environment.systemPackages = with pkgs; [
-    mypaint krita
+    mypaint krita inkscape
 
     libreoffice
-    
+
     ripgrep fd tree dua nix-tree du-dust
     pciutils usbutils htop-vim
     strace ltrace hyperfine
@@ -52,6 +52,7 @@
     libinput
     nmap
     wireguard-tools
+    exiftool
 
     ardour
     qpwgraph
@@ -60,7 +61,7 @@
 
     liquidsfz
     sfizz
-    distrho
+    distrho-ports
 
     noise-repellent
     dragonfly-reverb
@@ -140,7 +141,12 @@
 
   boot.kernel.sysctl."kernel.sysrq" = 1;
 
-  fonts.packages = with pkgs; [ noto-fonts-cjk monaspace ];
+  fonts.packages = with pkgs; [
+    noto-fonts-cjk-sans
+    monaspace
+    # corefonts
+    # vistafonts
+  ];
 
   security.rtkit.enable = true;
   services.pipewire = {
@@ -150,7 +156,7 @@
     alsa.enable = true;
     alsa.support32Bit = true;
     extraLv2Packages = with pkgs; [
-      distrho
+      distrho-ports
     ];
   };
 
@@ -182,6 +188,8 @@
     ""
     "${pkgs.rtkit}/libexec/rtkit-daemon ${cmdline}"
   ];
+
+  boot.kernel.sysctl."kernel.dmesg_restrict" = false;
 
   services.syncthing = rec {
     enable = true;

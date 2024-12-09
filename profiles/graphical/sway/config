@@ -16,9 +16,15 @@ set {
     $restarter printf 'img:/run/current-system/sw/share/icons/Papirus/32x32/apps/system-%s.svg:text:%s\n' shutdown poweroff suspend suspend reboot reboot hibernate hibernate | wofi --show dmenu -I -H "$(( (32 + 10 * 2) * 4 + 10 * 2 ))" | sed 's/.*://' | xargs -i systemctl '{}' -i
 }
 
+# swaybg_command /home/kanashimia/.local/state/cargo/release/windowtolayer -- /usr/bin/env vkcube-wayland --gpu_number 0
+# swaybg_command /home/kanashimia/vkcube.sh
+# exec /home/kanashimia/.local/state/cargo/release/windowtolayer -- vkcube-wayland --present_mode 2 --gpu_number 0
+# exec /home/kanashimia/vkcube.sh
+# swaybg_command -
+
 input type:keyboard {
     xkb_layout $layout
-    xkb_options "caps:escape,grp_led:num,grp:rctrl_rshift_toggle,compose:menu,compose:rctrl"
+    xkb_options "caps:escape,grp_led:num,grp:rctrl_rshift_toggle,compose:menu,compose:rctrl,altwin:swap_lalt_lwin,custom:ralt_as_lalt"
 }
 
 input type:touchpad {
@@ -35,6 +41,8 @@ input type:pointer {
 input type:tablet_tool {
     map_from_region 0.0x0.0 1.0x0.96
 }
+
+output * allow_tearing true
 
 exec swayidle idlehint 60
 
@@ -137,8 +145,8 @@ bindsym --to-code {
     $mod+Shift+b $exec $browser
     $mod+Shift+t $exec $telegram
 
-    Print       exec grim - | wl-copy -t image/png
-    Shift+Print exec slurp | grim -g - - | wl-copy -t image/png
+    Print       exec grim -c - | wl-copy -t image/png
+    Shift+Print exec systemd-run --user --scope --quiet -u screenshot -- slurp | grim -g - - | wl-copy -t image/png
     $mod+Print  exec ~/screenshot.sh
 
     XF86AudioRaiseVolume $exec wpctl set-volume @DEFAULT_SINK@ -l 1.0 5%+
