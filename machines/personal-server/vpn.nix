@@ -23,7 +23,10 @@
       };
       "hp-laptop" = {
         PublicKey = "pcGX/CPAt12kBRrjA1ZcIjuHfI+LNSUZoavcNj3WnzA=";
-        AllowedIPs = [ "10.0.0.4/32" "fc00:0010::4/128" ];
+        AllowedIPs = [
+          "10.0.0.4/32"
+          "fc00:0010::4/128"
+        ];
       };
     };
   };
@@ -31,7 +34,10 @@
   systemd.network.networks."50-wg0" = {
     name = "wg0";
     networkConfig = {
-      Address = [ "10.0.0.1/24" "fc00:0010::1/64" ];
+      Address = [
+        "10.0.0.1/24"
+        "fc00:0010::1/64"
+      ];
       IPMasquerade = "both";
     };
   };

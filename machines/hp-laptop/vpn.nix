@@ -11,11 +11,15 @@
     wireguardConfig = {
       PrivateKeyFile = "/run/credentials/systemd-networkd.service/wg-vpn";
       FirewallMark = 34952;
+      RouteTable = "off";
     };
     wireguardPeers = lib.attrValues {
       "personal-server" = {
         PublicKey = "qRHM8s/fgTNWGQDV6l4v53aBrt7sh0mbIQIh7Osz32k=";
-        AllowedIPs = [ "0.0.0.0/0" "::/0" ];
+        AllowedIPs = [
+          "0.0.0.0/0"
+          "::/0"
+        ];
         Endpoint = "redpilled.dev:42069";
       };
     };
@@ -24,7 +28,10 @@
   systemd.network.networks."50-wg0" = {
     name = "wg0";
     networkConfig = {
-      Address = [ "10.0.0.4/32" "fc00:0010::4/128" ];
+      Address = [
+        "10.0.0.4/32"
+        "fc00:0010::4/128"
+      ];
       Domains = "~.";
     };
     linkConfig = {
@@ -34,13 +41,22 @@
       { Table = 1000; Destination = "0.0.0.0/0"; }
       { Table = 1000; Destination = "::/0"; }
     ];
-    routingPolicyRules = [{
-      Family = "both";
-      FirewallMark = 34952;
-      InvertRule = true;
-      Table = 1000;
-      Priority = 10;
-    }];
+
+    routingPolicyRules = [
+      {
+        Family = "both";
+        Table = "main";
+        SuppressPrefixLength = 0;
+        Priority = 10;
+      }
+      {
+        Family = "both";
+        FirewallMark = 34952;
+        InvertRule = true;
+        Table = 1000;
+        Priority = 11;
+      }
+    ];
   };
 
   networking.nftables.tables."wg-wg0" = {
