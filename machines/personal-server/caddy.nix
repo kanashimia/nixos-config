@@ -4,23 +4,40 @@
     package = pkgs.caddyWith {
       plugins = [
         { src = "github.com/mholt/caddy-events-exec"; rev = "055bfd2e8b8247533c7a710e11301b7d1645c933"; }
+        { src = "github.com/mholt/caddy-l4"; rev = "3c6cc2c0ee0875899fde271fbdef95be3fef7a92"; }
         { src = "github.com/caddy-dns/cloudflare"; rev = "44030f9306f4815aceed3b042c7f3d2c2b110c97"; }
       ];
       caddyRev = "eaaa2e5872ef9e845a50c6aade36676c0ecfe2e2";
-      vendorHash = "sha256-zngDZtuaGcJ2Y79yPdXBYamW0ll7LiOeOTBbd7RN/NM=";
+      vendorHash = "sha256-krnqpb10TeGsYLD1p7u9EuP2EfCQjw0PZhky7fPRylY=";
     };
     configFile = pkgs.writeText "Caddyfile" ''
+      (mail-proxy-route) {
+        {args[0]} {
+          route {
+            proxy {
+              proxy_protocol v2
+              upstream {args[1]}
+            }
+          }
+        }
+      }
+
       {
         email acme2@redpilled.dev
         auto_https prefer_wildcard
         acme_dns cloudflare {file.{$CREDENTIALS_DIRECTORY}/cool-secret}
 
         log {
-          format console {
-            time_key ""
-            level_format upper
-          }
           level info
+        }
+
+        layer4 {
+          import mail-proxy-route :25 :10025
+          import mail-proxy-route :143 :10143
+          import mail-proxy-route :993 :10993
+          import mail-proxy-route :587 :10587
+          import mail-proxy-route :465 :10465
+          import mail-proxy-route :4190 :14190
         }
       }
 
@@ -29,7 +46,7 @@
       autoconfig.redpilled.dev/.well-known/autoconfig/mail/config-v1.1.xml,
       redpilled.dev/jmap/*,
       redpilled.dev/.well-known/jmap {
-        reverse_proxy :8080 {
+        reverse_proxy :10443 {
           transport http {
             tls_insecure_skip_verify
             proxy_protocol v2
@@ -66,6 +83,16 @@
   };
 
   environment.systemPackages = [ config.services.caddy.package ];
+
+  systemd.services.caddy.serviceConfig.Type = "exec";
+  systemd.services.caddy.serviceConfig.ExecStart = let
+    script = pkgs.writeShellScriptBin "caddy-start" ''
+      set -e
+      ${config.services.caddy.package}/bin/caddy run --config /etc/caddy/caddy_config --adapter caddyfile 2>&1 \
+        | ${pkgs.jq}/bin/jq '"<\({error:3,warn:4,info:6,debug:7}[.level]//4)>\(if .logger then "[\(.logger)] " else "" end)\(.msg) \(del(.msg,.level,.ts,.logger) | if . == {} then "" end)"' -r --unbuffered \
+        | systemd-cat --level-prefix=true -t caddy
+    '';
+  in lib.mkForce [ "" "${script}/bin/caddy-start" ];
 
   # Hack to place data in /var/lib/caddy instead of /var/lib/caddy/.local/share/caddy
   systemd.services."caddy".environment = {

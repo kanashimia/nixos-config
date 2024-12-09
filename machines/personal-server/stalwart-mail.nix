@@ -99,13 +99,13 @@ in {
       server.proxy.trusted-networks = ["127.0.0.1" "::1"];
 
       server.listener = {
-        "imap"      = { bind = "[::]:143";  protocol = "imap";        tls.implicit = false; };
-        "imaps"     = { bind = "[::]:993";  protocol = "imap";        tls.implicit = true;  };
-        "smtp"      = { bind = "[::]:25";   protocol = "smtp";        tls.implicit = false; };
-        "smtp-sub"  = { bind = "[::]:587";  protocol = "smtp";        tls.implicit = false; };
-        "smtps-sub" = { bind = "[::]:465";  protocol = "smtp";        tls.implicit = true;  };
-        "http"      = { bind = "[::]:8080"; protocol = "http";        tls.implicit = true;  };
-        "sieve"     = { bind = "[::]:4190"; protocol = "managesieve"; tls.implicit = true;  };
+        "imap"      = { bind = "[::]:10143"; protocol = "imap";        tls.implicit = false; };
+        "imaps"     = { bind = "[::]:10993"; protocol = "imap";        tls.implicit = true;  };
+        "smtp"      = { bind = "[::]:10025"; protocol = "smtp";        tls.implicit = false; };
+        "smtp-sub"  = { bind = "[::]:10587"; protocol = "smtp";        tls.implicit = false; };
+        "smtps-sub" = { bind = "[::]:10465"; protocol = "smtp";        tls.implicit = true;  };
+        "http"      = { bind = "[::]:10443"; protocol = "http";        tls.implicit = true;  };
+        "sieve"     = { bind = "[::]:14190"; protocol = "managesieve"; tls.implicit = true;  };
       };
 
       server.http.url = "'https://${domain}:443'";
