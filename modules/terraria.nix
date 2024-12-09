@@ -30,9 +30,21 @@ in {
       };
     };
 
+    users.users.terraria = {
+      description = "Terraria server service user";
+      group       = "terraria";
+      home        = "/var/lib/terraria";
+      createHome  = true;
+      uid         = config.ids.uids.terraria;
+    };
+
+    users.groups.terraria = {
+      gid = config.ids.gids.terraria;
+    };
+
     systemd.services.terraria = {
       enable = true;
-      wantedBy = [ "multi-user.target" ];
+      # wantedBy = [ "multi-user.target" ];
       after = [ "network.target" ];
       bindsTo = [ "terraria.socket" ];
 
@@ -49,8 +61,11 @@ in {
       '';
 
       serviceConfig = {
+        LoadCredential = cfg.loadCredential;
+
         User = "terraria";
-        DynamicUser = true;
+        Group = "terraria";
+        # DynamicUser = true;
 
         RuntimeDirectory = "terraria";
         StateDirectory = "terraria";
