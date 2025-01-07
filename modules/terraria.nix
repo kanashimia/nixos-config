@@ -17,6 +17,10 @@ in {
         type = with lib.types; listOf str;
         default = [];
       };
+      extraConfigPath = lib.mkOption {
+        type = with lib.types; nullOr path;
+        default = null;
+      };
     };
   };
 
@@ -53,10 +57,8 @@ in {
       '';
 
       script = ''
-        exec ${lib.getExe pkgs.terraria-server} -config <(
-          cat ${configFile}
-          printf '\npassword='
-          cat /run/credentials/terraria.service/terrarion
+        ${lib.getExe pkgs.terraria-server} -config <(
+          cat ${configFile} ${toString cfg.extraConfigPath}
         )
       '';
 

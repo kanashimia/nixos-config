@@ -2,6 +2,7 @@
   services.terraria = {
     enable = true;
     loadCredential = [ "terrarion" ];
+    extraConfigPath = "/run/credentials/terraria.service/terrarion";
     settings = {
       world = "/var/lib/terraria/worlds/from-the-new-world.wld";
       worldpath = "/var/lib/terraria/worlds";

@@ -1,25 +1,27 @@
 # zmodload zsh/datetime
 
-# preexec() {
-#     timer="$EPOCHREALTIME"
-# }
+preexec() {
+    print -n '\e]133;C\e\\'
+    # timer="$EPOCHREALTIME"
+}
 
 precmd() { 
     print -n '\e]133;D\e\\'
     print -n '\e]133;A\e\\'
-    # psvar[2]=''
+
+    psvar=()
+
     # if (( timer )); then
     #     local -rF elapsed=$(( EPOCHREALTIME - timer ))
     #     local -rF s=$(( elapsed % 60 ))
     #     local -ri m=$(( elapsed / 60 % 60 ))
     #     local -ri h=$(( elapsed / 3600 ))
-
     #     if (( h > 0 )); then
-    #         psvar[2]=$(printf '%ih%im' ${h} ${m})
+    #         psvar[3]="$(printf '%ih%im' ${h} ${m})"
     #     elif (( m > 0 )); then
-    #         psvar[2]=$(printf '%im%is' ${m} ${s})
+    #         psvar[3]="$(printf '%im%is' ${m} ${s})"
     #     elif (( s >= 1 )); then
-    #         psvar[2]=$(printf '%.2fs' ${s})
+    #         psvar[3]="$(printf '%.2fs' ${s})"
     #     fi
     # fi
     # unset timer
@@ -35,13 +37,17 @@ precmd() {
         fi
         PATH+='/..'
     done
-    PSVAR=''
+    psvar[2]="$SSH_TTY"
 }
-# %(2V.took:%2v.)
-PROMPT='
-%F{cyan}%~%f %(2L.%F{red}lvl:%L%f .)%(1V.%F{yellow}git:%1v%f.)
-%F{%(?.green.red)}%(!.!.›)%f '
 
-preexec() {
-    print -n '\e]133;C\e\\'
-}
+# %(3V.took:%3v.)\
+
+PROMPT="\
+
+%F{cyan}%~%f \
+%(2L.%F{red}lvl:%L%f .)\
+%(1V.%F{yellow}git:%1v%f .)\
+%(2V.%F{green}ssh:%n@%M%f .)\
+
+%F{%(?.green.red)}%(!.!.›)%f "
+

@@ -11,17 +11,6 @@
       vendorHash = "sha256-krnqpb10TeGsYLD1p7u9EuP2EfCQjw0PZhky7fPRylY=";
     };
     configFile = pkgs.writeText "Caddyfile" ''
-      (mail-proxy-route) {
-        {args[0]} {
-          route {
-            proxy {
-              proxy_protocol v2
-              upstream {args[1]}
-            }
-          }
-        }
-      }
-
       {
         email acme2@redpilled.dev
         auto_https prefer_wildcard
@@ -30,21 +19,18 @@
         log {
           level info
         }
-
-        layer4 {
-          import mail-proxy-route :25 :10025
-          import mail-proxy-route :143 :10143
-          import mail-proxy-route :993 :10993
-          import mail-proxy-route :587 :10587
-          import mail-proxy-route :465 :10465
-          import mail-proxy-route :4190 :14190
-        }
       }
 
       mta-sts.redpilled.dev/.well-known/mta-sts.txt,
       autoconfig.redpilled.dev/.well-known/mail-v1.xml,
       autoconfig.redpilled.dev/.well-known/autoconfig/mail/config-v1.1.xml,
+      autoconfig.redpilled.dev/mail/config-v1.1.xml,
+      autodiscover.redpilled.dev/autodiscover/autodiscover.xml,
       redpilled.dev/jmap/*,
+      redpilled.dev/auth/*,
+      redpilled.dev/healthz/*,
+      redpilled.dev/.well-known/oauth-authorization-server,
+      redpilled.dev/.well-known/openid-configuration,
       redpilled.dev/.well-known/jmap {
         reverse_proxy :10443 {
           transport http {

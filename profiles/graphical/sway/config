@@ -1,6 +1,7 @@
 set {
     $mod Mod4
     $layout "us(dvorak),ru,ua,us"
+    $options "caps:escape,grp_led:num,grp:rctrl_rshift_toggle,compose:menu,compose:rctrl,custom:ralt_as_lalt"
 
     $left h
     $down j
@@ -24,7 +25,11 @@ set {
 
 input type:keyboard {
     xkb_layout $layout
-    xkb_options "caps:escape,grp_led:num,grp:rctrl_rshift_toggle,compose:menu,compose:rctrl,altwin:swap_lalt_lwin,custom:ralt_as_lalt"
+    xkb_options $options
+}
+
+input 1:1:AT_Translated_Set_2_keyboard {
+    xkb_options $options,altwin:swap_lalt_lwin
 }
 
 input type:touchpad {

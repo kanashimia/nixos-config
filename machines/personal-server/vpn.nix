@@ -25,7 +25,7 @@
         PublicKey = "pcGX/CPAt12kBRrjA1ZcIjuHfI+LNSUZoavcNj3WnzA=";
         AllowedIPs = [
           "10.0.0.4/32"
-          "fc00:0010::4/128"
+          # "fc00:0010::4/128"
         ];
       };
     };
@@ -36,7 +36,7 @@
     networkConfig = {
       Address = [
         "10.0.0.1/24"
-        "fc00:0010::1/64"
+        # "fc00:0010::1/64"
       ];
       IPMasquerade = "both";
     };
