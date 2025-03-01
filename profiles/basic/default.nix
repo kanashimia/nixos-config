@@ -25,6 +25,10 @@
     git kakoune rsync helix
   ];
 
+  systemd.tmpfiles.rules = [
+    "w /sys/kernel/mm/lru_gen/min_ttl_ms - - - - 1000"
+  ];
+
   # Locale and keymaps
   console.keyMap = "dvorak";
   time.timeZone = "Europe/Kyiv";

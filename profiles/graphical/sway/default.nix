@@ -6,6 +6,7 @@ in {
     wrapperFeatures.gtk = false;
     wrapperFeatures.base = false;
     extraPackages = with pkgs; [
+      swaybg # fixme: bug in the nixpkgs-wayland
       foot
       wofi
       # j4-dmenu-desktop

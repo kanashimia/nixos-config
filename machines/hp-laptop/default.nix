@@ -18,6 +18,9 @@
 
   boot.supportedFilesystems = [ "bcachefs" "btrfs" "ext4" "xfs" ];
 
+  environment.systemPackages = with pkgs; [ solaar ];
+  hardware.logitech.wireless.enable = true;
+
   fileSystems = {
     "/" = {
       label = "iris";
@@ -27,12 +30,12 @@
     "/nix" = {
       label = "iris";
       fsType = "btrfs";
-      options = [ "subvol=nix" "noatime" ];
+      options = [ "subvol=nix" "noatime" "compress=lzo" ];
     };
     "/home" = {
       label = "iris";
       fsType = "btrfs";
-      options = [ "subvol=home" "noatime" ];
+      options = [ "subvol=home" "noatime" "compress=lzo" ];
     };
     "/boot" = {
       label = "boot";
@@ -48,7 +51,7 @@
       SNAPSHOT_DIR="/snapshots/home"
       mkdir -p "$SNAPSHOT_DIR"
       cd "$SNAPSHOT_DIR"
-      ls -r | tail -n +10 | xargs -I {} btrfs subvolume delete {}
+      ls -r | tail -n +100 | xargs -I {} btrfs subvolume delete {}
       btrfs subvolume snapshot -r "/home" "$(date --iso-8601=seconds)"
     '';
     startAt = "*:0/15";
@@ -80,7 +83,7 @@
     IdleActionSec=10min
   '';
 
-  boot.kernelPackages = pkgs.linuxPackages_latest;
+  # boot.kernelPackages = pkgs.linuxPackages_latest;
 
   services.udev.extraHwdb = ''
     evdev:atkbd:dmi:bvn*:bvr*:bd*:br*:efr*:svnHP:pnHP15-cx00*:pvr*

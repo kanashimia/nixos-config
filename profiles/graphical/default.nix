@@ -53,10 +53,11 @@
     nmap
     wireguard-tools
     exiftool
+    oha
 
     ardour
     qpwgraph
-    carla
+    # carla
     musescore
 
     liquidsfz

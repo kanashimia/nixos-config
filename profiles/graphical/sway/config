@@ -141,8 +141,8 @@ bindsym --to-code {
 }
 
 bindsym --to-code {
-    $mod+Return       $exec $term
-    $mod+Shift+Return $exec $term -D "$(swaycwd)"
+    $mod+Return       $exec -l $term
+    $mod+Shift+Return $exec -l $term -D "$(swaycwd)"
 
     $mod+r $exec $wofi 
 

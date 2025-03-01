@@ -15,9 +15,9 @@
 
     # su = "machinectl shell";
     su = "systemd-run --shell -E SHELL -q";
-    # sudo = "systemd-run --pty --same-dir --wait --collect --service-type=exec "
-    #   + "--quiet -E SHELL -E LOCALE_ARCHIVE -E TZDIR -E PATH -E EDITOR -- ";
-    sudo = "run0 --background= --setenv=SHELL --setenv=LOCALE_ARCHIVE --setenv=TZDIR --setenv=PATH --setenv=EDITOR -- ";
+    sudo = "systemd-run --pty --same-dir --wait --collect --service-type=exec "
+      + "--quiet -E SHELL -E LOCALE_ARCHIVE -E TZDIR -E PATH -E EDITOR -- ";
+    # sudo = "run0 --background= --setenv=SHELL --setenv=LOCALE_ARCHIVE --setenv=TZDIR --setenv=PATH --setenv=EDITOR -- ";
 
     diff = "diff --color=auto";
     grep = "grep --color=auto";

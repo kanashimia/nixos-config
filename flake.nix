@@ -38,9 +38,9 @@
     mkNixosModules = lib.mapAttrs (name: path: import path);
   in {
     overlays = mkOverlays {
-      helix = final: prev: (
-        inputs.helix.packages.${final.system}.helix
-      );
+      # helix = final: prev: (
+      #   inputs.helix.packages.${final.system}.helix
+      # );
 
       qemu-new = final: prev: prev.qemu.overrideAttrs (old: rec {
         version = "9.2.0";
@@ -451,35 +451,11 @@
 
       sway-unwrapped = final: prev:
         with inputs.nixpkgs-wayland.packages.${final.system};
-          (sway-unwrapped.override {
-            wlroots = wlroots.overrideAttrs (old: {
-              src = final.fetchFromGitLab {
-                domain = "gitlab.freedesktop.org";
-                owner = "emersion";
-                repo = "wlroots";
-                rev = "544eebe0ac2eafb08abf18e535357fa53eaf4df2";
-                hash = "sha256-xsk/9eojA0UvOdkrtBsjcXi0mlp6jENLRsM7MJln/Zw=";
-                # https://gitlab.freedesktop.org/emersion/wlroots/-/tree/ext-screencopy-v1-ng
-              };
-              # patches = old.patches ++ [
-              #   (final.fetchpatch {
-              #     domain = "gitlab.freedesktop.org";
-              #     owner = "wlroots";
-              #     repo = "wlroots";
-              #     rev = "eb554f07e16b59248b64c046bad08957f02bb805";
-              #     # url = "https://gitlab.freedesktop.org/wlroots/wlroots/-/merge_requests/4545.patch";
-              #     # hash = "sha256-JpLftNx6bwUTa7qePBr4uy/rrQ8EPeif/sqXfRA/I34=";
-              #   })
-              # ];
-            });
-          }).overrideAttrs (old: {
-            patches = old.patches ++ [
-              (final.fetchpatch {
-                url = "https://github.com/swaywm/sway/commit/e53b44f18cddcf96f426a7a386a99dc0ff2b72e6.patch";
-                hash = "sha256-OdM8Rk/VTxmo9q7i0sNChaiGMHojSZmUCgdqCAaBMLE=";
-              })
-            ];
-          });
+          sway-unwrapped;
+
+      swaybg = final: prev:
+        with inputs.nixpkgs-wayland.packages.${final.system};
+          swaybg;
     };
 
     nixosModules = mkNixosModules {

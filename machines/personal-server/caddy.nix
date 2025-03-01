@@ -1,14 +1,14 @@
 { config, lib, inputs, pkgs, ... }: {
   services.caddy = {
     enable = true;
-    package = pkgs.caddyWith {
+    package = pkgs.caddy.withPlugins {
       plugins = [
-        { src = "github.com/mholt/caddy-events-exec"; rev = "055bfd2e8b8247533c7a710e11301b7d1645c933"; }
-        { src = "github.com/mholt/caddy-l4"; rev = "3c6cc2c0ee0875899fde271fbdef95be3fef7a92"; }
-        { src = "github.com/caddy-dns/cloudflare"; rev = "44030f9306f4815aceed3b042c7f3d2c2b110c97"; }
+        # "github.com/mholt/caddy-l4@3c6cc2c0ee0875899fde271fbdef95be3fef7a92"
+        "github.com/caddy-dns/cloudflare@v0.0.0-20240703190432-89f16b99c18e"
       ];
-      caddyRev = "eaaa2e5872ef9e845a50c6aade36676c0ecfe2e2";
-      vendorHash = "sha256-krnqpb10TeGsYLD1p7u9EuP2EfCQjw0PZhky7fPRylY=";
+      hash = "sha256-JVkUkDKdat4aALJHQCq1zorJivVCdyBT+7UhqTvaFLw=";
+      # caddyRev = "eaaa2e5872ef9e845a50c6aade36676c0ecfe2e2";
+      # vendorHash = "sha256-krnqpb10TeGsYLD1p7u9EuP2EfCQjw0PZhky7fPRylY=";
     };
     configFile = pkgs.writeText "Caddyfile" ''
       {
@@ -40,6 +40,21 @@
         }
       }
 
+      mail.redpilled.dev {
+        reverse_proxy :10443 {
+          transport http {
+            tls_insecure_skip_verify
+            proxy_protocol v2
+          }
+        }
+      }
+
+      (cache) {
+        header {
+          ?Cache-Control "public, max-age=60, stale-while-revalidate=86400, stale-if-error=86400"
+        }
+      }
+
       (error-page) {
         handle_errors {
           encode zstd gzip
@@ -55,6 +70,7 @@
         file_server
         root /srv/www
         import error-page
+        import cache
       }
 
       www.redpilled.dev {
@@ -64,6 +80,7 @@
       *.redpilled.dev {
         error "Not Found" 404
         import error-page
+        import cache
       }
     '';
   };

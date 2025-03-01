@@ -20,7 +20,7 @@
           "0.0.0.0/0"
           # "::/0"
         ];
-        Endpoint = "redpilled.dev:42069";
+        Endpoint = "195.201.40.199:42069";
         PersistentKeepalive = 25;
       };
     };
