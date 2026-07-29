@@ -1,6 +1,7 @@
-{ config, lib, ... }: {
+{ config, lib, pkgs, ... }: {
   systemd.services.systemd-networkd.serviceConfig = {
-    LoadCredential = "wg-vpn";
+    # LoadCredential = "wg-vpn";
+    LoadCredential = "cf-wg-vpn";
   };
 
   systemd.network.netdevs."50-wg0" = {
@@ -9,18 +10,21 @@
       Kind = "wireguard";
     };
     wireguardConfig = {
-      PrivateKeyFile = "/run/credentials/systemd-networkd.service/wg-vpn";
+      # PrivateKeyFile = "/run/credentials/systemd-networkd.service/wg-vpn";
+      PrivateKeyFile = "/run/credentials/systemd-networkd.service/cf-wg-vpn";
       FirewallMark = 34952;
       RouteTable = "off";
     };
     wireguardPeers = lib.attrValues {
       "personal-server" = {
-        PublicKey = "qRHM8s/fgTNWGQDV6l4v53aBrt7sh0mbIQIh7Osz32k=";
+        # PublicKey = "qRHM8s/fgTNWGQDV6l4v53aBrt7sh0mbIQIh7Osz32k=";
+        PublicKey = "bmXOC+F1FxEMF9dyiK2H5/1SUtzH0JuVo51h2wPfgyo=";
         AllowedIPs = [
           "0.0.0.0/0"
-          # "::/0"
+          "::/0"
         ];
-        Endpoint = "195.201.40.199:42069";
+        # Endpoint = "195.201.40.199:4269";
+        Endpoint = "engage.cloudflareclient.com:2408";
         PersistentKeepalive = 25;
       };
     };
@@ -30,22 +34,31 @@
     name = "wg0";
     networkConfig = {
       Address = [
-        "10.0.0.4/32"
+        # "10.0.0.4/32"
         # "fc00:0010::4/128"
+        "172.16.0.2/32"
+        "2606:4700:110:8c9e:d477:e1d4:2241:a40a/128"
       ];
       Domains = "~.";
+      DNS = [
+        "1.1.1.1"
+        "1.0.0.1"
+        "2606:4700:4700::1111"
+        "2606:4700:4700::1001"
+      ];
     };
     linkConfig = {
       ActivationPolicy = "manual";
+      MTUBytes = 1280;
     };
     routes = [
       { Table = 1000; Destination = "0.0.0.0/0"; }
-      # { Table = 1000; Destination = "::/0"; }
+      { Table = 1000; Destination = "::/0"; }
     ];
 
     routingPolicyRules = [
       {
-        # Family = "both";
+        Family = "both";
         FirewallMark = 34952;
         InvertRule = true;
         Table = 1000;

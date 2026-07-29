@@ -1,4 +1,6 @@
-{ config, lib, ... }: {
+{ config, lib, pkgs, ... }: let
+  wgPort = 4269;
+in {
   systemd.services.systemd-networkd.serviceConfig = {
     LoadCredential = "wg-private";
   };
@@ -10,7 +12,7 @@
     };
     wireguardConfig = {
       PrivateKeyFile = "/run/credentials/systemd-networkd.service/wg-private";
-      ListenPort = 42069;
+      ListenPort = wgPort;
     };
     wireguardPeers = lib.attrValues {
       "phone" = {
@@ -42,10 +44,18 @@
     };
   };
 
+  # services.resolved.extraConfig = lib.generators.toKeyValue {} {
+  #   DNSStubListenerExtra = "10.0.0.1";
+  # };
+
+  services.resolved.settings.Resolve = {
+    DNSStubListenerExtra = "10.0.0.1";
+  };
+
   systemd.network.config.networkConfig = {
     IPv4Forwarding = true;
     IPv6Forwarding = true;
   };
 
-  networking.firewall.allowedUDPPorts = [ 42069 ];
+  networking.firewall.allowedUDPPorts = [ wgPort ];
 }

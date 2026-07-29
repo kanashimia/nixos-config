@@ -1,30 +1,44 @@
 { config, inputs, pkgs, lib, ... }: {
   nix.package = pkgs.nixVersions.latest;
+  # nix.package = pkgs.lixPackageSets.latest.lix;
 
   nix.settings = {
     experimental-features = [
       "nix-command"
       "flakes"
-      "pipe-operators"
+      # "pipe-operator"
     ];
-    auto-optimise-store = true;
+    # auto-optimise-store = true;
     use-xdg-base-directories = true;
     warn-dirty = false;
     flake-registry = "";
     trusted-users = [ "root" "@wheel" ];
   };
 
-  nix.registry."n" = {
-    to = builtins.parseFlakeRef "github:nixos/nixpkgs/${inputs.nixpkgs.rev}";
-    exact = false;
+  nix.channel.enable = false;
+
+  nix.registry = {
+    "nixpkgs" = {
+      to = { type = "path"; path = config.nixpkgs.flake.source; };
+    };
+    "n" = {
+      to = { id = "nixpkgs"; type = "indirect"; };
+    };
+    "nn" = {
+      to = builtins.parseFlakeRef "github:nixos/nixpkgs/${inputs.nixpkgs.rev}";
+      exact = false;
+    };
   };
 
-  nix.nixPath = lib.mkForce [];
+  # nix.nixPath = lib.mkForce [];
+  nix.nixPath = [
+    "nixpkgs=${config.nixpkgs.flake.source}"
+  ];
 
   nix.gc = {
     automatic = true;
-    dates = "weekly";
-    options = "--delete-older-than 7d";
+    dates = "monthly";
+    options = "--delete-older-than 30d";
   };
 
   system.activationScripts."diff" = {

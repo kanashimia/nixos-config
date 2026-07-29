@@ -52,6 +52,16 @@
 
     JULIA_DEPOT_PATH = "${XDG_DATA_HOME}/julia";
 
-    RUSTUP_HOME="${XDG_DATA_HOME}/rustup";
+    RUSTUP_HOME = "${XDG_DATA_HOME}/rustup";
+
+    SQLITE_HISTORY = "${XDG_CACHE_HOME}/sqlite_history";
+
+    NODE_REPL_HISTORY = "${XDG_DATA_HOME}/node_repl_history";
+
+    W3M_DIR = "${XDG_DATA_HOME}/w3m";
+
+    _JAVA_OPTIONS = "-Djava.util.prefs.userRoot=${XDG_CONFIG_HOME}/java";
+
+    GNUPGHOME = "${XDG_DATA_HOME}/gnupg";
   };
 }

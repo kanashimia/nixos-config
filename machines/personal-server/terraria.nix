@@ -1,6 +1,6 @@
 { pkgs, config, lib, ... }: {
-  services.terraria = {
-    enable = true;
+  services.mia.terraria = {
+    enable = false;
     loadCredential = [ "terrarion" ];
     extraConfigPath = "/run/credentials/terraria.service/terrarion";
     settings = {

@@ -1,6 +1,6 @@
 { pkgs, lib, ... }: let
   wrapBinScript = pkg: bin: script: pkgs.symlinkJoin {
-    inherit (pkg) name;
+    inherit (pkg) pname version meta;
     paths = [
       (pkgs.writeShellScriptBin bin script)
       pkg
@@ -34,6 +34,9 @@
 
       exec ${pkg}/bin/${bin} "$@"
     '';
+  coolXdgFix' = pkg:
+    let exe = pkg.meta.mainProgram;
+    in coolXdgFix pkg exe exe;
 in {
   programs.steam.package = pkgs.steam-xdg;
 
@@ -41,7 +44,9 @@ in {
     steam-xdg = final.steam.override {
       steam-unwrapped = coolXdgFix final.steam-unwrapped "steam" "Steam";
     };
-    chromium-xdg = coolXdgFix final.chromium "chromium" "chromium";
-    firefox-xdg = coolXdgFix final.firefox "firefox" "firefox";
+    # chromium-xdg = coolXdgFix' final.chromium;
+    # firefox-xdg = coolXdgFix' final.firefox;
+    # librewolf-xdg = coolXdgFix' final.librewolf;
+    # thunderbird-xdg = coolXdgFix' final.thunderbird;
   }) ];
 }

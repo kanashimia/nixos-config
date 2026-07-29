@@ -1,5 +1,5 @@
 { lib, pkgs, ... }: let
-  iconTheme = "Papirus";
+  iconTheme = "Adwaita";
   gtk3Theme = "adw-gtk3";
   gtkFontName = "DejaVu Sans 10";
   dark = true;
@@ -15,7 +15,7 @@ in {
     };
     "xdg/gtk-4.0/settings.ini".text = lib.generators.toINI {} {
       Settings = {
-        # gtk-application-prefer-dark-theme = dark;
+        gtk-application-prefer-dark-theme = dark;
         # gtk-icon-theme-name = iconTheme;
         # gtk-font-name = gtkFontName;
         # gtk-cursor-theme-name = "Adwaita";
@@ -55,9 +55,28 @@ in {
     qgnomeplatform
     adwaita-qt
     gnome-themes-extra
-    papirus-icon-theme
+    # papirus-icon-theme
     adw-gtk3
   ];
 
-  # gtk.iconCache.enable = true;
+  # environment.extraSetup = ''
+  #   find $out/share/icons -exec test -d {} ';' -mindepth 1 -maxdepth 1 -print0 | while read -d $'\0' themedir
+  #   do
+  #     if [ ! -w "$themedir" -a -L "$themedir" ]; then
+  #       name=$(basename "$themedir")
+  #       path=$(readlink -f "$themedir")
+  #       rm "$themedir"
+  #       mkdir -p "$themedir"
+  #       ln -s "$path"/* "$themedir"/
+  #     fi
+  #     if [ -w "$themedir" ]; then
+  #       rm -f "$themedir"/icon-theme.cache
+  #       ${pkgs.buildPackages.gtk4.out}/bin/gtk4-update-icon-cache -f --ignore-theme-index "$themedir" -q && \
+  #         echo "gtk4-update-icon-cache: Created cache for $themedir"
+  #     fi
+  #   done
+  # '';
+
+
+  gtk.iconCache.enable = true;
 }

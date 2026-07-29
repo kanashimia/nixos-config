@@ -1,6 +1,6 @@
 {
   programs.bash.promptInit = let
-    mkColor = n: ''\e[${n}m'';
+    mkColor = n: ''\[\e[${n}m\]'';
     clear = mkColor "";
     red = mkColor "31";
     cyan = mkColor "36";
@@ -16,7 +16,7 @@
   # Support XDG base dir spec to some degree.
   programs.bash.interactiveShellInit = /*bash*/''
     mkdir -p "''${XDG_STATE_HOME:-$HOME/.local/state}"/bash
-    HISTFILE="$_"/history
+    HISTFILE="''${XDG_STATE_HOME:-$HOME/.local/state}"/bash/history
     HISTSIZE=10000
     HISTFILESIZE=10000
     HISTCONTROL=ignoreboth:erasedups

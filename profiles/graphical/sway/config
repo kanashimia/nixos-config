@@ -1,20 +1,28 @@
 set {
     $mod Mod4
     $layout "us(dvorak),ru,ua,us"
-    $options "caps:escape,grp_led:num,grp:rctrl_rshift_toggle,compose:menu,compose:rctrl,custom:ralt_as_lalt"
+    $options "grp_led:num,grp:rctrl_rshift_toggle,compose:menu,compose:rctrl"
+    # ,custom:ralt_as_lalt
 
     $left h
     $down j
     $up k
     $right l
 
+    # $term footclient -E
     $term foot
     $browser chromium
-    $telegram telegram-desktop
-    $exec exec ~/run.sh
-    # $exec exec
-    $wofi wofi --show drun --insensitive --allow-images --filter
-    $restarter printf 'img:/run/current-system/sw/share/icons/Papirus/32x32/apps/system-%s.svg:text:%s\n' shutdown poweroff suspend suspend reboot reboot hibernate hibernate | wofi --show dmenu -I -H "$(( (32 + 10 * 2) * 4 + 10 * 2 ))" | sed 's/.*://' | xargs -i systemctl '{}' -i
+    # $browser "librewolf"
+    # $browser "firefox-devedition"
+    # $browser "librewolf", exec "~/fixupbrowser.sh"
+# for_window [app_id="^firefox$" title="^Extension: "] exec "sleep 0.1; swaymsg floating enable; swaymsg floating disable; swaymsg floating enable"
+    $telegram Telegram
+    # $exec exec ~/run.sh
+    # $exec exec ~/trash/runc/slicerun
+    $exec exec
+    $wofi wofi --show drun --insensitive --allow-images
+    $commands ~/documents/scripts/commands.sh
+    $restarter ~/documents/scripts/restarter.sh
 }
 
 # swaybg_command /home/kanashimia/.local/state/cargo/release/windowtolayer -- /usr/bin/env vkcube-wayland --gpu_number 0
@@ -29,13 +37,14 @@ input type:keyboard {
 }
 
 input 1:1:AT_Translated_Set_2_keyboard {
-    xkb_options $options,altwin:swap_lalt_lwin
+    xkb_options $options,caps:escape,altwin:swap_lalt_lwin
 }
 
 input type:touchpad {
     tap enable
     dwt disable
     natural_scroll enable
+    # events disabled
 }
 
 input type:pointer {
@@ -45,27 +54,33 @@ input type:pointer {
 
 input type:tablet_tool {
     map_from_region 0.0x0.0 1.0x0.96
+    # tool_mode * relative
+    # accel_profile adaptive
 }
 
-output * allow_tearing true
+# exec swaylock || swaymsg exit
 
-exec swayidle idlehint 60
+# exec swayidle idlehint 60
+# exec foot --server
+# exec_always pkill -f "tailscale systray"
+# exec_always tailscale systray
 
 seat * {
     xcursor_theme Adwaita 24
-    hide_cursor 5000
+    # hide_cursor 5000
 }
 
 floating_modifier $mod normal
 
 bindsym --no-repeat --whole-window {
-    BTN_EXTRA $exec wpctl set-mute @DEFAULT_SOURCE@ 0
-    BTN_SIDE  $exec wpctl set-mute @DEFAULT_SOURCE@ 1
+    BTN_EXTRA exec wpctl set-mute @DEFAULT_SOURCE@ 0
+    BTN_SIDE  exec wpctl set-mute @DEFAULT_SOURCE@ 1
 }
 
 bindsym --to-code {
     $mod+Shift+0 input type:keyboard xkb_layout "us"
     $mod+0 input type:keyboard xkb_layout $layout
+    $mod+F10 input type:keyboard xkb_options $options
 
     $mod+F1 input type:keyboard xkb_switch_layout 0
     $mod+F2 input type:keyboard xkb_switch_layout 1
@@ -83,8 +98,8 @@ bindsym --to-code {
     $mod+$up    focus up
     $mod+$right focus right
 
-    $mod+m mark --replace swap
-    $mod+Shift+m swap container with mark swap
+    $mod+a mark --replace swap
+    $mod+Shift+a swap container with mark swap
 
     $mod+Shift+$left  move left  100px
     $mod+Shift+$down  move down  100px
@@ -125,7 +140,7 @@ bindsym --to-code {
     $mod+v split v
 
     $mod+t layout toggle
-    $mod+Shift+n layout toggle tabbed split
+    $mod+Shift+n layout toggle stacking tabbed split
     $mod+f fullscreen
 
     $mod+p focus parent
@@ -133,18 +148,19 @@ bindsym --to-code {
     
     $mod+n split none
 
-    $mod+Shift+space floating toggle
-    $mod+space       focus mode_toggle
+    $mod+Shift+m floating toggle
+    $mod+m       focus mode_toggle
 
     $mod+Shift+minus move scratchpad
     $mod+minus       scratchpad show
 }
 
 bindsym --to-code {
-    $mod+Return       $exec -l $term
-    $mod+Shift+Return $exec -l $term -D "$(swaycwd)"
+    $mod+Return       $exec $term
+    $mod+Shift+Return $exec $term -D "$(swaycwd 2> /dev/null)"
 
     $mod+r $exec $wofi 
+    $mod+Shift+r $exec $commands
 
     $mod+Shift+e exec $restarter
     $mod+Shift+b $exec $browser
@@ -154,12 +170,12 @@ bindsym --to-code {
     Shift+Print exec systemd-run --user --scope --quiet -u screenshot -- slurp | grim -g - - | wl-copy -t image/png
     $mod+Print  exec ~/screenshot.sh
 
-    XF86AudioRaiseVolume $exec wpctl set-volume @DEFAULT_SINK@ -l 1.0 5%+
-    XF86AudioLowerVolume $exec wpctl set-volume @DEFAULT_SINK@ -l 1.0 5%-
-    XF86AudioMute        $exec wpctl set-mute   @DEFAULT_SINK@ toggle
+    XF86AudioRaiseVolume exec wpctl set-volume @DEFAULT_SINK@ -l 1.0 5%+
+    XF86AudioLowerVolume exec wpctl set-volume @DEFAULT_SINK@ -l 1.0 5%-
+    XF86AudioMute        exec wpctl set-mute   @DEFAULT_SINK@ toggle
 
-    XF86MonBrightnessUp   $exec brightnessctl set --quiet --exponent 5%+
-    XF86MonBrightnessDown $exec brightnessctl set --quiet --exponent 5%-
+    XF86MonBrightnessUp   exec brightnessctl set --quiet --exponent 5%+
+    XF86MonBrightnessDown exec brightnessctl set --quiet --exponent 5%-
 }
 
 set {
@@ -182,8 +198,10 @@ set {
 }
 
 #                       border   bg     text     indicator child_border
-client.focused          $blue    $blue  $bg_dark $blue     $fg
-client.focused_inactive $bg_dark $black $fg      $black    $bg_dark
+# client.focused          $black $bg    $fg      $blue     $black
+client.focused          $black   $bg_bright    $fg      $blue     $black
+# client.focused_inactive $bg_dark $black $fg      $black    $bg_dark
+client.focused_inactive $bg_dark $bg_bright $fg      $black    $bg_dark
 client.unfocused        $bg_dark $bg    $fg      $black    $bg_dark
 client.urgent           $red     $red   $bg_dark $yellow   $red
 
@@ -193,12 +211,19 @@ output * background /home/kanashimia/trash/assets/app-data/story/vn/res/finale/b
 set $border_size 2
 
 default_border pixel $border_size
+# default_border normal $border_size
 default_floating_border normal
+
+# for_window [tiling] border 2
+# for_window [all floating] border toggle
+
 
 #titlebar_padding          $border_size
 titlebar_border_thickness $border_size
 
-font monospace 11
+# font "pango:MonaspiceNe Nerd Font Propo" 11
+# font pango:monospace 11
+ # for_window [title="."] title_format "<b>%title</b> (%app_id)"
 
 force_display_urgency_hint 5000 ms
 
@@ -208,6 +233,10 @@ force_display_urgency_hint 5000 ms
 # }
 # $$exec nix run n#waybar
 
+# swaybg_command /home/kanashimia/swaybg.sh
+
+# exec waybar
+
 bar {
     # status_command nix shell n\#i3status -c i3status
     modifier $mod
@@ -215,7 +244,16 @@ bar {
     position bottom
     mode     hide
 
-    status_command while date +'%Y-%m-%d %H:%M'; do sleep 10; done
+    # swaybar_command /home/kanashimia/waybar.sh
+    # swaybar_command waybar
+    swaybar_command -
+
+    # id 69
+    # status_command while date +'%Y-%m-%d %H:%M'; do sleep 10; done
+    # status_command ~/status
+    # status_command waybar
+
+    font monospace 11
 
     colors {
         background         $transparent
@@ -225,4 +263,42 @@ bar {
     }
 }
 
-include /etc/sway/config.d/*
+# include /etc/sway/config.d/*
+exec_always 'systemctl import-environment --user PATH DISPLAY WAYLAND_DISPLAY SWAYSOCK XDG_CURRENT_DESKTOP; systemctl --user start sway.target'
+
+focus_wrapping no
+
+# font monospace 0.001
+# titlebar_border_thickness 2
+# titlebar_padding 4 4
+
+# font monospace 8
+# font "pango:MonaspiceNe Nerd Font Propo" 11
+font pango:monospace 12
+# for_window [title="."] title_format "<span foreground='#FF0000'>%title</span> (%app_id)"
+# for_window [title="."] title_format "%app_id"
+# for_window [app_id="foot"] title_format "%title"
+# for_window [app_id="foot"] border normal
+titlebar_border_thickness 2
+titlebar_padding 4 2
+
+for_window [app_id="^vivaldi" title="Vivaldi Settings:*"] floating enable
+for_window [app_id="^vivaldi" title="Bitwarden - Vivaldi"] floating enable
+for_window [app_id="^iwgtk$"] floating enable
+for_window [app_id="^.Telegram-wrapped$"] floating enable
+for_window [app_id="^org.telegram.desktop$" title="Instant View*"] floating enable
+for_window [app_id="^chrome-nngceckbapebfimnlniiiahkandclblb-"] floating enable
+for_window [app_id="^dev.zed.Zed$" title="Zed — Settings"] floating enable
+for_window [app_id="^xdg-desktop-portal-gtk$"] floating enable
+
+# output * allow_tearing true
+# output * max_render_time 6
+# for_window [all] max_render_time 1
+# for_window [all] allow_tearing true
+
+show_marks no
+
+output * allow_tearing true
+output * max_render_time off
+for_window [all] max_render_time off
+for_window [all] allow_tearing true

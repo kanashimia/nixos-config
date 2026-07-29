@@ -1,0 +1,104 @@
+{
+  email acme2@redpilled.dev
+
+  log {
+    level info
+  }
+
+  # servers {
+  #   trusted_proxies static private_ranges 173.245.48.0/20 103.21.244.0/22 103.22.200.0/22 103.31.4.0/22 141.101.64.0/18 108.162.192.0/18 190.93.240.0/20 188.114.96.0/20 197.234.240.0/22 198.41.128.0/17 162.158.0.0/15 104.16.0.0/13 104.24.0.0/14 172.64.0.0/13 131.0.72.0/22 2400:cb00::/32 2606:4700::/32 2803:f800::/32 2405:b500::/32 2405:8100::/32 2a06:98c0::/29 2c0f:f248::/32
+  #   trusted_proxies_strict
+  #   client_ip_headers CF-Connecting-IP X-Forwarded-For X-Real-IP
+  # }
+}
+
+# mail.redpilled.dev,
+# mta-sts.redpilled.dev/.well-known/mta-sts.txt,
+# autoconfig.redpilled.dev/.well-known/mail-v1.xml,
+# autoconfig.redpilled.dev/.well-known/autoconfig/mail/config-v1.1.xml,
+# autoconfig.redpilled.dev/mail/config-v1.1.xml,
+# autodiscover.redpilled.dev/autodiscover/autodiscover.xml,
+# redpilled.dev/jmap/*,
+# redpilled.dev/auth/*,
+# redpilled.dev/healthz/*,
+# redpilled.dev/.well-known/oauth-authorization-server,
+# redpilled.dev/.well-known/openid-configuration,
+# redpilled.dev/.well-known/jmap {
+#   reverse_proxy :10080 {
+#     transport http {
+#      proxy_protocol v2
+#     }
+#   }
+# }
+
+# vault.redpilled.dev {
+#   @admin {
+#     path /admin*
+#     not remote_ip private_ranges
+#   }
+#   redir @admin /
+#   reverse_proxy :13117 {
+#     header_up X-Real-IP {client_ip}
+#   }
+# }
+
+# headscale.redpilled.dev {
+#   reverse_proxy :24217 {
+#     header_up X-Real-IP {client_ip}
+#   }
+# }
+
+# # nb.redpilled.dev {
+# #   reverse_proxy :51820 {
+# #     header_up X-Real-IP {client_ip}
+# #   }
+# # }
+
+# # sso.redpilled.dev {
+# #   reverse_proxy :51022 {
+# #     header_up X-Real-IP {client_ip}
+# #   }
+# # }
+
+(cache) {
+  header {
+    ?Cache-Control "public, max-age=60, stale-while-revalidate=86400, stale-if-error=86400"
+  }
+}
+
+# (error-page) {
+#   handle_errors {
+#     encode zstd gzip
+#     file_server
+#     root /srv/www
+#     rewrite /errors.html
+#     templates
+#   }
+# }
+
+# redpilled.dev {
+#   encode zstd gzip
+#   file_server
+#   root /srv/www
+#   import error-page
+#   import cache
+# }
+
+# www.redpilled.dev {
+#   redir https://redpilled.dev{uri} permanent
+# }
+
+# *.redpilled.dev {
+#   error "Not Found" 404
+#   import error-page
+#   import cache
+# }
+
+:8000 {
+  bind caddy.internal
+  encode zstd gzip
+  file_server
+  root /srv/www
+  # import error-page
+  import cache
+}

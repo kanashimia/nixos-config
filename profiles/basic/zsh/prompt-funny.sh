@@ -1,9 +1,32 @@
 # zmodload zsh/datetime
 
+precmd=()
+precmd_functions=()
+unset -f precmd 2>/dev/null
+
+preexec=()
+preexec_functions=()
+unset -f preexec 2>/dev/null
+
+chpwd=()
+chpwd_functions=()
+unset -f chpwd 2>/dev/null
+
+unset PROMPT
+
 preexec() {
     print -n '\e]133;C\e\\'
     # timer="$EPOCHREALTIME"
 }
+
+COOL_PROMPT="\
+<span foreground='#89ddff'>%~</span> \
+%(2L.<span foreground='#f07178'>lvl:%L</span> .)\
+%(1V.<span foreground='#ffc47c'>git:%1v</span> .)\
+%(2V.<span foreground='#f07178'>ssh:%n@%M</span> .)\
+%(3V.<span foreground='#f07178'>env:%3v</span> .)\
+"
+
 
 precmd() { 
     print -n '\e]133;D\e\\'
@@ -38,28 +61,24 @@ precmd() {
             if [[ -f "$FILE" ]]; then
                 local GIT_REF="$(< "$FILE")" 
                 psvar[1]="${GIT_REF#ref: refs/heads/}"
-                return
+                break
             fi
             local FILE="$PATH"/.git
             if [[ -f "$FILE" ]]; then
                 local GIT_REF="$(< "$FILE")" 
                 psvar[1]="${GIT_REF#gitdir: */.git/}"
-                return
+                break
             fi
         fi
         PATH+='/..'
     done
+
+    print -Pn "\e]2;$COOL_PROMPT\e\\"
 }
+# zle -N zle-line-init _my_precmd
 
 # %(3V.took:%3v.)\
 
 PROMPT="\
-
-%F{cyan}%~%f \
-%(2L.%F{red}lvl:%L%f .)\
-%(1V.%F{yellow}git:%1v%f .)\
-%(2V.%F{green}ssh:%n@%M%f .)\
-%(3V.%F{red}env:%3v%f .)\
-
 %F{%(?.green.red)}%(!.!.›)%f "
 

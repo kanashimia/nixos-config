@@ -3,61 +3,53 @@
 in {
   programs.sway = {
     enable = true;
-    wrapperFeatures.gtk = false;
+    wrapperFeatures.gtk = true;
     wrapperFeatures.base = false;
-    extraPackages = with pkgs; [
-      swaybg # fixme: bug in the nixpkgs-wayland
-      foot
-      wofi
-      # j4-dmenu-desktop
-
-      telegram-desktop
-      keepassxc
-      zathura
-      chromium-xdg
-      thunderbird
-      firefox-devedition
-
-      wev
-      imv
-      libsixel
-      mpv
-
-      wl-clipboard
-      grim
-      slurp
-      wf-recorder
-      # wl-screenrec
-      vulkan-tools
-      mesa-demos
-      wayland-utils
-      libva-utils
-
-      swaylock
-      swayidle
-
-      brightnessctl
-
-      (linkFarm "xdg-terminal-exec" [
-        { name = "bin/xdg-terminal-exec"; path = "${pkgs.foot}/bin/foot"; }
-      ])
-    ];
   };
 
-  # programs.kdeconnect.enable = true;
-  # programs.kdeconnect.package = pkgs.kdePackages.kdeconnect-kde;
+  environment.systemPackages = with pkgs; [
+    foot
+    wofi
+    # j4-dmenu-desktop
 
-  # systemd.user.services.kdeconnect = {
-  #   description = "Adds communication between your desktop and your smartphone";
-  #   after = [ "graphical-session-pre.target" ];
-  #   partOf = [ "graphical-session.target" ];
-  #   wantedBy = [ "graphical-session.target" ];
-  #   # environment.PATH=${config.home.profileDirectory}/bin";
-  #   serviceConfig = {
-  #     ExecStart = "${pkgs.kdePackages.kdeconnect-kde}/bin/kdeconnectd";
-  #     Restart = "on-abort";
-  #   };
-  # };
+    telegram-desktop
+    keepassxc
+    zathura
+    chromium
+    thunderbird
+    firefox-devedition
+    # librewolf
+    # vivaldi
+    zed-editor-fhs
+
+    wev
+    imv
+    libsixel
+    mpv-unwrapped
+
+    wl-clipboard
+    grim
+    slurp
+    wf-recorder
+    wl-screenrec
+    vulkan-tools
+    mesa-demos
+    wayland-utils
+    libva-utils
+
+    swaylock
+    swayidle
+
+    brightnessctl
+
+    (linkFarm "xdg-terminal-exec" [
+      { name = "bin/xdg-terminal-exec"; path = lib.getExe pkgs.foot; }
+    ])
+  ];
+
+  environment.sessionVariables = {
+    _JAVA_AWT_WM_NONREPARENTING = "1";
+  };
 
   xdg.portal.enable = true;
   xdg.portal.xdgOpenUsePortal = true;
@@ -114,11 +106,16 @@ in {
         -b 'Reboot' 'systemctl reboot'
     '';
   in {
-    enable = true;
-    vt = 1;
+    enable = false;
+    restart = true;
+    # settings.initial_session = {
+    #   command = swaySession;
+    #   user = "kanashimia";
+    # };
     settings.default_session = {
-      command = swaySession;
-      user = "kanashimia";
+      # command = swaySession;
+      # command = "${pkgs.greetd}/bin/agreety --cmd ${swaySession}";
+      # user = "kanashimia";
       # command = "sway";
       # command = "systemd-cat -t sway -- sway --config ${swayLogin}";
       # command = "${pkgs.greetd.greetd}/bin/agreety --cmd ${swaySession}";
@@ -131,98 +128,84 @@ in {
 
   # programs.regreet.enable = true;
 
+  security.pam.services."autologin" = {
+    startSession = true;
+    allowNullPassword = true;
+    showMotd = true;
+    lastlog.enable = true;
+  };
+
   systemd.services."autovt@${tty}".enable = false;
 
-  /*
-
-  security.pam.services."sway-autologin".text =''
-    auth      required  pam_nologin.so
-    auth      required  pam_unix.so     try_first_pass nullok
-    account   required  pam_nologin.so
-    account   required  pam_unix.so
-    session   required  pam_env.so conffile=/etc/pam/environment readenv=0
-    session   required  pam_unix.so
-    -session  optional  ${config.systemd.package}/lib/security/pam_systemd.so type=wayland class=user desktop=sway
-    -session  optional  pam_loginuid.so
-  '';
-  systemd.user.services.sway = {
-
-# Activate using a systemd socket
-# Requires = weston.socket
-# After = weston.socket
-
-before = [ "graphical-session.target" ];
-wantedBy = [ "graphical-session.target" ];
-
-  serviceConfig = {
-      UnsetEnvironment = [ "WAYLAND_DISPLAY" "DISPLAY" "SWAYSOCK" "XDG_CURRENT_DESKTOP" ];
-# Type=notify
-Type = "simple";
-TimeoutStartSec = 60;
-WatchdogSec=20;
-# Defaults to journal
-#StandardOutput=journal
-StandardError="journal";
-
-# add a ~/.config/weston.ini and weston will pick-it up
-# ExecStart=/usr/bin/weston --modules=systemd-notify.so
-      ExecStart = "/run/current-system/sw/bin/sway";
-      };
-};
-
-
-
-  systemd.services.sway = {
-    enable = true;
-    wantedBy = [ "graphical.target" ];
-
-    # wants = [ "systemd-user-sessions.service" ];
-    after = [ "systemd-user-sessions.service" "getty@${tty}.service" ];
-    conflicts = [ "getty@${tty}.service" ];
-
-    # script = ''
-    #   PATH=/run/current-system/sw/bin
-    #   # exec systemd-run --user --scope --quiet --no-ask-password \
-    #   #   --slice=session.slice \
-    #   #   -p PartOf=graphical-session.target \
-    #   #   -u sway -- sway --unsupported-gpu
-    #   exec sway
-    # '';
-
-    environment = {
-      XDG_CURRENT_DESKTOP = "sway";
+  systemd.user.services."foot-server" = {
+    wantedBy = [ "sway.target" ];
+    partOf = [ "graphical-session.target" ];
+    serviceConfig = {
+      Type = "exec";
+      ExecStart = "${lib.getExe pkgs.foot} --server";
     };
+  };
+  systemd.user.services."waybar" = {
+    wantedBy = [ "sway.target" ];
+    partOf = [ "graphical-session.target" ];
+    serviceConfig = {
+      Type = "exec";
+      ExecStart = lib.getExe pkgs.waybar;
+    };
+  };
+  systemd.user.services."swayidle" = {
+    wantedBy = [ "sway.target" ];
+    partOf = [ "graphical-session.target" ];
+    serviceConfig = {
+      Type = "exec";
+      ExecStart = "${lib.getExe pkgs.swayidle} idlehint 60";
+    };
+  };
+
+# [Unit]
+# Description=Lock Sway screen before sleep
+# Before=sleep.target
+
+# [Service]
+# Type=forking
+# Environment=WAYLAND_DISPLAY=wayland-0
+# ExecStart=/usr/bin/swaylock -f -c 000000
+
+# [Install]
+# WantedBy=sleep.target
+  systemd.services.sway-al = let
+    swaySession = pkgs.writeShellScript "sway-session" ''
+      export XDG_CURRENT_DESKTOP=sway
+      exec systemd-cat -t sway /run/current-system/sw/bin/sway
+    '';
+      # exec systemd-cat -t sway -- \
+      #   systemd-run --user --scope --quiet --no-ask-password \
+      #     --slice session -u sway b\
+      #     -p PartOf=sway.target \
+      #     -- sway
+  in {
+    enable = true;
+    description = "Autologin";
+    after = [ "systemd-user-sessions.service" "plymouth-quit-wait.service" "getty@${tty}.service" ];
+    conflicts = [ "getty@${tty}.service" ];
+    aliases = [ "display-manager.service" ];
 
     serviceConfig = {
-      Type = "simple";
-      # UnsetEnvironment = [ "WAYLAND_DISPLAY" "DISPLAY" "SWAYSOCK" "XDG_CURRENT_DESKTOP" ];
-      Environment = [ "XDG_CURRENT_DESKTOP=sway" ];
-      # ExecStart = "/run/current-system/sw/bin/sway --unsupported-gpu";
-      # ExecStart = "systemd-run --user --scope --quiet --no-ask-password -u sway --slice sway /run/current-system/sw/bin/sway";
-      # ExecStart = "/run/current-system/sw/bin/dbus-run-session /run/current-system/sw/bin/sway";
-      ExecStart = "/run/current-system/sw/bin/sway";
-      # Type = "exec";
-      # ExecStart = "${pkgs.dbus}/bin/dbus-launch /run/current-system/sw/bin/sway";
-      ExecStopPost = "systemctl --user stop sway.target";
-      # ExecStart = "${pkgs.gnome.mutter}/bin/mutter --wayland -- ${pkgs.foot}/bin/foot";
-      # ExecStart = "${config.systemd.package}/bin/systemd-run --user --scope --quiet --no-ask-password --slice session.slice -u sway -- ${pkgs.sway}/bin/sway --unsupported-gpu";
-      # ExecStart = "${config.systemd.package}/bin/systemctl --user --wait start sway";
+      Type = "exec";
+      ExecStart = "${lib.getExe pkgs.autologin} kanashimia ${swaySession}";
 
-      # TimeoutStartSec = 30;
-      # WatchdogSec = 10;
-
-      PAMName = "login";
-      # PAMName = "sway-autologin";
-      User = "kanashimia";
-      Group = "users";
-      WorkingDirectory = "~";
+      TimeoutStopSec = "30s";
+      KeyringMode = "shared";
 
       TTYPath = "/dev/${tty}";
       TTYReset = "yes";
       TTYVHangup = "yes";
       TTYVTDisallocate = "yes";
 
-      StandardInput = "tty-fail";
+      IgnoreSIGPIPE = "no";
+      SendSIGHUP = "yes";
+
+      # StandardInput = "tty-fail";
       StandardOutput = "journal";
       StandardError = "journal";
 
@@ -232,11 +215,21 @@ StandardError="journal";
       Restart = "always";
       RestartSec = 1;
     };
-
-
+    unitConfig = {
+      StartLimitBurst = 5;
+      StartLimitIntervalSec = 30;
+    };
     restartIfChanged = false;
   };
-  */
+
+  # systemd.slices."-".sliceConfig = {
+  #   ManagedOOMSwap = "kill";
+  # };
+
+  # systemd.user.slices."-".sliceConfig = {
+  #   ManagedOOMMemoryPressure = "kill";
+  #   # ManagedOOMMemoryPressureLimit = "40%";
+  # };
 
   # systemd.user.slices."app".sliceConfig = {
   #   ManagedOOMMemoryPressure = "kill";

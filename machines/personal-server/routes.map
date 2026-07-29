@@ -1,0 +1,16 @@
+redpilled.dev/haproxy/stats/  stats
+
+vault.redpilled.dev/  vault
+headscale.redpilled.dev/  headscale
+redpilled.dev/  website
+
+mail.redpilled.dev/  mail
+mta-sts.redpilled.dev/  mail
+autoconfig.redpilled.dev/  mail
+autodiscover.redpilled.dev/  mail
+redpilled.dev/jmap/  mail
+redpilled.dev/auth/  mail
+redpilled.dev/healthz/  mail
+redpilled.dev/.well-known/oauth-authorization-server/  mail
+redpilled.dev/.well-known/openid-configuration/  mail
+redpilled.dev/.well-known/jmap/  mail

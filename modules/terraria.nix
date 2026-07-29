@@ -1,5 +1,5 @@
 { config, lib, pkgs, ... }: let
-  cfg = config.services.terraria;
+  cfg = config.services.mia.terraria;
   configFormat = pkgs.formats.keyValue {};
   configFile = configFormat.generate "terraria-config.txt" cfg.settings;
   terrariaFifo = "/run/terraria/terraria.sock";
@@ -7,7 +7,7 @@ in {
   disabledModules = [ "services/games/terraria.nix" ];
 
   options = {
-    services.terraria = {
+    services.mia.terraria = {
       enable = lib.mkEnableOption "Terraria Server";
       settings = lib.mkOption {
         type = configFormat.type;
