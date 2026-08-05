@@ -56,21 +56,35 @@
     };
   }; */
 
+  # boot.initrd.network.enable = true;
+  # boot.initrd.network.ssh.enable = true;
+  # boot.initrd.network.ssh.hostKeys = [ "/etc/ssh/initrd_ssh_host_ed25519_key" ];
+  # boot.initrd.network.ssh.ignoreEmptyHostKeys = true;
+
+  boot.initrd.systemd.settings.Manager = {
+    DefaultTimeoutStartSec = "30s";
+    DefaultTimeoutStopSec = "30s";
+  };
+
   systemd.services."hetzner-network-gen" = {
     enable = true;
 
     conflicts = [ "shutdown.target" ];
     before = [
       # "sysinit.target"
-       "systemd-firstboot.service" "shutdown.target"
+      "systemd-firstboot.service" "shutdown.target"
+      "systemd-tmpfiles-setup.service"
+      "haproxy.service"
       # "tailscaled.service" "headscale.service"
     ];
-    after = [ "systemd-imdsd.socket" "network-online.target" "systemd-imds-import.service" ];
+    after = [ "systemd-imdsd.socket" "network-online.target" ];
     wants = [ "systemd-imdsd.socket" "network-online.target" ];
+
+    # wantedBy = [ "systemd-imds-import.service" ];
 
     wantedBy = [ "multi-user.target" ];
 
-    environment.PATH = lib.mkForce "${config.systemd.package}/lib/systemd";
+    environment.PATH = lib.mkForce "${config.systemd.package}/lib/systemd:${pkgs.coreutils}/bin";
 
     # unitConfig = {
     #   DefaultDependencies = false;
@@ -88,7 +102,8 @@
   };
 
   boot.kernelParams = [
-    "systemd.imds=on"
+    # "systemd.imds=on"
+    # "systemd.imds.import=on"
     # "systemd.imds.vendor=hetzner-cloud"
     # "systemd.imds.data_url=http://169.254.169.254/hetzner/v1/metadata"
     # "systemd.imds.address_ipv4=169.254.169.254"

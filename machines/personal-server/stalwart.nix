@@ -133,6 +133,9 @@ in {
         minHamSamples = 1;
         minSpamSamples = 10;
       })
+      (update "ReportSettings" {
+        inboundReportForwarding = false;
+      })
       (update "DnsResolver" (variant "Cloudflare" {}))
     ];
   };

@@ -177,6 +177,8 @@ in {
       wantedBy = [ "multi-user.target" ];
       after = [ "local-fs.target" "network.target" ];
 
+      environment = cfg.env;
+
       serviceConfig = {
         Type = "exec";
         ExecStart = "${lib.getExe stalwart-wrapper} ${lib.getExe cfg.package} --config=/etc/stalwart/config.json";

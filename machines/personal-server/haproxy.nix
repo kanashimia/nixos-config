@@ -94,22 +94,33 @@
       User = "haproxy";
       Group = "haproxy";
 
+      RuntimeDirectory = "haproxy";
       StateDirectory = "haproxy";
       WorkingDirectory = "/var/lib/haproxy";
       UMask = "0077";
       StateDirectoryMode = "0700";
 
+      EnvironmentFile = "-/var/lib/haproxy/haproxy.env";
+
+      # ExecStartPre = lib.mkForce [
+      #   (pkgs.writeShellScript "haproxy-gen-env.sh" ''
+      #     echo "PUBLIC_IPS=$(</etc/credstore/ipv4),$(</etc/credstore/ipv6)" > /run/haproxy/haproxy.env
+      #   '')
+      # ];
+      ExecStartPre = [
+        "${pkgs.coreutils}/bin/mkdir -p auth pki lua maps"
+      ];
       ExecStart = lib.mkForce [
         # "${(pkgs.writeShellScriptBin "haproxy" lib.readFile "./log-wrapper.sh")} ${pkgs.haproxy}/bin/haproxy -q -Ws -f /etc/haproxy/haproxy.cfg -p /run/haproxy/haproxy.pid -S /run/haproxy/haproxy-master.sock"
         # "${pkgs.haproxy}/bin/haproxy -Ws -f /etc/haproxy/haproxy.cfg -f /etc/haproxy/conf.d -p /run/haproxy/haproxy.pid -S /run/haproxy/haproxy-master.sock"
         "${pkgs.haproxy}/bin/haproxy -Ws -f /etc/haproxy/haproxy.cfg -p /run/haproxy/haproxy.pid -S /run/haproxy/haproxy-master.sock"
       ];
       ExecReload = lib.mkForce [
-        "${pkgs.haproxy}/bin/haproxy-dump-certs -p . -S /run/haproxy/haproxy-master.sock"
+        "${pkgs.haproxy}/bin/haproxy-dump-certs -p pki -S /run/haproxy/haproxy-master.sock"
         "${pkgs.haproxy}/bin/haproxy-reload -S /run/haproxy/haproxy-master.sock"
       ];
       ExecStop = lib.mkForce [
-        "${pkgs.haproxy}/bin/haproxy-dump-certs -p . -S /run/haproxy/haproxy-master.sock"
+        "${pkgs.haproxy}/bin/haproxy-dump-certs -p pki -S /run/haproxy/haproxy-master.sock"
       ];
 
       PrivateTmp = "disconnected";
@@ -128,8 +139,6 @@
       ProtectKernelModules = true;
       ProtectControlGroups = true;
       SystemCallFilter = "~@cpu-emulation @keyring @module @obsolete @raw-io @reboot @swap @sync";
-
-      RuntimeDirectory = "haproxy";
     };
     path = [ pkgs.openssl pkgs.socat pkgs.diffutils ];
     reloadTriggers = [ config.environment.etc."haproxy/haproxy.cfg".source ];

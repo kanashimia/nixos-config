@@ -92,6 +92,7 @@
     wireguard-tools
     exiftool
     oha
+    glib
 
     compsize
     e2fsprogs

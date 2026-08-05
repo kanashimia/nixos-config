@@ -9,6 +9,8 @@ set {
     $up k
     $right l
 
+    $apps /run/current-system/sw/share/applications
+
     # $term footclient -E
     $term foot
     $browser chromium
@@ -16,7 +18,8 @@ set {
     # $browser "firefox-devedition"
     # $browser "librewolf", exec "~/fixupbrowser.sh"
 # for_window [app_id="^firefox$" title="^Extension: "] exec "sleep 0.1; swaymsg floating enable; swaymsg floating disable; swaymsg floating enable"
-    $telegram Telegram
+    # $telegram Telegram
+    $telegram gio launch $apps/org.telegram.desktop.desktop
     # $exec exec ~/run.sh
     # $exec exec ~/trash/runc/slicerun
     $exec exec
@@ -164,7 +167,7 @@ bindsym --to-code {
 
     $mod+Shift+e exec $restarter
     $mod+Shift+b $exec $browser
-    $mod+Shift+t $exec $telegram
+    $mod+Shift+t $exec $telegram; [app_id="org.telegram.desktop"] move to workspace current
 
     Print       exec grim -c - | wl-copy -t image/png
     Shift+Print exec systemd-run --user --scope --quiet -u screenshot -- slurp | grim -g - - | wl-copy -t image/png

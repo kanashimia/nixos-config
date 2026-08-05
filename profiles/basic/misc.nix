@@ -45,25 +45,24 @@
      "systemd-imds-import.service"
      "systemd-imds-early-network.service"
   ];
-  boot.initrd.systemd.additionalUpstreamUnits = [
-     "systemd-imdsd@.service"
-     "systemd-imdsd.socket"
-     "systemd-imds-import.service"
-     "systemd-imds-early-network.service"
+  systemd.services.systemd-imds-import.before = [
+    "systemd-tmpfiles-setup.service"
   ];
-  # systemd.sockets.systemd-networkd-varlink-metrics.wantedBy = [ "sockets.target" ];
-  boot.initrd.systemd.storePaths = [
-    "${config.systemd.package}/lib/systemd/systemd-imds"
-  ];
+  # boot.initrd.systemd.additionalUpstreamUnits = [
+  #    "systemd-imdsd@.service"
+  #    "systemd-imdsd.socket"
+  #    "systemd-imds-import.service"
+  #    "systemd-imds-early-network.service"
+  # ];
+  # # systemd.sockets.systemd-networkd-varlink-metrics.wantedBy = [ "sockets.target" ];
+  # boot.initrd.systemd.storePaths = [
+  #   "${config.systemd.package}/lib/systemd/systemd-imds"
+  #   "${config.systemd.package}/lib/systemd/systemd-imdsd"
+  #   "${config.systemd.package}/lib/systemd/system-generators/systemd-imds-generator"
+  # ];
   users.users.systemd-imds = {
-    description = "systemd Instance Metadata";
     isSystemUser = true;
     group = "systemd-imds";
-    # createHome  = true;
-    # uid         = config.ids.uids.terraria;
   };
-  users.groups.systemd-imds = {
-    # gid = config.ids.gids.terraria;
-  };
-
+  users.groups.systemd-imds = { };
 }

@@ -2,8 +2,8 @@
   description = "Configuration of my nixos machines.";
 
   inputs = {
-    # nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
-    nixpkgs.url = "github:nixos/nixpkgs";
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    # nixpkgs.url = "github:nixos/nixpkgs";
     # nixpkgs-small.url = "github:nixos/nixpkgs/nixos-unstable-small";
     # nixpkgs-other.url = "github:nixos/nixpkgs/nixos-unstable";
     # nixpkgs-unstablest.url = "github:nixos/nixpkgs/nixos-unstable-small";
@@ -674,7 +674,7 @@
     nixosModules = mkNixosModules {
       unfree = ./modules/unfree.nix;
       terraria = ./modules/terraria.nix;
-      stalwart-mail = ./modules/stalwart-mail.nix;
+      # stalwart-mail = ./modules/stalwart-mail.nix;
       stalwart = ./modules/stalwart.nix;
     } // {
       # headplane = inputs.headplane.nixosModules.headplane;
